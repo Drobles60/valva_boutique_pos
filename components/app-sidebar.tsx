@@ -12,6 +12,8 @@ import {
   Sparkles,
   ChevronDown,
   Tag,
+  Shield,
+  Settings,
 } from "lucide-react"
 import {
   Sidebar,
@@ -37,6 +39,8 @@ const menuItems = [
   { title: "Proveedores", icon: CreditCard, href: "/proveedores" },
   { title: "Clientes", icon: Users, href: "/clientes" },
   { title: "Reportes", icon: FileText, href: "/reportes" },
+  { title: "Usuarios y Roles", icon: Shield, href: "/usuarios" },
+  { title: "Webhooks", icon: Settings, href: "/configuracion/webhooks" },
 ]
 
 const inventorySubmenu = [

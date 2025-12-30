@@ -1,36 +1,154 @@
 "use client"
+
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileText, Download, TrendingUp } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { FileText, Download, TrendingUp, DollarSign, ShoppingCart, Percent } from "lucide-react"
+import type { Venta } from "@/lib/types"
+import { getVentas, getProducts, getCurrentUser } from "@/lib/storage"
 
 export function ReportesContent() {
-  const ventasDiarias = [
-    { dia: "Lunes", ventas: 1250000, transacciones: 12 },
-    { dia: "Martes", ventas: 1850000, transacciones: 18 },
-    { dia: "Miércoles", ventas: 2100000, transacciones: 21 },
-    { dia: "Jueves", ventas: 1650000, transacciones: 15 },
-    { dia: "Viernes", ventas: 2450000, transacciones: 24 },
-    { dia: "Sábado", ventas: 3200000, transacciones: 32 },
-    { dia: "Domingo", ventas: 1500000, transacciones: 14 },
-  ]
+  const [ventas, setVentas] = useState<Venta[]>([])
+  const [fechaInicio, setFechaInicio] = useState("")
+  const [fechaFin, setFechaFin] = useState("")
+  const [tipoReporte, setTipoReporte] = useState("todo")
+  const [currentUser] = useState(getCurrentUser())
 
-  const productosTop = [
-    { nombre: "Vestido de Noche", cantidad: 28, total: 6020000 },
-    { nombre: "Chaqueta Cuero", cantidad: 15, total: 5250000 },
-    { nombre: "Pantalón Clásico", cantidad: 42, total: 5250000 },
-    { nombre: "Blusa Elegante", cantidad: 38, total: 3382000 },
-    { nombre: "Falda Plisada", cantidad: 25, total: 1875000 },
-  ]
+  useEffect(() => {
+    loadVentas()
+    // Set default dates (last 7 days)
+    const hoy = new Date()
+    const hace7Dias = new Date(hoy)
+    hace7Dias.setDate(hoy.getDate() - 7)
+    setFechaInicio(hace7Dias.toISOString().split("T")[0])
+    setFechaFin(hoy.toISOString().split("T")[0])
+  }, [])
+
+  const loadVentas = () => {
+    setVentas(getVentas())
+  }
+
+  const ventasFiltradas = ventas.filter((venta) => {
+    const fechaVenta = new Date(venta.fecha)
+    const inicio = fechaInicio ? new Date(fechaInicio) : new Date(0)
+    const fin = fechaFin ? new Date(fechaFin) : new Date()
+    fin.setHours(23, 59, 59)
+
+    return fechaVenta >= inicio && fechaVenta <= fin
+  })
+
+  // Calculate profit for each sale
+  const productos = getProducts()
+  const calcularUtilidad = () => {
+    let totalCosto = 0
+    let totalVenta = 0
+
+    ventasFiltradas.forEach((venta) => {
+      venta.productos.forEach((item) => {
+        const producto = productos.find((p) => p.id === item.producto.id)
+        if (producto) {
+          totalCosto += producto.precioCosto * item.cantidad
+          totalVenta += item.precioUnitario * item.cantidad
+        }
+      })
+    })
+
+    return {
+      totalCosto,
+      totalVenta,
+      utilidad: totalVenta - totalCosto,
+      margen: totalVenta > 0 ? ((totalVenta - totalCosto) / totalVenta) * 100 : 0,
+    }
+  }
+
+  const utilidadData = calcularUtilidad()
+
+  // Group sales by product
+  const ventasPorProducto = ventasFiltradas
+    .flatMap((venta) => venta.productos)
+    .reduce(
+      (acc, item) => {
+        const producto = productos.find((p) => p.id === item.producto.id)
+        if (!producto) return acc
+
+        const key = item.producto.id
+        if (!acc[key]) {
+          acc[key] = {
+            producto: item.producto,
+            cantidad: 0,
+            totalVenta: 0,
+            totalCosto: 0,
+            utilidad: 0,
+          }
+        }
+        acc[key].cantidad += item.cantidad
+        acc[key].totalVenta += item.precioUnitario * item.cantidad
+        acc[key].totalCosto += producto.precioCosto * item.cantidad
+        acc[key].utilidad = acc[key].totalVenta - acc[key].totalCosto
+        return acc
+      },
+      {} as Record<string, any>,
+    )
+
+  const productosTop = Object.values(ventasPorProducto)
+    .sort((a: any, b: any) => b.totalVenta - a.totalVenta)
+    .slice(0, 10)
+
+  const productosMasRentables = Object.values(ventasPorProducto)
+    .sort((a: any, b: any) => b.utilidad - a.utilidad)
+    .slice(0, 10)
+
+  // Sales by day
+  const ventasPorDia = ventasFiltradas.reduce(
+    (acc, venta) => {
+      const dia = new Date(venta.fecha).toLocaleDateString()
+      if (!acc[dia]) {
+        acc[dia] = { total: 0, transacciones: 0, utilidad: 0 }
+      }
+      acc[dia].total += venta.total
+      acc[dia].transacciones += 1
+
+      // Calculate profit
+      venta.productos.forEach((item) => {
+        const producto = productos.find((p) => p.id === item.producto.id)
+        if (producto) {
+          acc[dia].utilidad += (item.precioUnitario - producto.precioCosto) * item.cantidad
+        }
+      })
+      return acc
+    },
+    {} as Record<string, any>,
+  )
+
+  const totalVentas = ventasFiltradas.reduce((sum, v) => sum + v.total, 0)
+  const ventasContado = ventasFiltradas.filter((v) => v.estado === "completada").reduce((sum, v) => sum + v.total, 0)
+  const ventasCredito = ventasFiltradas.filter((v) => v.estado === "credito").reduce((sum, v) => sum + v.total, 0)
+  const ticketPromedio = ventasFiltradas.length > 0 ? totalVentas / ventasFiltradas.length : 0
+
+  const canViewReports = currentUser?.permisos.verReportes
+  const canViewCosts = currentUser?.permisos.verCostos
+
+  if (!canViewReports) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[80vh] gap-4 p-6">
+        <FileText className="h-16 w-16 text-muted-foreground" />
+        <h2 className="text-2xl font-bold">Acceso Denegado</h2>
+        <p className="text-muted-foreground">No tiene permisos para ver reportes</p>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reportes</h1>
-          <p className="text-muted-foreground">Análisis y estadísticas de ventas</p>
+          <h1 className="text-3xl font-bold tracking-tight">Reportes y Analíticas</h1>
+          <p className="text-muted-foreground">Análisis de ventas y rentabilidad</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -44,138 +162,265 @@ export function ReportesContent() {
         </div>
       </div>
 
+      {/* Filters */}
       <Card>
         <CardHeader>
           <CardTitle>Filtros de Reporte</CardTitle>
-          <CardDescription>Seleccione el período y tipo de reporte</CardDescription>
+          <CardDescription>Seleccione el período para analizar</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-4">
             <div className="space-y-2">
-              <Label htmlFor="tipo-reporte">Tipo de Reporte</Label>
-              <Select defaultValue="diario">
+              <Label htmlFor="tipo-reporte">Tipo de Análisis</Label>
+              <Select value={tipoReporte} onValueChange={setTipoReporte}>
                 <SelectTrigger id="tipo-reporte">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="diario">Diario</SelectItem>
-                  <SelectItem value="semanal">Semanal</SelectItem>
-                  <SelectItem value="mensual">Mensual</SelectItem>
+                  <SelectItem value="todo">Todos</SelectItem>
+                  <SelectItem value="ventas">Solo Ventas</SelectItem>
+                  <SelectItem value="rentabilidad">Rentabilidad</SelectItem>
+                  <SelectItem value="productos">Por Producto</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="fecha-inicio">Fecha Inicio</Label>
-              <Input id="fecha-inicio" type="date" />
+              <Input
+                id="fecha-inicio"
+                type="date"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="fecha-fin">Fecha Fin</Label>
-              <Input id="fecha-fin" type="date" />
+              <Input id="fecha-fin" type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
             </div>
             <div className="flex items-end">
-              <Button className="w-full">
+              <Button className="w-full" onClick={loadVentas}>
                 <FileText className="mr-2 h-4 w-4" />
-                Generar Reporte
+                Actualizar
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
+      {/* Main Stats */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Ventas Totales</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${totalVentas.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">{ventasFiltradas.length} transacciones</p>
+          </CardContent>
+        </Card>
+
+        {canViewCosts && (
+          <>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Utilidad Bruta</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-[#D4AF37]">${utilidadData.utilidad.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">Ventas menos costos</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Margen de Utilidad</CardTitle>
+                <Percent className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-[#D4AF37]">{utilidadData.margen.toFixed(1)}%</div>
+                <p className="text-xs text-muted-foreground">Rentabilidad promedio</p>
+              </CardContent>
+            </Card>
+          </>
+        )}
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Ticket Promedio</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${ticketPromedio.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Por transacción</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Sales by Payment Method */}
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Ventas por Día (Semana Actual)</CardTitle>
-            <CardDescription>Resumen de ventas diarias</CardDescription>
+            <CardTitle>Ventas por Método de Pago</CardTitle>
+            <CardDescription>Distribución de ventas</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {ventasDiarias.map((dia, index) => (
-                <div key={dia.dia} className="flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
-                      {index + 1}
-                    </div>
-                    <div>
-                      <p className="font-medium">{dia.dia}</p>
-                      <p className="text-sm text-muted-foreground">{dia.transacciones} transacciones</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary">${dia.ventas.toLocaleString("es-CO")}</p>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <TrendingUp className="h-3 w-3" />
-                      <span>+5.2%</span>
-                    </div>
-                  </div>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/10">
+                  <DollarSign className="h-6 w-6 text-green-600" />
                 </div>
-              ))}
+                <div>
+                  <p className="font-medium">Ventas de Contado</p>
+                  <p className="text-sm text-muted-foreground">
+                    {((ventasContado / totalVentas) * 100 || 0).toFixed(1)}% del total
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-green-600">${ventasContado.toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-500/10">
+                  <FileText className="h-6 w-6 text-orange-600" />
+                </div>
+                <div>
+                  <p className="font-medium">Ventas a Crédito</p>
+                  <p className="text-sm text-muted-foreground">
+                    {((ventasCredito / totalVentas) * 100 || 0).toFixed(1)}% del total
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-orange-600">${ventasCredito.toLocaleString()}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Productos Más Vendidos</CardTitle>
-            <CardDescription>Top 5 productos del período</CardDescription>
+            <CardTitle>Ventas por Día</CardTitle>
+            <CardDescription>Últimos días del período</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {productosTop.map((producto, index) => (
-                <div key={producto.nombre} className="flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
-                      #{index + 1}
-                    </div>
+            <div className="space-y-2">
+              {Object.entries(ventasPorDia)
+                .slice(-7)
+                .map(([dia, data]: [string, any]) => (
+                  <div key={dia} className="flex items-center justify-between rounded-lg border p-3">
                     <div>
-                      <p className="font-medium">{producto.nombre}</p>
-                      <p className="text-sm text-muted-foreground">{producto.cantidad} unidades</p>
+                      <p className="font-medium">{dia}</p>
+                      <p className="text-sm text-muted-foreground">{data.transacciones} transacciones</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-primary">${data.total.toLocaleString()}</p>
+                      {canViewCosts && <p className="text-sm text-[#D4AF37]">+${data.utilidad.toLocaleString()}</p>}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary">${producto.total.toLocaleString("es-CO")}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </CardContent>
         </Card>
       </div>
 
+      {/* Top Products */}
       <Card>
         <CardHeader>
-          <CardTitle>Resumen General</CardTitle>
-          <CardDescription>Estadísticas consolidadas del período</CardDescription>
+          <CardTitle>Productos Más Vendidos</CardTitle>
+          <CardDescription>Top 10 productos por volumen de ventas</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-4">
-            <div className="rounded-lg border bg-secondary p-4">
-              <p className="text-sm text-muted-foreground">Ventas Totales</p>
-              <p className="text-2xl font-bold text-primary">
-                ${ventasDiarias.reduce((sum, d) => sum + d.ventas, 0).toLocaleString("es-CO")}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {ventasDiarias.reduce((sum, d) => sum + d.transacciones, 0)} transacciones
-              </p>
-            </div>
-            <div className="rounded-lg border bg-secondary p-4">
-              <p className="text-sm text-muted-foreground">Ventas Contado</p>
-              <p className="text-2xl font-bold">$11,250,000</p>
-              <p className="text-xs text-muted-foreground mt-1">78% del total</p>
-            </div>
-            <div className="rounded-lg border bg-secondary p-4">
-              <p className="text-sm text-muted-foreground">Ventas Crédito</p>
-              <p className="text-2xl font-bold">$2,750,000</p>
-              <p className="text-xs text-muted-foreground mt-1">22% del total</p>
-            </div>
-            <div className="rounded-lg border bg-secondary p-4">
-              <p className="text-sm text-muted-foreground">Ticket Promedio</p>
-              <p className="text-2xl font-bold">$102,340</p>
-              <p className="text-xs text-muted-foreground mt-1">por transacción</p>
-            </div>
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Posición</TableHead>
+                <TableHead>Producto</TableHead>
+                <TableHead className="text-right">Cantidad</TableHead>
+                <TableHead className="text-right">Ventas</TableHead>
+                {canViewCosts && (
+                  <>
+                    <TableHead className="text-right">Costo</TableHead>
+                    <TableHead className="text-right">Utilidad</TableHead>
+                    <TableHead className="text-right">Margen</TableHead>
+                  </>
+                )}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {productosTop.map((item: any, index) => (
+                <TableRow key={item.producto.id}>
+                  <TableCell>
+                    <Badge variant={index < 3 ? "default" : "secondary"}>#{index + 1}</Badge>
+                  </TableCell>
+                  <TableCell className="font-medium">{item.producto.nombre}</TableCell>
+                  <TableCell className="text-right">{item.cantidad}</TableCell>
+                  <TableCell className="text-right font-semibold">${item.totalVenta.toLocaleString()}</TableCell>
+                  {canViewCosts && (
+                    <>
+                      <TableCell className="text-right text-muted-foreground">
+                        ${item.totalCosto.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-right font-semibold text-[#D4AF37]">
+                        ${item.utilidad.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Badge variant="outline">{((item.utilidad / item.totalVenta) * 100).toFixed(1)}%</Badge>
+                      </TableCell>
+                    </>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
+
+      {/* Most Profitable Products */}
+      {canViewCosts && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Productos Más Rentables</CardTitle>
+            <CardDescription>Top 10 productos por utilidad generada</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Posición</TableHead>
+                  <TableHead>Producto</TableHead>
+                  <TableHead className="text-right">Utilidad</TableHead>
+                  <TableHead className="text-right">Margen</TableHead>
+                  <TableHead className="text-right">Cantidad</TableHead>
+                  <TableHead className="text-right">Total Ventas</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {productosMasRentables.map((item: any, index) => (
+                  <TableRow key={item.producto.id}>
+                    <TableCell>
+                      <Badge className="bg-[#D4AF37]">#{index + 1}</Badge>
+                    </TableCell>
+                    <TableCell className="font-medium">{item.producto.nombre}</TableCell>
+                    <TableCell className="text-right font-bold text-[#D4AF37]">
+                      ${item.utilidad.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant="outline">{((item.utilidad / item.totalVenta) * 100).toFixed(1)}%</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">{item.cantidad}</TableCell>
+                    <TableCell className="text-right font-semibold">${item.totalVenta.toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
