@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { SidebarToggle } from "@/components/app-sidebar"
 
 // Mock data de productos
 const mockProductos = [
@@ -91,15 +92,20 @@ export function DescuentosContent() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Gestión de Descuentos</h1>
-        <p className="text-muted-foreground">
-          Busca productos por código o referencia para aplicar descuentos especiales
-        </p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Gestión de Descuentos</h1>
+            <p className="text-sm text-muted-foreground md:text-base">
+              Busca productos por código o referencia para aplicar descuentos especiales
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
         {/* Formulario de búsqueda y aplicación */}
         <Card>
           <CardHeader>
@@ -235,7 +241,7 @@ export function DescuentosContent() {
           <CardHeader>
             <CardTitle>Resumen de Descuentos</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -8,7 +8,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Valva - Sistema POS",
+  title: "Valva Boutique",
   description: "Sistema POS y Contable para Boutique Valva",
   generator: "v0.app",
   icons: {

@@ -20,13 +20,15 @@ import {
 import { Package, Plus, Search, Edit, Trash2, TrendingUp, DollarSign } from "lucide-react"
 import type { Product } from "@/lib/types"
 import { getProducts, saveProduct, deleteProduct, getCurrentUser } from "@/lib/storage"
+import { SidebarToggle } from "@/components/app-sidebar"
 
 export function ProductosContent() {
   const [productos, setProductos] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
-  const [currentUser, setCurrentUser] = useState(getCurrentUser())
+  const [currentUser, setCurrentUser] = useState<ReturnType<typeof getCurrentUser>>(null)
+  const [mounted, setMounted] = useState(false)
 
   const [formData, setFormData] = useState({
     codigo: "",
@@ -43,6 +45,8 @@ export function ProductosContent() {
   })
 
   useEffect(() => {
+    setMounted(true)
+    setCurrentUser(getCurrentUser())
     loadProductos()
   }, [])
 
@@ -139,7 +143,18 @@ export function ProductosContent() {
   const canEditPrices = currentUser?.permisos.editarPrecios
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Gestión de Productos</h1>
+            <p className="text-sm text-muted-foreground md:text-base">Administra tu inventario de productos</p>
+          </div>
+        </div>
+      </div>
+
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -152,7 +167,7 @@ export function ProductosContent() {
             <p className="text-xs text-muted-foreground">{productosStockBajo} con stock bajo</p>
           </CardContent>
         </Card>
-        {canViewCosts && (
+        {mounted && canViewCosts && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Valor Inventario</CardTitle>
@@ -187,18 +202,18 @@ export function ProductosContent() {
       </div>
 
       {/* Search and Add */}
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-2 md:flex-row md:gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar por nombre, código, referencia o categoría..."
+            placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-9"
           />
         </div>
-        {canEditPrices && (
-          <Button onClick={() => setDialogOpen(true)}>
+        {mounted && canEditPrices && (
+          <Button onClick={() => setDialogOpen(true)} className="w-full md:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             Nuevo Producto
           </Button>
@@ -211,30 +226,35 @@ export function ProductosContent() {
           <CardTitle>Inventario de Productos</CardTitle>
           <CardDescription>Gestión de productos con múltiples precios</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Código</TableHead>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Referencia</TableHead>
-                <TableHead>Categoría</TableHead>
+                <TableHead>Producto</TableHead>
+                <TableHead className="hidden md:table-cell">Código</TableHead>
+                <TableHead className="hidden lg:table-cell">Referencia</TableHead>
+                <TableHead className="hidden sm:table-cell">Categoría</TableHead>
                 <TableHead className="text-right">Stock</TableHead>
-                {canViewCosts && <TableHead className="text-right">Costo</TableHead>}
+                {mounted && canViewCosts && <TableHead className="hidden xl:table-cell text-right">Costo</TableHead>}
                 <TableHead className="text-right">P. Público</TableHead>
-                <TableHead className="text-right">P. Mayorista</TableHead>
-                <TableHead className="text-right">P. Especial</TableHead>
-                {canViewCosts && <TableHead className="text-right">Margen</TableHead>}
+                <TableHead className="hidden lg:table-cell text-right">P. Mayorista</TableHead>
+                <TableHead className="hidden xl:table-cell text-right">P. Especial</TableHead>
+                {mounted && canViewCosts && <TableHead className="hidden 2xl:table-cell text-right">Margen</TableHead>}
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredProductos.map((producto) => (
                 <TableRow key={producto.id}>
-                  <TableCell className="font-medium">{producto.codigo}</TableCell>
-                  <TableCell>{producto.nombre}</TableCell>
-                  <TableCell>{producto.referencia}</TableCell>
                   <TableCell>
+                    <div>
+                      <p className="font-medium">{producto.nombre}</p>
+                      <p className="text-xs text-muted-foreground md:hidden">{producto.codigo}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell font-medium">{producto.codigo}</TableCell>
+                  <TableCell className="hidden lg:table-cell">{producto.referencia}</TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <Badge variant="outline">{producto.categoria}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
@@ -248,27 +268,27 @@ export function ProductosContent() {
                       {producto.cantidad}
                     </span>
                   </TableCell>
-                  {canViewCosts && (
-                    <TableCell className="text-right">${producto.precioCosto.toLocaleString()}</TableCell>
+                  {mounted && canViewCosts && (
+                    <TableCell className="hidden xl:table-cell text-right">${producto.precioCosto.toLocaleString()}</TableCell>
                   )}
                   <TableCell className="text-right">${producto.precioVentaPublico.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">${producto.precioMayorista.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">${producto.precioEspecial.toLocaleString()}</TableCell>
-                  {canViewCosts && (
-                    <TableCell className="text-right">
+                  <TableCell className="hidden lg:table-cell text-right">${producto.precioMayorista.toLocaleString()}</TableCell>
+                  <TableCell className="hidden xl:table-cell text-right">${producto.precioEspecial.toLocaleString()}</TableCell>
+                  {mounted && canViewCosts && (
+                    <TableCell className="hidden 2xl:table-cell text-right">
                       <Badge variant="secondary">
                         {calcularMargen(producto.precioCosto, producto.precioVentaPublico)}%
                       </Badge>
                     </TableCell>
                   )}
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      {canEditPrices && (
+                    <div className="flex justify-end gap-1">
+                      {mounted && canEditPrices && (
                         <>
-                          <Button variant="ghost" size="icon" onClick={() => handleEdit(producto)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(producto)}>
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => handleDelete(producto.id)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDelete(producto.id)}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </>

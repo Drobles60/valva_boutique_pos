@@ -89,10 +89,13 @@ export function WebhooksConfig() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Configuración de Webhooks</h1>
-        <p className="text-muted-foreground">Integración con n8n y otros servicios</p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex items-center gap-3">
+        <SidebarToggle />
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Configuración de Webhooks</h1>
+          <p className="text-sm text-muted-foreground md:text-base">Integración con n8n y otros servicios</p>
+        </div>
       </div>
 
       {/* Main Config */}

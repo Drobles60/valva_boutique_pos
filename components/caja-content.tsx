@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Lock, Unlock } from "lucide-react"
+import { SidebarToggle } from "./app-sidebar"
 
 export function CajaContent() {
   const [cajaAbierta, setCajaAbierta] = React.useState(false)
@@ -28,22 +29,25 @@ export function CajaContent() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Gestión de Caja</h1>
-          <p className="text-muted-foreground">Control de apertura y cierre de caja</p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Gestión de Caja</h1>
+            <p className="text-sm text-muted-foreground md:text-base">Control de apertura y cierre de caja</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border bg-card px-4 py-2">
+        <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 md:px-4">
           {cajaAbierta ? (
             <>
-              <Unlock className="h-5 w-5 text-primary" />
-              <span className="font-medium text-primary">Caja Abierta</span>
+              <Unlock className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+              <span className="text-sm font-medium text-primary md:text-base">Caja Abierta</span>
             </>
           ) : (
             <>
-              <Lock className="h-5 w-5 text-muted-foreground" />
-              <span className="font-medium text-muted-foreground">Caja Cerrada</span>
+              <Lock className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground md:text-base">Caja Cerrada</span>
             </>
           )}
         </div>

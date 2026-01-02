@@ -3,6 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Package, TrendingUp, Users, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SidebarToggle } from "@/components/app-sidebar"
 
 export function DashboardContent() {
   const stats = [
@@ -44,15 +45,22 @@ export function DashboardContent() {
   ]
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Bienvenido al sistema Valva</p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Dashboard</h1>
+            <p className="text-sm text-muted-foreground md:text-base">Bienvenido al sistema Valva</p>
+          </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">Ver Reportes</Button>
-          <Button>Nueva Venta</Button>
+          <Button variant="outline" size="sm" className="flex-1 md:flex-none" asChild>
+            <a href="/reportes">Ver Reportes</a>
+          </Button>
+          <Button size="sm" className="flex-1 md:flex-none" asChild>
+            <a href="/ventas">Nueva Venta</a>
+          </Button>
         </div>
       </div>
 

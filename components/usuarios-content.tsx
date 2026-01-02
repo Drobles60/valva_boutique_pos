@@ -22,6 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Shield, Plus, Edit, UserCog, Users } from "lucide-react"
 import type { Usuario } from "@/lib/types"
 import { getUsuarios, saveUsuario, getCurrentUser, setCurrentUser } from "@/lib/storage"
+import { SidebarToggle } from "./app-sidebar"
 
 const rolesConfig = {
   administrador: {
@@ -179,14 +180,17 @@ export function UsuariosContent() {
   const canManageUsers = currentUser?.permisos.gestionarUsuarios
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Usuarios y Roles</h1>
-          <p className="text-muted-foreground">Gestión de usuarios y permisos del sistema</p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />  
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Usuarios y Roles</h1>
+            <p className="text-sm text-muted-foreground md:text-base">Gestión de usuarios y permisos del sistema</p>
+          </div>
         </div>
         {canManageUsers && (
-          <Button onClick={() => setDialogOpen(true)}>
+          <Button onClick={() => setDialogOpen(true)} className="w-full md:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             Nuevo Usuario
           </Button>
@@ -256,27 +260,32 @@ export function UsuariosContent() {
           <CardTitle>Usuarios del Sistema</CardTitle>
           <CardDescription>Lista de usuarios registrados y sus roles</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Email</TableHead>
+                <TableHead>Usuario</TableHead>
+                <TableHead className="hidden md:table-cell">Email</TableHead>
                 <TableHead>Rol</TableHead>
-                <TableHead>Permisos</TableHead>
-                <TableHead>Fecha Creación</TableHead>
+                <TableHead className="hidden lg:table-cell">Permisos</TableHead>
+                <TableHead className="hidden xl:table-cell">Fecha</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {usuarios.map((usuario) => (
                 <TableRow key={usuario.id}>
-                  <TableCell className="font-medium">{usuario.nombre}</TableCell>
-                  <TableCell>{usuario.email}</TableCell>
+                  <TableCell>
+                    <div>
+                      <p className="font-medium">{usuario.nombre}</p>
+                      <p className="text-sm text-muted-foreground md:hidden">{usuario.email}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">{usuario.email}</TableCell>
                   <TableCell>
                     <Badge className={rolesConfig[usuario.rol].color}>{rolesConfig[usuario.rol].label}</Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden lg:table-cell">
                     <div className="flex flex-wrap gap-1">
                       {Object.entries(usuario.permisos)
                         .filter(([_, value]) => value)
@@ -293,11 +302,12 @@ export function UsuariosContent() {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>{new Date(usuario.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell className="hidden xl:table-cell">{new Date(usuario.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm" onClick={() => handleSetCurrentUser(usuario)}>
-                        Usar
+                    <div className="flex justify-end gap-1">
+                      <Button variant="outline" size="sm" className="h-8" onClick={() => handleSetCurrentUser(usuario)}>
+                        <span className="hidden sm:inline">Usar</span>
+                        <span className="sm:hidden">OK</span>
                       </Button>
                       {canManageUsers && (
                         <Button variant="ghost" size="icon" onClick={() => handleEdit(usuario)}>

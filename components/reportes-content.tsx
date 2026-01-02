@@ -11,15 +11,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { FileText, Download, TrendingUp, DollarSign, ShoppingCart, Percent } from "lucide-react"
 import type { Venta } from "@/lib/types"
 import { getVentas, getProducts, getCurrentUser } from "@/lib/storage"
+import { SidebarToggle } from "./app-sidebar"
 
 export function ReportesContent() {
   const [ventas, setVentas] = useState<Venta[]>([])
   const [fechaInicio, setFechaInicio] = useState("")
   const [fechaFin, setFechaFin] = useState("")
   const [tipoReporte, setTipoReporte] = useState("todo")
-  const [currentUser] = useState(getCurrentUser())
+  const [currentUser, setCurrentUser] = useState<ReturnType<typeof getCurrentUser>>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+    setCurrentUser(getCurrentUser())
     loadVentas()
     // Set default dates (last 7 days)
     const hoy = new Date()
@@ -133,6 +137,10 @@ export function ReportesContent() {
   const canViewReports = currentUser?.permisos.verReportes
   const canViewCosts = currentUser?.permisos.verCostos
 
+  if (!mounted) {
+    return null
+  }
+
   if (!canViewReports) {
     return (
       <div className="flex flex-col items-center justify-center h-[80vh] gap-4 p-6">
@@ -144,20 +152,23 @@ export function ReportesContent() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reportes y Analíticas</h1>
-          <p className="text-muted-foreground">Análisis de ventas y rentabilidad</p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Reportes y Analíticas</h1>
+            <p className="text-sm text-muted-foreground md:text-base">Análisis de ventas y rentabilidad</p>
+          </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" size="sm" className="flex-1 md:flex-none">
             <Download className="mr-2 h-4 w-4" />
-            Exportar PDF
+            <span className="hidden sm:inline">Exportar</span> PDF
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" size="sm" className="flex-1 md:flex-none">
             <Download className="mr-2 h-4 w-4" />
-            Exportar Excel
+            <span className="hidden sm:inline">Exportar</span> Excel
           </Button>
         </div>
       </div>
@@ -334,7 +345,7 @@ export function ReportesContent() {
           <CardTitle>Productos Más Vendidos</CardTitle>
           <CardDescription>Top 10 productos por volumen de ventas</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>

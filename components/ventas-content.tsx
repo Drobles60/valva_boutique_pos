@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Trash2, ShoppingCart, Search } from "lucide-react"
 import type { Product, Cliente } from "@/lib/types"
 import { getProducts, getClientes, saveVenta } from "@/lib/storage"
+import { SidebarToggle } from "./app-sidebar"
 
 type CartItem = {
   product: Product
@@ -141,11 +142,14 @@ export function VentasContent() {
   )
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Punto de Venta</h1>
-          <p className="text-muted-foreground">Sistema POS con múltiples precios</p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Punto de Venta</h1>
+            <p className="text-muted-foreground">Sistema POS con múltiples precios</p>
+          </div>
         </div>
         <Button size="lg" disabled={carrito.length === 0} onClick={procesarVenta}>
           <ShoppingCart className="mr-2 h-4 w-4" />

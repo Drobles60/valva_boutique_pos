@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Search, Plus, DollarSign, Edit, CreditCard, History, AlertCircle } from "lucide-react"
 import type { Cliente, Abono } from "@/lib/types"
 import { getClientes, saveCliente, deleteCliente, saveAbono, getAbonosByCliente, getCurrentUser } from "@/lib/storage"
+import { SidebarToggle } from "./app-sidebar"
 
 export function ClientesContent() {
   const [clientes, setClientes] = useState<Cliente[]>([])
@@ -179,13 +180,16 @@ export function ClientesContent() {
   const canManageCredits = currentUser?.permisos.gestionarCreditos
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Clientes</h1>
-          <p className="text-muted-foreground">Gestión de clientes y cuentas por cobrar</p>
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Clientes</h1>
+            <p className="text-sm text-muted-foreground md:text-base">Gestión de clientes y cuentas por cobrar</p>
+          </div>
         </div>
-        <Button onClick={() => setDialogOpen(true)}>
+        <Button onClick={() => setDialogOpen(true)} className="w-full md:w-auto">
           <Plus className="mr-2 h-4 w-4" />
           Nuevo Cliente
         </Button>
@@ -246,17 +250,17 @@ export function ClientesContent() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Cliente</TableHead>
-                <TableHead>Identificación</TableHead>
-                <TableHead>Teléfono</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead className="text-right">Saldo Actual</TableHead>
-                <TableHead className="text-right">Límite Crédito</TableHead>
-                <TableHead className="text-right">Disponible</TableHead>
+                <TableHead className="hidden md:table-cell">Identificación</TableHead>
+                <TableHead className="hidden sm:table-cell">Teléfono</TableHead>
+                <TableHead className="hidden lg:table-cell">Tipo</TableHead>
+                <TableHead className="text-right">Saldo</TableHead>
+                <TableHead className="hidden lg:table-cell text-right">Límite</TableHead>
+                <TableHead className="hidden xl:table-cell text-right">Disponible</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -271,12 +275,13 @@ export function ClientesContent() {
                     <TableCell>
                       <div>
                         <p className="font-medium">{cliente.nombre}</p>
-                        <p className="text-sm text-muted-foreground">{cliente.email || "Sin email"}</p>
+                        <p className="text-sm text-muted-foreground md:hidden">{cliente.identificacion}</p>
+                        <p className="text-xs text-muted-foreground">{cliente.email || "Sin email"}</p>
                       </div>
                     </TableCell>
-                    <TableCell>{cliente.identificacion}</TableCell>
-                    <TableCell>{cliente.telefono}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">{cliente.identificacion}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{cliente.telefono || "N/A"}</TableCell>
+                    <TableCell className="hidden lg:table-cell">
                       <Badge variant={cliente.tipoCliente === "publico" ? "secondary" : "default"}>
                         {cliente.tipoCliente === "publico"
                           ? "Público"
@@ -290,8 +295,8 @@ export function ClientesContent() {
                         ${cliente.saldoActual.toLocaleString()}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right">${cliente.limiteCredito.toLocaleString()}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="hidden lg:table-cell text-right">${cliente.limiteCredito.toLocaleString()}</TableCell>
+                    <TableCell className="hidden xl:table-cell text-right">
                       {cliente.limiteCredito > 0 && (
                         <div>
                           <span
@@ -305,8 +310,8 @@ export function ClientesContent() {
                       )}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="sm" onClick={() => handleEdit(cliente)}>
+                      <div className="flex justify-end gap-1">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(cliente)}>
                           <Edit className="h-4 w-4" />
                         </Button>
                         {cliente.saldoActual > 0 && canManageCredits && (
