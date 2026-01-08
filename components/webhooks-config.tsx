@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 import { Webhook, Check, X, AlertCircle } from "lucide-react"
 import { getWebhookConfig, saveWebhookConfig } from "@/lib/webhooks"
+import { SidebarToggle } from "@/components/app-sidebar"
 
 export function WebhooksConfig() {
   const [config, setConfig] = useState({
