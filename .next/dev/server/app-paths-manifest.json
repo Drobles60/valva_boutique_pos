@@ -1,12 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/caja/page": "app/caja/page.js",
-  "/clientes/page": "app/clientes/page.js",
-  "/configuracion/webhooks/page": "app/configuracion/webhooks/page.js",
-  "/inventario/descuentos/page": "app/inventario/descuentos/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/usuarios/[id]/route": "app/api/usuarios/[id]/route.js",
+  "/api/usuarios/route": "app/api/usuarios/route.js",
   "/inventario/productos/page": "app/inventario/productos/page.js",
-  "/page": "app/page.js",
-  "/reportes/page": "app/reportes/page.js",
-  "/usuarios/page": "app/usuarios/page.js",
-  "/ventas/page": "app/ventas/page.js"
+  "/usuarios/page": "app/usuarios/page.js"
 }

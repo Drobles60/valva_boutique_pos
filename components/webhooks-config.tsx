@@ -9,6 +9,8 @@ import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 import { Webhook, Check, X, AlertCircle } from "lucide-react"
 import { getWebhookConfig, saveWebhookConfig } from "@/lib/webhooks"
+import { toast } from "sonner"
+import { SidebarToggle } from "@/components/app-sidebar"
 
 export function WebhooksConfig() {
   const [config, setConfig] = useState({
@@ -42,7 +44,9 @@ export function WebhooksConfig() {
 
   const handleSaveUrl = () => {
     saveWebhookConfig(config)
-    alert("Configuración guardada")
+    toast.success("Configuración guardada", {
+      description: "Los cambios se han guardado correctamente"
+    })
   }
 
   const handleToggleActivo = (activo: boolean) => {
@@ -53,7 +57,9 @@ export function WebhooksConfig() {
 
   const handleTestWebhook = async () => {
     if (!config.url) {
-      alert("Por favor ingrese una URL de webhook")
+      toast.error("URL requerida", {
+        description: "Por favor ingrese una URL de webhook válida"
+      })
       return
     }
 

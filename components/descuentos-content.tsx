@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { SidebarToggle } from "@/components/app-sidebar"
+import { toast } from "sonner"
 
 // Mock data de productos
 const mockProductos = [
@@ -36,7 +37,9 @@ export function DescuentosContent() {
       setPrecioConDescuento(producto.precioOriginal.toString())
       setDescuentoPorcentaje("")
     } else {
-      alert("Producto no encontrado")
+      toast.error("Producto no encontrado", {
+        description: "Verifica el código o referencia del producto"
+      })
       setProductoSeleccionado(null)
     }
   }

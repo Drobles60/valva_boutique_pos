@@ -122,20 +122,14 @@ export const getUsuarios = (): Usuario[] => {
 
   // Create default admin user
   const defaultAdmin: Usuario = {
-    id: "1",
+    id: 1,
+    username: "admin",
     nombre: "Administrador",
+    apellido: "Sistema",
     email: "admin@valva.com",
     rol: "administrador",
-    permisos: {
-      verCostos: true,
-      editarPrecios: true,
-      gestionarCreditos: true,
-      verReportes: true,
-      gestionarUsuarios: true,
-      abrirCaja: true,
-      hacerDescuentos: true,
-    },
-    createdAt: new Date().toISOString(),
+    estado: "activo",
+    created_at: new Date().toISOString(),
   }
   localStorage.setItem(STORAGE_KEYS.USUARIOS, JSON.stringify([defaultAdmin]))
   return [defaultAdmin]

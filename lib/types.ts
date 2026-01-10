@@ -50,20 +50,28 @@ export interface Venta {
 }
 
 export interface Usuario {
-  id: string
-  nombre: string
+  id: number
+  username: string
   email: string
-  rol: "administrador" | "vendedor" | "contador" | "inventario"
-  permisos: {
-    verCostos: boolean
-    editarPrecios: boolean
-    gestionarCreditos: boolean
-    verReportes: boolean
-    gestionarUsuarios: boolean
-    abrirCaja: boolean
-    hacerDescuentos: boolean
-  }
-  createdAt: string
+  nombre: string
+  apellido: string
+  telefono?: string
+  rol: "administrador" | "vendedor"
+  estado: "activo" | "inactivo" | "suspendido"
+  ultimo_acceso?: string
+  created_at: string
+  updated_at?: string
+}
+
+export interface UsuarioFormData {
+  username: string
+  email: string
+  password?: string
+  nombre: string
+  apellido: string
+  telefono?: string
+  rol: "administrador" | "vendedor"
+  estado?: "activo" | "inactivo" | "suspendido"
 }
 
 export interface Abono {

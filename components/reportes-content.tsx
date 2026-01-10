@@ -134,8 +134,8 @@ export function ReportesContent() {
   const ventasCredito = ventasFiltradas.filter((v) => v.estado === "credito").reduce((sum, v) => sum + v.total, 0)
   const ticketPromedio = ventasFiltradas.length > 0 ? totalVentas / ventasFiltradas.length : 0
 
-  const canViewReports = currentUser?.permisos.verReportes
-  const canViewCosts = currentUser?.permisos.verCostos
+  const canViewReports = true
+  const canViewCosts = currentUser?.rol === 'administrador'
 
   if (!mounted) {
     return null

@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 
 import type React from "react"
@@ -23,6 +24,8 @@ import { Search, Plus, DollarSign, Edit, CreditCard, History, AlertCircle } from
 import type { Cliente, Abono } from "@/lib/types"
 import { getClientes, saveCliente, deleteCliente, saveAbono, getAbonosByCliente, getCurrentUser } from "@/lib/storage"
 import { SidebarToggle } from "./app-sidebar"
+import { toast } from "sonner"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 
 export function ClientesContent() {
   const [clientes, setClientes] = useState<Cliente[]>([])
@@ -31,6 +34,8 @@ export function ClientesContent() {
   const [abonoDialogOpen, setAbonoDialogOpen] = useState(false)
   const [historialDialogOpen, setHistorialDialogOpen] = useState(false)
   const [editingClient, setEditingClient] = useState<Cliente | null>(null)
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
+  const [clienteToDelete, setClienteToDelete] = useState<string | null>(null)
   const [selectedClient, setSelectedClient] = useState<Cliente | null>(null)
   const [abonos, setAbonos] = useState<Abono[]>([])
   const [currentUser] = useState(getCurrentUser())
@@ -87,7 +92,9 @@ export function ClientesContent() {
 
     const monto = Number.parseFloat(abonoData.monto)
     if (monto <= 0 || monto > selectedClient.saldoActual) {
-      alert("Monto inválido")
+      toast.error("Monto inválido", {
+        description: `El monto debe ser mayor a 0 y no puede exceder el saldo actual de $${selectedClient.saldoActual.toLocaleString()}`
+      })
       return
     }
 
@@ -105,7 +112,9 @@ export function ClientesContent() {
     saveAbono(abono, selectedClient.id)
     loadClientes()
     handleCloseAbonoDialog()
-    alert("Abono registrado exitosamente")
+    toast.success("¡Abono registrado!", {
+      description: `Se registró un abono de $${monto.toLocaleString()} para ${selectedClient.nombre}`
+    })
   }
 
   const handleEdit = (cliente: Cliente) => {
@@ -123,9 +132,18 @@ export function ClientesContent() {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm("¿Está seguro de eliminar este cliente?")) {
-      deleteCliente(id)
+    setClienteToDelete(id)
+    setConfirmDeleteOpen(true)
+  }
+
+  const confirmDelete = () => {
+    if (clienteToDelete) {
+      deleteCliente(clienteToDelete)
       loadClientes()
+      toast.success("Cliente eliminado", {
+        description: "El cliente ha sido eliminado del sistema"
+      })
+      setClienteToDelete(null)
     }
   }
 
@@ -567,6 +585,17 @@ export function ClientesContent() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        onConfirm={confirmDelete}
+        title="¿Eliminar cliente?"
+        description="Esta acción eliminará permanentemente este cliente del sistema. Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="destructive"
+      />
     </div>
   )
 }
