@@ -21,6 +21,8 @@ import { Package, Plus, Search, Edit, Trash2, TrendingUp, DollarSign } from "luc
 import type { Product } from "@/lib/types"
 import { getProducts, saveProduct, deleteProduct, getCurrentUser } from "@/lib/storage"
 import { SidebarToggle } from "@/components/app-sidebar"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import { toast } from "sonner"
 
 export function ProductosContent() {
   const [productos, setProductos] = useState<Product[]>([])
@@ -29,6 +31,8 @@ export function ProductosContent() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [currentUser, setCurrentUser] = useState<ReturnType<typeof getCurrentUser>>(null)
   const [mounted, setMounted] = useState(false)
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
     codigo: "",
@@ -98,9 +102,18 @@ export function ProductosContent() {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm("¿Está seguro de eliminar este producto?")) {
-      deleteProduct(id)
+    setProductToDelete(id)
+    setConfirmDeleteOpen(true)
+  }
+
+  const confirmDelete = () => {
+    if (productToDelete) {
+      deleteProduct(productToDelete)
       loadProductos()
+      toast.success("Producto eliminado", {
+        description: "El producto ha sido eliminado del inventario"
+      })
+      setProductToDelete(null)
     }
   }
 
@@ -123,7 +136,7 @@ export function ProductosContent() {
   }
 
   const calcularMargen = (costo: number, venta: number) => {
-    if (!costo || !venta) return 0
+    if (!costo || !venta) return "0"
     return (((venta - costo) / costo) * 100).toFixed(2)
   }
 
@@ -139,8 +152,8 @@ export function ProductosContent() {
   const totalProductos = productos.length
   const productosStockBajo = productos.filter((p) => p.stockMinimo && p.cantidad <= p.stockMinimo).length
 
-  const canViewCosts = currentUser?.permisos.verCostos
-  const canEditPrices = currentUser?.permisos.editarPrecios
+  const canViewCosts = currentUser?.rol === 'administrador'
+  const canEditPrices = currentUser?.rol === 'administrador'
 
   return (
     <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
@@ -187,13 +200,13 @@ export function ProductosContent() {
           <CardContent>
             <div className="text-2xl font-bold">
               {productos.length > 0
-                ? (
+                ? String((
                     productos.reduce(
                       (sum, p) => sum + Number.parseFloat(calcularMargen(p.precioCosto, p.precioVentaPublico)),
                       0,
                     ) / productos.length
-                  ).toFixed(1)
-                : 0}
+                  ).toFixed(1))
+                : "0"}
               %
             </div>
             <p className="text-xs text-muted-foreground">Rentabilidad</p>
@@ -479,6 +492,17 @@ export function ProductosContent() {
           </form>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        onConfirm={confirmDelete}
+        title="¿Eliminar producto?"
+        description="Esta acción eliminará permanentemente este producto del inventario. Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        variant="destructive"
+      />
     </div>
   )
 }

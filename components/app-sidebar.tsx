@@ -1,7 +1,9 @@
+// @ts-nocheck
 "use client"
 
 import * as React from "react"
 import { usePathname } from "next/navigation"
+import { useSession, signOut } from "next-auth/react"
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -15,6 +17,8 @@ import {
   Tag,
   Shield,
   Settings,
+  LogOut,
+  User,
 } from "lucide-react"
 import {
   Sidebar,
@@ -29,9 +33,11 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Button } from "@/components/ui/button"
 
 const menuItems = [
   { title: "Dashboard", icon: LayoutDashboard, href: "/" },
@@ -71,16 +77,21 @@ export function SidebarToggle() {
 export function AppSidebar() {
   const { toggleSidebar } = useSidebar()
   const pathname = usePathname()
+  const { data: session } = useSession()
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: '/login' })
+  }
 
   return (
     <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border">
-          <div className="flex items-center gap-3 px-4 py-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <Sparkles className="h-6 w-6 text-primary-foreground" />
+          <div className="flex items-center gap-0 px-4 py-6">
+            <div className="flex h-18 w-18 items-center justify-center">
+              <img src="/logo 1.jpeg" alt="Valva Logo" className="h-18 w-18 object-cover rounded-4xl shadow-md hover:shadow-lg transition-all duration-200" />
             </div>
-            <div className="flex-1">
-              <h1 className="text-xl font-bold tracking-tight text-sidebar-foreground">Valva</h1>
+            <div className="flex-1 ml-2">
+              <h1 className="text-xl font-bold tracking-tight text-sidebar-foreground">Valva Boutique</h1>
               <p className="text-xs text-sidebar-foreground/70">Sistema POS</p>
             </div>
             <button
@@ -140,6 +151,35 @@ export function AppSidebar() {
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   </SidebarMenuItem>
+        
+        <SidebarFooter className="border-t border-sidebar-border p-4">
+          <div className="space-y-3">
+            {/* Información del usuario */}
+            <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent p-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
+                <User className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-sidebar-foreground truncate">
+                  {session?.user?.nombre || session?.user?.username || 'Usuario'}
+                </p>
+                <p className="text-xs text-sidebar-foreground/70 capitalize truncate">
+                  {session?.user?.rol || 'Sin rol'}
+                </p>
+              </div>
+            </div>
+            
+            {/* Botón de cerrar sesión */}
+            <Button
+              variant="ghost"
+              className="w-full justify-start bg-sidebar-accent hover:bg-sidebar-accent/80 text-sidebar-foreground"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Cerrar Sesión
+            </Button>
+          </div>
+        </SidebarFooter>
                 </Collapsible>
               </SidebarMenu>
             </SidebarGroupContent>

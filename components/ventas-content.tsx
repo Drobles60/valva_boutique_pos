@@ -11,6 +11,7 @@ import { Plus, Trash2, ShoppingCart, Search } from "lucide-react"
 import type { Product, Cliente } from "@/lib/types"
 import { getProducts, getClientes, saveVenta } from "@/lib/storage"
 import { SidebarToggle } from "./app-sidebar"
+import { toast } from "sonner"
 
 type CartItem = {
   product: Product
@@ -131,7 +132,9 @@ export function VentasContent() {
 
     saveVenta(venta)
     setCarrito([])
-    alert("Venta procesada exitosamente")
+    toast.success("¡Venta completada!", {
+      description: `Total: $${total.toLocaleString()} - ${tipoVenta === "credito" ? "Venta a crédito" : "Venta de contado"}`
+    })
   }
 
   const productosFiltrados = productos.filter(
