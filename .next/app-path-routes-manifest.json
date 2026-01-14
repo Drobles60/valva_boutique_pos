@@ -1,0 +1,18 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/auth/[...nextauth]/route": "/api/auth/[...nextauth]",
+  "/api/usuarios/[id]/route": "/api/usuarios/[id]",
+  "/api/usuarios/route": "/api/usuarios",
+  "/api/webhooks/n8n/route": "/api/webhooks/n8n",
+  "/caja/page": "/caja",
+  "/clientes/page": "/clientes",
+  "/configuracion/webhooks/page": "/configuracion/webhooks",
+  "/inventario/descuentos/page": "/inventario/descuentos",
+  "/inventario/productos/page": "/inventario/productos",
+  "/login/page": "/login",
+  "/page": "/",
+  "/reportes/page": "/reportes",
+  "/usuarios/page": "/usuarios",
+  "/ventas/page": "/ventas"
+}
