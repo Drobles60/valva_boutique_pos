@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 28, "column": 0}, "map": {"version":3,"sources":["file:///D:/Documents/NOD/valva_boutique_pos/components/auth/auth-provider.tsx"],"sourcesContent":["'use client';\r\n\r\nimport { SessionProvider } from 'next-auth/react';\r\n\r\nexport function AuthProvider({ children }: { children: React.ReactNode }) {\r\n  return <SessionProvider>{children}</SessionProvider>;\r\n}\r\n"],"names":[],"mappings":";;;;;AAEA;AAFA;;;AAIO,SAAS,aAAa,EAAE,QAAQ,EAAiC;IACtE,qBAAO,8WAAC,6QAAe;kBAAE;;;;;;AAC3B"}}]
-}
