@@ -1,6 +1,13 @@
 {
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/inventario/productos/page": "app/inventario/productos/page.js",
+  "/api/pedidos/route": "app/api/pedidos/route.js",
+  "/api/proveedores/route": "app/api/proveedores/route.js",
+  "/api/usuarios/route": "app/api/usuarios/route.js",
+  "/compras/page": "app/compras/page.js",
+  "/login/page": "app/login/page.js",
   "/page": "app/page.js",
-  "/ventas/page": "app/ventas/page.js"
+  "/pedidos/page": "app/pedidos/page.js",
+  "/proveedores/page": "app/proveedores/page.js",
+  "/reportes/page": "app/reportes/page.js",
+  "/usuarios/page": "app/usuarios/page.js"
 }

@@ -19,6 +19,8 @@ import {
   Settings,
   LogOut,
   User,
+  Building2,
+  ShoppingBag,
 } from "lucide-react"
 import {
   Sidebar,
@@ -43,8 +45,9 @@ const menuItems = [
   { title: "Dashboard", icon: LayoutDashboard, href: "/" },
   { title: "Caja", icon: DollarSign, href: "/caja" },
   { title: "Ventas (POS)", icon: ShoppingCart, href: "/ventas" },
-  { title: "Pedidos", icon: Package, href: "/pedidos" },
   { title: "Clientes", icon: Users, href: "/clientes" },
+  { title: "Proveedores", icon: Building2, href: "/proveedores" },
+  { title: "Pedidos", icon: ShoppingBag, href: "/pedidos" },
   { title: "Reportes", icon: FileText, href: "/reportes" },
   { title: "Usuarios y Roles", icon: Shield, href: "/usuarios" },
   { title: "Webhooks", icon: Settings, href: "/configuracion/webhooks" },
