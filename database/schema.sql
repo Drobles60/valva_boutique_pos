@@ -36,7 +36,7 @@ CREATE TABLE categorias_padre (
   nombre VARCHAR(100) NOT NULL UNIQUE,
   descripcion TEXT,
   orden INT DEFAULT 0,
-  estado ENUM('activo', 'inactivo') DEFAULT 'activo',
+  estado ENUM('activo','inactivo') DEFAULT 'activo',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -50,24 +50,10 @@ CREATE TABLE tipos_prenda (
   nombre VARCHAR(100) NOT NULL,
   descripcion TEXT,
   orden INT DEFAULT 0,
-  estado ENUM('activo', 'inactivo') DEFAULT 'activo',
+  estado ENUM('activo','inactivo') DEFAULT 'activo',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (categoria_padre_id) REFERENCES categorias_padre(id) ON DELETE CASCADE,
-  INDEX idx_categoria_padre (categoria_padre_id),
-  INDEX idx_estado (estado)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- =========================================
--- MARCAS
--- =========================================
-CREATE TABLE marcas (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL,
-  descripcion TEXT,
-  estado VARCHAR(30),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  FOREIGN KEY (categoria_padre_id) REFERENCES categorias_padre(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =========================================
@@ -77,7 +63,7 @@ CREATE TABLE sistemas_tallas (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   descripcion TEXT,
-  tipo ENUM('letras', 'numeros', 'mixto') DEFAULT 'letras',
+  tipo ENUM('letras','numeros','mixto') DEFAULT 'letras',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -91,12 +77,10 @@ CREATE TABLE tallas (
   valor VARCHAR(20) NOT NULL,
   descripcion VARCHAR(100),
   orden INT DEFAULT 0,
-  estado ENUM('activo', 'inactivo') DEFAULT 'activo',
+  estado ENUM('activo','inactivo') DEFAULT 'activo',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (sistema_talla_id) REFERENCES sistemas_tallas(id) ON DELETE CASCADE,
-  INDEX idx_sistema (sistema_talla_id),
-  INDEX idx_estado (estado)
+  FOREIGN KEY (sistema_talla_id) REFERENCES sistemas_tallas(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =========================================
@@ -121,28 +105,22 @@ CREATE TABLE productos (
   descripcion TEXT,
   categoria_padre_id INT UNSIGNED NOT NULL,
   tipo_prenda_id INT UNSIGNED NOT NULL,
-  marca_id INT UNSIGNED,
   talla_id INT UNSIGNED,
+  proveedor_id INT UNSIGNED NOT NULL,
   color VARCHAR(50),
   precio_compra DECIMAL(10,2),
   precio_venta DECIMAL(10,2),
   precio_minimo DECIMAL(10,2),
   stock_actual INT DEFAULT 0,
-  estado ENUM('activo', 'inactivo', 'agotado') DEFAULT 'activo',
+  estado ENUM('activo','inactivo','agotado') DEFAULT 'activo',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (categoria_padre_id) REFERENCES categorias_padre(id) ON DELETE RESTRICT,
-  FOREIGN KEY (tipo_prenda_id) REFERENCES tipos_prenda(id) ON DELETE RESTRICT,
-  FOREIGN KEY (marca_id) REFERENCES marcas(id) ON DELETE SET NULL,
-  FOREIGN KEY (talla_id) REFERENCES tallas(id) ON DELETE SET NULL,
-  INDEX idx_categoria_padre (categoria_padre_id),
-  INDEX idx_tipo_prenda (tipo_prenda_id),
-  INDEX idx_marca (marca_id),
-  INDEX idx_talla (talla_id),
-  INDEX idx_estado (estado),
-  INDEX idx_sku (sku),
-  INDEX idx_codigo_barras (codigo_barras)
+  FOREIGN KEY (categoria_padre_id) REFERENCES categorias_padre(id),
+  FOREIGN KEY (tipo_prenda_id) REFERENCES tipos_prenda(id),
+  FOREIGN KEY (talla_id) REFERENCES tallas(id),
+  FOREIGN KEY (proveedor_id) REFERENCES proveedores(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- =========================================
 -- MOVIMIENTOS INVENTARIO
@@ -230,55 +208,50 @@ CREATE TABLE clientes (
 -- =========================================
 CREATE TABLE proveedores (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  codigo VARCHAR(50),
-  razon_social VARCHAR(200),
+  codigo VARCHAR(20) UNIQUE AFTER id,
+  ruc VARCHAR(50) NOT NULL UNIQUE,
+  razon_social VARCHAR(200) NOT NULL,
   nombre_comercial VARCHAR(200),
-  ruc VARCHAR(50),
-  email VARCHAR(150),
-  telefono VARCHAR(30),
+  telefono VARCHAR(30) NOT NULL,
   celular VARCHAR(30),
+  email VARCHAR(150),
   direccion TEXT,
   ciudad VARCHAR(100),
   provincia VARCHAR(100),
   persona_contacto VARCHAR(100),
   telefono_contacto VARCHAR(30),
-  dias_credito INT,
-  limite_credito DECIMAL(10,2),
-  saldo_pendiente DECIMAL(10,2),
-  estado VARCHAR(30),
+  estado ENUM('activo','inactivo') DEFAULT 'activo',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
 -- =========================================
--- COMPRAS
+-- PEDIDOS A PROVEEDORES
 -- =========================================
-CREATE TABLE compras (
+CREATE TABLE pedidos (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  numero_compra VARCHAR(50),
-  proveedor_id INT UNSIGNED,
-  fecha_compra DATE,
-  subtotal DECIMAL(10,2),
-  iva DECIMAL(10,2),
-  descuento DECIMAL(10,2),
-  total DECIMAL(10,2),
-  estado VARCHAR(30),
+  numero_pedido VARCHAR(50) UNIQUE,
+  proveedor_id INT UNSIGNED NOT NULL,
+  fecha_pedido DATE NOT NULL,
+  costo_total DECIMAL(10,2) NOT NULL,
+  estado ENUM('pendiente', 'recibido') DEFAULT 'pendiente',
+  fecha_recibido TIMESTAMP NULL,
   usuario_id INT UNSIGNED,
+  notas TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (proveedor_id) REFERENCES proveedores(id),
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE detalle_compras (
+CREATE TABLE detalle_pedidos (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  compra_id INT UNSIGNED,
-  producto_id INT UNSIGNED,
-  cantidad INT,
-  precio_unitario DECIMAL(10,2),
-  subtotal DECIMAL(10,2),
-  FOREIGN KEY (compra_id) REFERENCES compras(id),
-  FOREIGN KEY (producto_id) REFERENCES productos(id)
+  pedido_id INT UNSIGNED NOT NULL,
+  descripcion VARCHAR(500) NOT NULL,
+  cantidad INT NOT NULL,
+  precio_total DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =========================================

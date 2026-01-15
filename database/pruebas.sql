@@ -1,7 +1,20 @@
 -- ============================================
--- ARCHIVO DE PRUEBAS - Usuario Admin
+-- ARCHIVO DE PRUEBAS Y MODIFICACIONES
 -- ============================================
 USE valva_boutique_pos;
+
+-- ============================================
+-- ALTER TABLE: Agregar campo estado a proveedores
+-- ============================================
+ALTER TABLE proveedores 
+ADD COLUMN estado ENUM('activo','inactivo') DEFAULT 'activo' AFTER telefono_contacto;
+
+-- Verificar la estructura actualizada
+DESCRIBE proveedores;
+
+-- ============================================
+-- DATOS DE PRUEBA - Usuario Admin
+-- ============================================
 
 -- Insertar usuario administrador de prueba
 -- Username: admin
