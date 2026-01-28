@@ -115,11 +115,14 @@ export function PedidosContent() {
     try {
       const response = await fetch('/api/proveedores')
       if (!response.ok) throw new Error('Error al cargar proveedores')
-      const data = await response.json()
-      setProveedores(data.filter((p: Proveedor) => p.estado === 'activo'))
+      const result = await response.json()
+      // La API retorna { success: true, data: [...] }
+      const data = result.data || result
+      setProveedores(Array.isArray(data) ? data.filter((p: Proveedor) => p.estado === 'activo') : [])
     } catch (error: any) {
       console.error('Error al cargar proveedores:', error)
       toast.error('Error al cargar proveedores')
+      setProveedores([])
     }
   }
 

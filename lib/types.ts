@@ -2,17 +2,20 @@ export interface Product {
   id: string
   codigo: string
   nombre: string
-  referencia: string // Código de barras
+  referencia: string // SKU
   categoria: string
+  tipoPrenda?: string // Tipo específico de prenda
+  talla?: string // Talla del producto
   cantidad: number
   precioCosto: number
   precioVentaPublico: number // Precio retail normal
   precioMayorista: number // Precio wholesale
-  precioEspecial: number // Precio especial
+  precioEspecial: number // Precio especial/mínimo
   stockMinimo?: number
   proveedor?: string
   descuento?: number
   precioConDescuento?: number
+  color?: string // Color del producto
   createdAt: string
   updatedAt: string
 }

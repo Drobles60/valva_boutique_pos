@@ -1,9 +1,0 @@
-1:"$Sreact.fragment"
-2:I[11522,["/_next/static/chunks/37d7a53caae2953f.js","/_next/static/chunks/b21eb09bb24ef616.js","/_next/static/chunks/ee39fc1798ba27df.js","/_next/static/chunks/4d004c3b1cca8295.js","/_next/static/chunks/c4d1b1cc12c0433e.js"],"SidebarProvider"]
-3:I[60313,["/_next/static/chunks/37d7a53caae2953f.js","/_next/static/chunks/b21eb09bb24ef616.js","/_next/static/chunks/ee39fc1798ba27df.js","/_next/static/chunks/4d004c3b1cca8295.js","/_next/static/chunks/c4d1b1cc12c0433e.js"],"AppSidebar"]
-4:I[11522,["/_next/static/chunks/37d7a53caae2953f.js","/_next/static/chunks/b21eb09bb24ef616.js","/_next/static/chunks/ee39fc1798ba27df.js","/_next/static/chunks/4d004c3b1cca8295.js","/_next/static/chunks/c4d1b1cc12c0433e.js"],"SidebarInset"]
-5:I[12143,["/_next/static/chunks/37d7a53caae2953f.js","/_next/static/chunks/b21eb09bb24ef616.js","/_next/static/chunks/ee39fc1798ba27df.js","/_next/static/chunks/4d004c3b1cca8295.js","/_next/static/chunks/c4d1b1cc12c0433e.js"],"CajaContent"]
-6:I[89836,["/_next/static/chunks/1e086dccfb274931.js"],"OutletBoundary"]
-7:"$Sreact.suspense"
-0:{"buildId":"AjQI804WnUq91VptMsrpy","rsc":["$","$1","c",{"children":[["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{"children":["$","$L5",null,{}]}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/ee39fc1798ba27df.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/4d004c3b1cca8295.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/c4d1b1cc12c0433e.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"loading":null,"isPartial":false}
-8:null

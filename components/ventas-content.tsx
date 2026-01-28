@@ -30,9 +30,49 @@ export function VentasContent() {
   const [clienteSeleccionado, setClienteSeleccionado] = React.useState<Cliente | null>(null)
 
   React.useEffect(() => {
-    setProductos(getProducts())
+    loadProductos()
     setClientes(getClientes())
   }, [])
+
+  const loadProductos = async () => {
+    try {
+      const response = await fetch('/api/productos')
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && result.data) {
+          // Convertir formato de API a formato de Product
+          const productosConvertidos = result.data.map((p: any) => ({
+            id: p.id?.toString() || '',
+            nombre: p.nombre || '',
+            codigo: p.codigo_barras || '',
+            referencia: p.sku || '',
+            categoria: p.categoria_nombre || '',
+            tipoPrenda: p.tipo_prenda_nombre || '',
+            talla: p.talla_valor || '',
+            color: p.color || '',
+            cantidad: Number(p.stock_actual) || 0,
+            stockMinimo: 5,
+            precioCosto: Number(p.precio_compra) || 0,
+            precioVentaPublico: p.tiene_descuento ? Number(p.precio_final) : Number(p.precio_venta),
+            precioMayorista: Number(p.precio_venta) || 0,
+            precioEspecial: Number(p.precio_minimo) || 0,
+            proveedor: p.proveedor_nombre || '',
+            // Si tiene descuento, marcar el producto
+            descuento: p.tiene_descuento && p.descuento_aplicado ? 
+              (p.descuento_aplicado.tipo === 'porcentaje' ? p.descuento_aplicado.valor : null) : undefined,
+            precioConDescuento: p.tiene_descuento ? Number(p.precio_final) : undefined,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }))
+          setProductos(productosConvertidos)
+        }
+      }
+    } catch (error) {
+      console.error('Error cargando productos:', error)
+      // Fallback a localStorage
+      setProductos(getProducts())
+    }
+  }
 
   React.useEffect(() => {
     if (clienteSeleccionado) {
