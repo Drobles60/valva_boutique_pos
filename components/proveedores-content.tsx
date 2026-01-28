@@ -76,13 +76,16 @@ export function ProveedoresContent() {
       setLoading(true)
       const response = await fetch('/api/proveedores')
       if (!response.ok) throw new Error('Error al cargar proveedores')
-      const data = await response.json()
-      setProveedores(data)
+      const result = await response.json()
+      // La API retorna { success: true, data: [...] }
+      const data = result.data || result
+      setProveedores(Array.isArray(data) ? data : [])
     } catch (error: any) {
       console.error('Error al cargar proveedores:', error)
       toast.error('Error al cargar proveedores', {
         description: error.message
       })
+      setProveedores([])
     } finally {
       setLoading(false)
     }
@@ -293,15 +296,15 @@ export function ProveedoresContent() {
     })
   }
 
-  const filteredProveedores = proveedores.filter(
+  const filteredProveedores = (Array.isArray(proveedores) ? proveedores : []).filter(
     (p) =>
       p.razon_social.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.ruc.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (p.nombre_comercial && p.nombre_comercial.toLowerCase().includes(searchTerm.toLowerCase())),
   )
 
-  const totalProveedores = proveedores.length
-  const proveedoresActivos = proveedores.filter((p) => p.estado === 'activo').length
+  const totalProveedores = Array.isArray(proveedores) ? proveedores.length : 0
+  const proveedoresActivos = Array.isArray(proveedores) ? proveedores.filter((p) => p.estado === 'activo').length : 0
 
   return (
     <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">

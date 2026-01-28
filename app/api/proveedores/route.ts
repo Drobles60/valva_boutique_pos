@@ -4,19 +4,23 @@ import { query } from '@/lib/db';
 // GET - Obtener todos los proveedores
 export async function GET() {
   try {
-    const proveedores = await query<any[]>(
+    const result: any = await query(
       `SELECT id, codigo, ruc, razon_social, nombre_comercial, telefono, celular, email,
               direccion, ciudad, provincia, persona_contacto, telefono_contacto,
               estado, created_at, updated_at 
        FROM proveedores 
-       ORDER BY created_at DESC`
+       WHERE estado = 'activo'
+       ORDER BY razon_social ASC`
     );
 
-    return NextResponse.json(proveedores);
+    return NextResponse.json({
+      success: true,
+      data: Array.isArray(result) ? result : []
+    });
   } catch (error: any) {
     console.error('Error al obtener proveedores:', error);
     return NextResponse.json(
-      { error: error.message || 'Error al obtener proveedores' },
+      { success: false, error: error.message || 'Error al obtener proveedores' },
       { status: 500 }
     );
   }
