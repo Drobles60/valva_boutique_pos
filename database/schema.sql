@@ -235,6 +235,8 @@ CREATE TABLE pedidos (
   proveedor_id INT UNSIGNED NOT NULL,
   fecha_pedido DATE NOT NULL,
   costo_total DECIMAL(10,2) NOT NULL,
+  total_abonado DECIMAL(10,2) DEFAULT 0.00,
+  saldo_pendiente DECIMAL(10,2) DEFAULT 0.00,
   estado ENUM('pendiente', 'recibido') DEFAULT 'pendiente',
   fecha_recibido TIMESTAMP NULL,
   usuario_id INT UNSIGNED,
@@ -252,6 +254,23 @@ CREATE TABLE detalle_pedidos (
   cantidad INT NOT NULL,
   precio_total DECIMAL(10,2) NOT NULL,
   FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabla de abonos a pedidos
+CREATE TABLE abonos_pedidos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  pedido_id INT UNSIGNED NOT NULL,
+  monto DECIMAL(10,2) NOT NULL,
+  fecha_abono TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  metodo_pago ENUM('efectivo', 'transferencia', 'tarjeta', 'cheque', 'otro') DEFAULT 'efectivo',
+  referencia VARCHAR(100),
+  notas TEXT,
+  usuario_id INT UNSIGNED,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL,
+  INDEX idx_pedido_id (pedido_id),
+  INDEX idx_fecha_abono (fecha_abono)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =========================================
@@ -619,3 +638,64 @@ INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
 (72, 5),  -- Bolso Satchel → Única
 (73, 5);  -- Bolso Bucket → Única
 
+-- =========================================
+-- TRIGGERS PARA ABONOS A PEDIDOS
+-- =========================================
+
+DELIMITER //
+
+-- Trigger: Actualizar saldos al insertar un abono
+CREATE TRIGGER after_abono_insert
+AFTER INSERT ON abonos_pedidos
+FOR EACH ROW
+BEGIN
+  UPDATE pedidos 
+  SET total_abonado = total_abonado + NEW.monto,
+      saldo_pendiente = saldo_pendiente - NEW.monto
+  WHERE id = NEW.pedido_id;
+END//
+
+-- Trigger: Actualizar saldos al eliminar un abono
+CREATE TRIGGER after_abono_delete
+AFTER DELETE ON abonos_pedidos
+FOR EACH ROW
+BEGIN
+  UPDATE pedidos 
+  SET total_abonado = total_abonado - OLD.monto,
+      saldo_pendiente = saldo_pendiente + OLD.monto
+  WHERE id = OLD.pedido_id;
+END//
+
+DELIMITER ;
+
+-- =========================================
+-- VISTAS
+-- =========================================
+
+-- Vista: Resumen de estado de pagos de pedidos
+CREATE OR REPLACE VIEW vista_estado_pedidos AS
+SELECT 
+  p.id,
+  p.numero_pedido,
+  p.proveedor_id,
+  pr.razon_social as proveedor_nombre,
+  pr.codigo as proveedor_codigo,
+  p.fecha_pedido,
+  p.costo_total,
+  p.total_abonado,
+  p.saldo_pendiente,
+  p.estado,
+  p.fecha_recibido,
+  CASE 
+    WHEN p.saldo_pendiente = 0 THEN 'pagado'
+    WHEN p.total_abonado = 0 THEN 'sin_pagar'
+    WHEN p.saldo_pendiente > 0 AND p.total_abonado > 0 THEN 'pago_parcial'
+    ELSE 'sin_pagar'
+  END as estado_pago,
+  ROUND((p.total_abonado / p.costo_total) * 100, 2) as porcentaje_pagado,
+  (SELECT COUNT(*) FROM abonos_pedidos WHERE pedido_id = p.id) as cantidad_abonos,
+  p.created_at,
+  p.updated_at
+FROM pedidos p
+LEFT JOIN proveedores pr ON p.proveedor_id = pr.id
+ORDER BY p.created_at DESC;

@@ -231,7 +231,6 @@ async function GET() {
               direccion, ciudad, provincia, persona_contacto, telefono_contacto,
               estado, created_at, updated_at 
        FROM proveedores 
-       WHERE estado = 'activo'
        ORDER BY razon_social ASC`);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
@@ -323,7 +322,7 @@ async function PUT(request) {
         const body = await request.json();
         let { id, codigo, ruc, razonSocial, nombreComercial, telefono, celular, email, direccion, ciudad, provincia, personaContacto, telefonoContacto } = body;
         // Sanitizar valores undefined/vacíos a null
-        codigo = codigo || null;
+        // Pero no sobrescribir el código si viene null (mantener el existente)
         nombreComercial = nombreComercial || null;
         celular = celular || null;
         email = email || null;
@@ -352,6 +351,16 @@ async function PUT(request) {
                 status: 400
             });
         }
+        // Si el código viene null o undefined, mantener el existente
+        let codigoFinal = codigo;
+        if (!codigo) {
+            const proveedorActual = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('SELECT codigo FROM proveedores WHERE id = ?', [
+                id
+            ]);
+            if (proveedorActual.length > 0) {
+                codigoFinal = proveedorActual[0].codigo;
+            }
+        }
         // Actualizar el proveedor
         await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`UPDATE proveedores SET
         codigo = ?,
@@ -368,7 +377,7 @@ async function PUT(request) {
         telefono_contacto = ?,
         estado = ?
        WHERE id = ?`, [
-            codigo,
+            codigoFinal,
             ruc,
             razonSocial,
             nombreComercial,

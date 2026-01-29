@@ -9,7 +9,6 @@ export async function GET() {
               direccion, ciudad, provincia, persona_contacto, telefono_contacto,
               estado, created_at, updated_at 
        FROM proveedores 
-       WHERE estado = 'activo'
        ORDER BY razon_social ASC`
     );
 
@@ -140,7 +139,7 @@ export async function PUT(request: NextRequest) {
     } = body;
 
     // Sanitizar valores undefined/vacíos a null
-    codigo = codigo || null;
+    // Pero no sobrescribir el código si viene null (mantener el existente)
     nombreComercial = nombreComercial || null;
     celular = celular || null;
     email = email || null;
@@ -171,6 +170,18 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // Si el código viene null o undefined, mantener el existente
+    let codigoFinal = codigo;
+    if (!codigo) {
+      const proveedorActual = await query<any[]>(
+        'SELECT codigo FROM proveedores WHERE id = ?',
+        [id]
+      );
+      if (proveedorActual.length > 0) {
+        codigoFinal = proveedorActual[0].codigo;
+      }
+    }
+
     // Actualizar el proveedor
     await query(
       `UPDATE proveedores SET
@@ -189,7 +200,7 @@ export async function PUT(request: NextRequest) {
         estado = ?
        WHERE id = ?`,
       [
-        codigo,
+        codigoFinal,
         ruc,
         razonSocial,
         nombreComercial,

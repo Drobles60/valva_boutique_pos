@@ -6,6 +6,7 @@ export async function GET() {
   try {
     const pedidos = await query<any[]>(
       `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              p.total_abonado, p.saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -68,12 +69,12 @@ export async function POST(request: NextRequest) {
       numeroPedido = `PED-${(ultimoNumero + 1).toString().padStart(3, '0')}`;
     }
 
-    // Insertar el pedido
+    // Insertar el pedido con saldo_pendiente igual al costo_total
     const result = await query<any>(
       `INSERT INTO pedidos (
-        numero_pedido, proveedor_id, fecha_pedido, costo_total, estado, usuario_id, notas
-      ) VALUES (?, ?, ?, ?, 'pendiente', ?, ?)`,
-      [numeroPedido, proveedorId, fechaPedido, costoTotal, usuarioId || null, notas || null]
+        numero_pedido, proveedor_id, fecha_pedido, costo_total, total_abonado, saldo_pendiente, estado, usuario_id, notas
+      ) VALUES (?, ?, ?, ?, 0, ?, 'pendiente', ?, ?)`,
+      [numeroPedido, proveedorId, fechaPedido, costoTotal, costoTotal, usuarioId || null, notas || null]
     );
 
     const pedidoId = result.insertId;

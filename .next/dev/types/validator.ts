@@ -182,6 +182,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../../app/api/pedidos/[id]/abonos/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/pedidos/[id]/abonos">> = Specific
+  const handler = {} as typeof import("../../../app/api/pedidos/[id]/abonos/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/api/pedidos/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/pedidos">> = Specific
@@ -222,6 +231,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/productos/verificar-codigo">> = Specific
   const handler = {} as typeof import("../../../app/api/productos/verificar-codigo/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/api/proveedores/[id]/abonos/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/proveedores/[id]/abonos">> = Specific
+  const handler = {} as typeof import("../../../app/api/proveedores/[id]/abonos/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

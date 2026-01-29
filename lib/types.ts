@@ -16,6 +16,16 @@ export interface Product {
   descuento?: number
   precioConDescuento?: number
   color?: string // Color del producto
+  // Información de descuentos aplicados
+  tieneDescuento?: boolean
+  descuentoAplicado?: {
+    id: number
+    nombre: string
+    tipo: 'fijo' | 'porcentaje'
+    valor: number
+  } | null
+  precioOriginal?: number
+  montoDescuento?: number
   createdAt: string
   updatedAt: string
 }

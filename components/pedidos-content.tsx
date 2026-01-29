@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Search, Plus, Eye, ShoppingBag, Package, CheckCircle, Clock, X } from "lucide-react"
+import { Search, Plus, Eye, ShoppingBag, Package, CheckCircle, Clock, X, DollarSign, Wallet } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
 
@@ -49,6 +49,16 @@ type DetallePedido = {
   precioTotal: number
 }
 
+type Abono = {
+  id: number
+  monto: number
+  fecha_abono: string
+  metodo_pago: "efectivo" | "transferencia" | "tarjeta" | "cheque" | "otro"
+  referencia?: string
+  notas?: string
+  usuario_id?: number
+}
+
 type Pedido = {
   id: number
   numero_pedido: string
@@ -57,11 +67,16 @@ type Pedido = {
   proveedor_codigo?: string
   fecha_pedido: string
   costo_total: number
+  total_abonado: number
+  saldo_pendiente: number
   estado: "pendiente" | "recibido"
+  estado_pago?: "sin_pagar" | "pago_parcial" | "pagado"
+  porcentaje_pagado?: number
   fecha_recibido?: string
   usuario_id?: number
   notas?: string
   detalles: DetallePedido[]
+  abonos?: Abono[]
   created_at: string
   updated_at: string
 }
@@ -73,8 +88,18 @@ export function PedidosContent() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [detalleDialogOpen, setDetalleDialogOpen] = useState(false)
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const [abonoDialogOpen, setAbonoDialogOpen] = useState(false)
+  const [abonoProveedorDialogOpen, setAbonoProveedorDialogOpen] = useState(false)
   const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null)
+  const [selectedProveedor, setSelectedProveedor] = useState<Proveedor | null>(null)
   const [loading, setLoading] = useState(false)
+  
+  const [abonoForm, setAbonoForm] = useState({
+    monto: "",
+    metodoPago: "efectivo" as "efectivo" | "transferencia" | "tarjeta" | "cheque" | "otro",
+    referencia: "",
+    notas: "",
+  })
   
   const [formData, setFormData] = useState({
     proveedorId: "",
@@ -118,7 +143,8 @@ export function PedidosContent() {
       const result = await response.json()
       // La API retorna { success: true, data: [...] }
       const data = result.data || result
-      setProveedores(Array.isArray(data) ? data.filter((p: Proveedor) => p.estado === 'activo') : [])
+      // Cargar todos los proveedores sin filtrar
+      setProveedores(Array.isArray(data) ? data : [])
     } catch (error: any) {
       console.error('Error al cargar proveedores:', error)
       toast.error('Error al cargar proveedores')
@@ -260,6 +286,148 @@ export function PedidosContent() {
     setDetalleDialogOpen(true)
   }
 
+  const abrirDialogAbonoPedido = (pedido: Pedido) => {
+    if (pedido.saldo_pendiente <= 0) {
+      toast.info('Este pedido ya está completamente pagado')
+      return
+    }
+    setSelectedPedido(pedido)
+    setAbonoForm({
+      monto: "",
+      metodoPago: "efectivo",
+      referencia: "",
+      notas: "",
+    })
+    setAbonoDialogOpen(true)
+  }
+
+  const abrirDialogAbonoProveedor = () => {
+    // Filtrar proveedores que tengan pedidos con saldo pendiente
+    const proveedoresConDeuda = proveedores.filter(prov => 
+      pedidos.some(ped => ped.proveedor_id === prov.id && ped.saldo_pendiente > 0)
+    )
+    
+    if (proveedoresConDeuda.length === 0) {
+      toast.info('No hay proveedores con saldo pendiente')
+      return
+    }
+    
+    setAbonoForm({
+      monto: "",
+      metodoPago: "efectivo",
+      referencia: "",
+      notas: "",
+    })
+    setSelectedProveedor(null)
+    setAbonoProveedorDialogOpen(true)
+  }
+
+  const registrarAbonoPedido = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!selectedPedido) return
+    
+    const monto = parseFloat(abonoForm.monto)
+    
+    if (!monto || monto <= 0) {
+      toast.error('Ingrese un monto válido')
+      return
+    }
+    
+    if (monto > selectedPedido.saldo_pendiente) {
+      toast.error('El monto no puede ser mayor al saldo pendiente')
+      return
+    }
+
+    try {
+      setLoading(true)
+      
+      const response = await fetch(`/api/pedidos/${selectedPedido.id}/abonos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          monto,
+          metodoPago: abonoForm.metodoPago,
+          referencia: abonoForm.referencia || undefined,
+          notas: abonoForm.notas || undefined,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al registrar abono')
+      }
+
+      await loadPedidos()
+      setAbonoDialogOpen(false)
+      setSelectedPedido(null)
+      
+      toast.success('Abono registrado correctamente', {
+        description: `Pedido ${selectedPedido.numero_pedido}: $${monto.toLocaleString()}`
+      })
+    } catch (error: any) {
+      console.error('Error al registrar abono:', error)
+      toast.error('Error al registrar abono', {
+        description: error.message
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const registrarAbonoProveedor = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!selectedProveedor) {
+      toast.error('Seleccione un proveedor')
+      return
+    }
+    
+    const monto = parseFloat(abonoForm.monto)
+    
+    if (!monto || monto <= 0) {
+      toast.error('Ingrese un monto válido')
+      return
+    }
+
+    try {
+      setLoading(true)
+      
+      const response = await fetch(`/api/proveedores/${selectedProveedor.id}/abonos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          monto,
+          metodoPago: abonoForm.metodoPago,
+          referencia: abonoForm.referencia || undefined,
+          notas: abonoForm.notas || undefined,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al registrar abono')
+      }
+
+      await loadPedidos()
+      setAbonoProveedorDialogOpen(false)
+      setSelectedProveedor(null)
+      
+      toast.success('Abono distribuido correctamente', {
+        description: `${data.pedidos_afectados} pedido(s) afectado(s) - Total: $${data.monto_aplicado.toLocaleString()}`
+      })
+    } catch (error: any) {
+      console.error('Error al registrar abono:', error)
+      toast.error('Error al registrar abono', {
+        description: error.message
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleCloseDialog = () => {
     setDialogOpen(false)
     setFormData({
@@ -280,6 +448,7 @@ export function PedidosContent() {
   const totalPedidos = pedidos.length
   const pedidosPendientes = pedidos.filter(p => p.estado === 'pendiente').length
   const pedidosRecibidos = pedidos.filter(p => p.estado === 'recibido').length
+  const totalSaldoPendiente = pedidos.reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -296,14 +465,24 @@ export function PedidosContent() {
               <h2 className="text-2xl font-bold">Gestión de Pedidos</h2>
               <p className="text-muted-foreground">Registra y controla pedidos a proveedores</p>
             </div>
-            <Button onClick={() => setDialogOpen(true)} className="w-full md:w-auto">
-              <Plus className="mr-2 h-4 w-4" />
-              Nuevo Pedido
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={abrirDialogAbonoProveedor} 
+                variant="outline"
+                className="w-full md:w-auto"
+              >
+                <Wallet className="mr-2 h-4 w-4" />
+                Abonar a Proveedor
+              </Button>
+              <Button onClick={() => setDialogOpen(true)} className="w-full md:w-auto">
+                <Plus className="mr-2 h-4 w-4" />
+                Nuevo Pedido
+              </Button>
+            </div>
           </div>
 
           {/* Stats */}
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Pedidos</CardTitle>
@@ -331,6 +510,17 @@ export function PedidosContent() {
                 <div className="text-2xl font-bold text-green-600">{pedidosRecibidos}</div>
               </CardContent>
             </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Saldo Pendiente</CardTitle>
+                <DollarSign className="h-4 w-4 text-red-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-600">
+                  ${totalSaldoPendiente.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Search y tabla */}
@@ -348,29 +538,31 @@ export function PedidosContent() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="overflow-x-auto">
-              <Table>
+            <CardContent className="overflow-x-auto -mx-6 sm:mx-0">
+              <Table className="text-sm">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Número</TableHead>
-                    <TableHead>Proveedor</TableHead>
-                    <TableHead>Fecha Pedido</TableHead>
-                    <TableHead>Fecha Entrega</TableHead>
-                    <TableHead className="text-right">Costo Total</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead className="text-right">Acciones</TableHead>
+                    <TableHead className="min-w-[100px]">Número</TableHead>
+                    <TableHead className="min-w-[150px]">Proveedor</TableHead>
+                    <TableHead className="min-w-[100px]">Fecha Pedido</TableHead>
+                    <TableHead className="min-w-[100px]">Fecha Entrega</TableHead>
+                    <TableHead className="text-right min-w-[100px]">Costo Total</TableHead>
+                    <TableHead className="text-right min-w-[100px]">Total Abonado</TableHead>
+                    <TableHead className="text-right min-w-[120px]">Saldo Pendiente</TableHead>
+                    <TableHead className="min-w-[90px]">Estado</TableHead>
+                    <TableHead className="text-right min-w-[120px]">Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {loading && pedidos.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8">
+                      <TableCell colSpan={9} className="text-center py-8">
                         Cargando pedidos...
                       </TableCell>
                     </TableRow>
                   ) : filteredPedidos.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                         No se encontraron pedidos
                       </TableCell>
                     </TableRow>
@@ -408,6 +600,16 @@ export function PedidosContent() {
                         <TableCell className="text-right font-medium">
                           ${Number(pedido.costo_total).toFixed(2)}
                         </TableCell>
+                        <TableCell className="text-right">
+                          <span className="font-medium text-blue-600">
+                            ${Number(pedido.total_abonado || 0).toFixed(2)}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <span className={`font-medium ${Number(pedido.saldo_pendiente || 0) === 0 ? 'text-green-600' : 'text-orange-600'}`}>
+                            ${Number(pedido.saldo_pendiente || pedido.costo_total).toFixed(2)}
+                          </span>
+                        </TableCell>
                         <TableCell>
                           <Badge variant={pedido.estado === 'recibido' ? 'default' : 'secondary'}>
                             {pedido.estado === 'recibido' ? 'Recibido' : 'Pendiente'}
@@ -424,6 +626,17 @@ export function PedidosContent() {
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
+                            {pedido.saldo_pendiente > 0 && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => abrirDialogAbonoPedido(pedido)}
+                                title="Registrar abono"
+                              >
+                                <DollarSign className="h-4 w-4 text-blue-600" />
+                              </Button>
+                            )}
                             {pedido.estado === 'pendiente' && (
                               <Button
                                 variant="ghost"
@@ -450,7 +663,7 @@ export function PedidosContent() {
 
       {/* Dialog Nuevo Pedido */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto w-[95vw] sm:w-full">
           <DialogHeader>
             <DialogTitle>Nuevo Pedido a Proveedor</DialogTitle>
             <DialogDescription>
@@ -459,7 +672,7 @@ export function PedidosContent() {
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="proveedor">Proveedor *</Label>
                   <Select
@@ -470,11 +683,13 @@ export function PedidosContent() {
                       <SelectValue placeholder="Seleccione proveedor" />
                     </SelectTrigger>
                     <SelectContent>
-                      {proveedores.map((prov) => (
-                        <SelectItem key={prov.id} value={prov.id.toString()}>
-                          {prov.razon_social} {prov.codigo && `(${prov.codigo})`}
-                        </SelectItem>
-                      ))}
+                      {proveedores
+                        .filter(prov => prov.estado === 'activo')
+                        .map((prov) => (
+                          <SelectItem key={prov.id} value={prov.id.toString()}>
+                            {prov.razon_social} {prov.codigo && `(${prov.codigo})`}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -506,15 +721,15 @@ export function PedidosContent() {
               <div className="border-t pt-4">
                 <h3 className="text-sm font-medium mb-4">Detalles del Pedido</h3>
                 
-                <div className="grid grid-cols-12 gap-2 mb-2">
-                  <div className="col-span-5">
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 mb-2">
+                  <div className="sm:col-span-5">
                     <Input
                       placeholder="Descripción del artículo"
                       value={nuevaLinea.descripcion}
                       onChange={(e) => setNuevaLinea({ ...nuevaLinea, descripcion: e.target.value })}
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div className="sm:col-span-2">
                     <Input
                       type="number"
                       placeholder="Cantidad"
@@ -523,7 +738,7 @@ export function PedidosContent() {
                       min="1"
                     />
                   </div>
-                  <div className="col-span-3">
+                  <div className="sm:col-span-3">
                     <Input
                       type="number"
                       step="0.01"
@@ -533,7 +748,7 @@ export function PedidosContent() {
                       min="0"
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div className="sm:col-span-2">
                     <Button type="button" onClick={agregarLinea} className="w-full">
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -541,13 +756,13 @@ export function PedidosContent() {
                 </div>
 
                 {detalles.length > 0 && (
-                  <div className="border rounded-md">
+                  <div className="border rounded-md overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Descripción</TableHead>
-                          <TableHead className="text-center">Cantidad</TableHead>
-                          <TableHead className="text-right">Precio Total</TableHead>
+                          <TableHead className="min-w-[150px]">Descripción</TableHead>
+                          <TableHead className="text-center min-w-[80px]">Cantidad</TableHead>
+                          <TableHead className="text-right min-w-[100px]">Precio Total</TableHead>
                           <TableHead className="w-12"></TableHead>
                         </TableRow>
                       </TableHeader>
@@ -596,7 +811,7 @@ export function PedidosContent() {
 
       {/* Dialog Ver Detalle */}
       <Dialog open={detalleDialogOpen} onOpenChange={setDetalleDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Detalle del Pedido</DialogTitle>
             <DialogDescription>
@@ -605,7 +820,7 @@ export function PedidosContent() {
           </DialogHeader>
           {selectedPedido && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label className="text-muted-foreground">Proveedor</Label>
                   <p className="font-medium">{selectedPedido.proveedor_nombre}</p>
@@ -649,13 +864,13 @@ export function PedidosContent() {
 
               <div>
                 <Label className="text-muted-foreground mb-2 block">Detalles</Label>
-                <div className="border rounded-md">
+                <div className="border rounded-md overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Descripción</TableHead>
-                        <TableHead className="text-center">Cantidad</TableHead>
-                        <TableHead className="text-right">Precio Total</TableHead>
+                        <TableHead className="min-w-[150px]">Descripción</TableHead>
+                        <TableHead className="text-center min-w-[80px]">Cantidad</TableHead>
+                        <TableHead className="text-right min-w-[100px]">Precio Total</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -688,7 +903,7 @@ export function PedidosContent() {
 
       {/* Diálogo de confirmación para marcar como recibido */}
       <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="w-[95vw] sm:w-full max-w-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>¿Marcar pedido como recibido?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -709,6 +924,214 @@ export function PedidosContent() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Dialog Abono a Pedido Individual */}
+      <Dialog open={abonoDialogOpen} onOpenChange={setAbonoDialogOpen}>
+        <DialogContent className="w-[95vw] sm:w-full max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Registrar Abono a Pedido</DialogTitle>
+            <DialogDescription>
+              {selectedPedido && (
+                <div className="space-y-2 mt-2">
+                  <p><span className="font-semibold">Pedido:</span> {selectedPedido.numero_pedido}</p>
+                  <p><span className="font-semibold">Proveedor:</span> {selectedPedido.proveedor_nombre}</p>
+                  <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm pt-2 border-t">
+                    <div>
+                      <p className="text-muted-foreground">Costo Total</p>
+                      <p className="font-semibold">${Number(selectedPedido.costo_total).toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Abonado</p>
+                      <p className="font-semibold text-blue-600">${Number(selectedPedido.total_abonado).toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Saldo</p>
+                      <p className="font-semibold text-orange-600">${Number(selectedPedido.saldo_pendiente).toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={registrarAbonoPedido}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="monto-abono">Monto del Abono *</Label>
+                <Input
+                  id="monto-abono"
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  max={selectedPedido?.saldo_pendiente}
+                  placeholder="0.00"
+                  value={abonoForm.monto}
+                  onChange={(e) => setAbonoForm({ ...abonoForm, monto: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="metodo-pago-abono">Método de Pago</Label>
+                <Select
+                  value={abonoForm.metodoPago}
+                  onValueChange={(value: any) => setAbonoForm({ ...abonoForm, metodoPago: value })}
+                >
+                  <SelectTrigger id="metodo-pago-abono">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="efectivo">Efectivo</SelectItem>
+                    <SelectItem value="transferencia">Transferencia</SelectItem>
+                    <SelectItem value="tarjeta">Tarjeta</SelectItem>
+                    <SelectItem value="cheque">Cheque</SelectItem>
+                    <SelectItem value="otro">Otro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="referencia-abono">Referencia</Label>
+                <Input
+                  id="referencia-abono"
+                  type="text"
+                  placeholder="Número de transacción, cheque, etc."
+                  value={abonoForm.referencia}
+                  onChange={(e) => setAbonoForm({ ...abonoForm, referencia: e.target.value })}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="notas-abono">Notas</Label>
+                <Textarea
+                  id="notas-abono"
+                  placeholder="Observaciones adicionales..."
+                  value={abonoForm.notas}
+                  onChange={(e) => setAbonoForm({ ...abonoForm, notas: e.target.value })}
+                  rows={3}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setAbonoDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Registrando...' : 'Registrar Abono'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Abono a Proveedor (Colectivo) */}
+      <Dialog open={abonoProveedorDialogOpen} onOpenChange={setAbonoProveedorDialogOpen}>
+        <DialogContent className="w-[95vw] sm:w-full max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Abonar a Proveedor</DialogTitle>
+            <DialogDescription>
+              El monto se distribuirá automáticamente entre los pedidos pendientes del proveedor, comenzando por el más antiguo.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={registrarAbonoProveedor}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="proveedor-abono">Proveedor *</Label>
+                <Select
+                  value={selectedProveedor?.id.toString() || ""}
+                  onValueChange={(value) => {
+                    const prov = proveedores.find(p => p.id.toString() === value)
+                    setSelectedProveedor(prov || null)
+                  }}
+                  required
+                >
+                  <SelectTrigger id="proveedor-abono">
+                    <SelectValue placeholder="Seleccione un proveedor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {proveedores
+                      .filter(prov => prov.estado === 'activo' && pedidos.some(ped => ped.proveedor_id === prov.id && ped.saldo_pendiente > 0))
+                      .map((proveedor) => {
+                        const saldoTotal = pedidos
+                          .filter(p => p.proveedor_id === proveedor.id && p.saldo_pendiente > 0)
+                          .reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
+                        const numPedidos = pedidos.filter(p => p.proveedor_id === proveedor.id && p.saldo_pendiente > 0).length
+                        
+                        return (
+                          <SelectItem key={proveedor.id} value={proveedor.id.toString()}>
+                            {proveedor.razon_social} - {numPedidos} pedido(s) - Deuda: ${saldoTotal.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </SelectItem>
+                        )
+                      })}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="monto-proveedor">Monto del Abono *</Label>
+                <Input
+                  id="monto-proveedor"
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  placeholder="0.00"
+                  value={abonoForm.monto}
+                  onChange={(e) => setAbonoForm({ ...abonoForm, monto: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="metodo-pago-proveedor">Método de Pago</Label>
+                <Select
+                  value={abonoForm.metodoPago}
+                  onValueChange={(value: any) => setAbonoForm({ ...abonoForm, metodoPago: value })}
+                >
+                  <SelectTrigger id="metodo-pago-proveedor">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="efectivo">Efectivo</SelectItem>
+                    <SelectItem value="transferencia">Transferencia</SelectItem>
+                    <SelectItem value="tarjeta">Tarjeta</SelectItem>
+                    <SelectItem value="cheque">Cheque</SelectItem>
+                    <SelectItem value="otro">Otro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="referencia-proveedor">Referencia</Label>
+                <Input
+                  id="referencia-proveedor"
+                  type="text"
+                  placeholder="Número de transacción, cheque, etc."
+                  value={abonoForm.referencia}
+                  onChange={(e) => setAbonoForm({ ...abonoForm, referencia: e.target.value })}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="notas-proveedor">Notas</Label>
+                <Textarea
+                  id="notas-proveedor"
+                  placeholder="Observaciones adicionales..."
+                  value={abonoForm.notas}
+                  onChange={(e) => setAbonoForm({ ...abonoForm, notas: e.target.value })}
+                  rows={3}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setAbonoProveedorDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={loading || !selectedProveedor}>
+                {loading ? 'Registrando...' : 'Distribuir Abono'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -5169,7 +5169,7 @@ function ProductosContent() {
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
-                                                            children: Array.isArray(proveedores) && proveedores.length > 0 ? proveedores.map((prov)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                            children: Array.isArray(proveedores) && proveedores.length > 0 ? proveedores.filter((prov)=>prov.estado === 'activo').map((prov)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
                                                                     value: prov.id.toString(),
                                                                     children: [
                                                                         prov.razon_social,
@@ -5179,15 +5179,15 @@ function ProductosContent() {
                                                                     ]
                                                                 }, prov.id, true, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1177,
-                                                                    columnNumber: 25
+                                                                    lineNumber: 1179,
+                                                                    columnNumber: 27
                                                                 }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
                                                                 value: "0",
                                                                 disabled: true,
                                                                 children: "No hay proveedores disponibles"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/productos-content.tsx",
-                                                                lineNumber: 1182,
+                                                                lineNumber: 1184,
                                                                 columnNumber: 23
                                                             }, this)
                                                         }, void 0, false, {
@@ -5215,7 +5215,7 @@ function ProductosContent() {
                                                     children: "Precios y Stock"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/productos-content.tsx",
-                                                    lineNumber: 1192,
+                                                    lineNumber: 1194,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5229,7 +5229,7 @@ function ProductosContent() {
                                                                     children: "Precio Compra *"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1196,
+                                                                    lineNumber: 1198,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5245,13 +5245,13 @@ function ProductosContent() {
                                                                     required: true
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1197,
+                                                                    lineNumber: 1199,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/productos-content.tsx",
-                                                            lineNumber: 1195,
+                                                            lineNumber: 1197,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5262,7 +5262,7 @@ function ProductosContent() {
                                                                     children: "Precio Venta *"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1209,
+                                                                    lineNumber: 1211,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5278,7 +5278,7 @@ function ProductosContent() {
                                                                     required: true
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1210,
+                                                                    lineNumber: 1212,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 formData.precio_compra && formData.precio_venta && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5291,13 +5291,13 @@ function ProductosContent() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1220,
+                                                                    lineNumber: 1222,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/productos-content.tsx",
-                                                            lineNumber: 1208,
+                                                            lineNumber: 1210,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5308,7 +5308,7 @@ function ProductosContent() {
                                                                     children: "Precio Mínimo"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1232,
+                                                                    lineNumber: 1234,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5323,19 +5323,19 @@ function ProductosContent() {
                                                                         })
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/productos-content.tsx",
-                                                                    lineNumber: 1233,
+                                                                    lineNumber: 1235,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/productos-content.tsx",
-                                                            lineNumber: 1231,
+                                                            lineNumber: 1233,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/productos-content.tsx",
-                                                    lineNumber: 1194,
+                                                    lineNumber: 1196,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5346,7 +5346,7 @@ function ProductosContent() {
                                                             children: "Cantidad en Stock *"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/productos-content.tsx",
-                                                            lineNumber: 1245,
+                                                            lineNumber: 1247,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5362,7 +5362,7 @@ function ProductosContent() {
                                                             required: true
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/productos-content.tsx",
-                                                            lineNumber: 1246,
+                                                            lineNumber: 1248,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5370,19 +5370,19 @@ function ProductosContent() {
                                                             children: "Esta cantidad se registrará en el inventario inicial"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/productos-content.tsx",
-                                                            lineNumber: 1255,
+                                                            lineNumber: 1257,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/productos-content.tsx",
-                                                    lineNumber: 1244,
+                                                    lineNumber: 1246,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/productos-content.tsx",
-                                            lineNumber: 1191,
+                                            lineNumber: 1193,
                                             columnNumber: 15
                                         }, this)
                                     ]
@@ -5400,7 +5400,7 @@ function ProductosContent() {
                                             children: "Cancelar"
                                         }, void 0, false, {
                                             fileName: "[project]/components/productos-content.tsx",
-                                            lineNumber: 1262,
+                                            lineNumber: 1264,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -5408,13 +5408,13 @@ function ProductosContent() {
                                             children: editingProduct ? "Guardar Cambios" : "Agregar Producto"
                                         }, void 0, false, {
                                             fileName: "[project]/components/productos-content.tsx",
-                                            lineNumber: 1265,
+                                            lineNumber: 1267,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/productos-content.tsx",
-                                    lineNumber: 1261,
+                                    lineNumber: 1263,
                                     columnNumber: 13
                                 }, this)
                             ]
@@ -5445,7 +5445,7 @@ function ProductosContent() {
                 variant: "destructive"
             }, void 0, false, {
                 fileName: "[project]/components/productos-content.tsx",
-                lineNumber: 1271,
+                lineNumber: 1273,
                 columnNumber: 7
             }, this)
         ]
