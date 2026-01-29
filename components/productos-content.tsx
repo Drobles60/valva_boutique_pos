@@ -1173,11 +1173,13 @@ export function ProductosContent() {
                   </SelectTrigger>
                   <SelectContent>
                     {Array.isArray(proveedores) && proveedores.length > 0 ? (
-                      proveedores.map((prov) => (
-                        <SelectItem key={prov.id} value={prov.id.toString()}>
-                          {prov.razon_social} ({prov.ruc})
-                        </SelectItem>
-                      ))
+                      proveedores
+                        .filter(prov => prov.estado === 'activo')
+                        .map((prov) => (
+                          <SelectItem key={prov.id} value={prov.id.toString()}>
+                            {prov.razon_social} ({prov.ruc})
+                          </SelectItem>
+                        ))
                     ) : (
                       <SelectItem value="0" disabled>
                         No hay proveedores disponibles

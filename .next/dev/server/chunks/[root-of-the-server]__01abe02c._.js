@@ -226,6 +226,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$
 async function GET() {
     try {
         const pedidos = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              p.total_abonado, p.saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -271,13 +272,14 @@ async function POST(request) {
             const ultimoNumero = parseInt(ultimoPedido[0].numero_pedido.split('-')[1]);
             numeroPedido = `PED-${(ultimoNumero + 1).toString().padStart(3, '0')}`;
         }
-        // Insertar el pedido
+        // Insertar el pedido con saldo_pendiente igual al costo_total
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`INSERT INTO pedidos (
-        numero_pedido, proveedor_id, fecha_pedido, costo_total, estado, usuario_id, notas
-      ) VALUES (?, ?, ?, ?, 'pendiente', ?, ?)`, [
+        numero_pedido, proveedor_id, fecha_pedido, costo_total, total_abonado, saldo_pendiente, estado, usuario_id, notas
+      ) VALUES (?, ?, ?, ?, 0, ?, 'pendiente', ?, ?)`, [
             numeroPedido,
             proveedorId,
             fechaPedido,
+            costoTotal,
             costoTotal,
             usuarioId || null,
             notas || null

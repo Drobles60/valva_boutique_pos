@@ -57,10 +57,12 @@ export function VentasContent() {
             precioMayorista: Number(p.precio_venta) || 0,
             precioEspecial: Number(p.precio_minimo) || 0,
             proveedor: p.proveedor_nombre || '',
-            // Si tiene descuento, marcar el producto
-            descuento: p.tiene_descuento && p.descuento_aplicado ? 
-              (p.descuento_aplicado.tipo === 'porcentaje' ? p.descuento_aplicado.valor : null) : undefined,
+            // Información completa del descuento
+            tieneDescuento: p.tiene_descuento || false,
+            descuentoAplicado: p.descuento_aplicado || null,
+            precioOriginal: p.precio_original || p.precio_venta,
             precioConDescuento: p.tiene_descuento ? Number(p.precio_final) : undefined,
+            montoDescuento: p.monto_descuento || 0,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           }))
@@ -87,7 +89,8 @@ export function VentasContent() {
   }, [clienteSeleccionado])
 
   const getPrecioByTipo = (product: Product, tipoCliente: "publico" | "mayorista" | "especial") => {
-    if (product.descuento && product.precioConDescuento) {
+    // Si el producto tiene descuento aplicado, usar el precio con descuento
+    if ((product as any).tieneDescuento && product.precioConDescuento) {
       return product.precioConDescuento
     }
     switch (tipoCliente) {
@@ -246,9 +249,11 @@ export function VentasContent() {
                           <div className="flex-1">
                             <p className="font-medium">{producto.nombre}</p>
                             <p className="text-xs text-muted-foreground">{producto.codigo}</p>
-                            {producto.descuento && (
+                            {(producto as any).tieneDescuento && (producto as any).descuentoAplicado && (
                               <Badge variant="destructive" className="mt-1">
-                                {producto.descuento}% OFF
+                                {(producto as any).descuentoAplicado.tipo === 'porcentaje' 
+                                  ? `${(producto as any).descuentoAplicado.valor}% OFF`
+                                  : `Precio ${(producto as any).descuentoAplicado.nombre}`}
                               </Badge>
                             )}
                           </div>
@@ -329,9 +334,11 @@ export function VentasContent() {
                                   ? "Mayorista"
                                   : "Especial"}
                             </Badge>
-                            {item.product.descuento && (
+                            {(item.product as any).tieneDescuento && (item.product as any).descuentoAplicado && (
                               <Badge variant="destructive" className="text-xs">
-                                {item.product.descuento}% OFF
+                                {(item.product as any).descuentoAplicado.tipo === 'porcentaje' 
+                                  ? `${(item.product as any).descuentoAplicado.valor}% OFF`
+                                  : `${(item.product as any).descuentoAplicado.nombre}`}
                               </Badge>
                             )}
                           </div>
