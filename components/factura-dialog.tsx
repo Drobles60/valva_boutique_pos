@@ -166,19 +166,30 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       yPos += 4
 
       // Productos
-      pdf.setFontSize(9)
       venta.detalles.forEach((detalle) => {
-        // Nombre del producto
-        const nombreMaxWidth = pageWidth - 2 * margin
+        // Nombre del producto (izquierda) y Total (derecha) en la misma línea
+        pdf.setFontSize(10) // Tamaño más grande para el nombre
+        pdf.setFont('helvetica', 'normal')
+        const nombreMaxWidth = pageWidth - margin * 2 - 20 // Espacio para el precio
         const lineasNombre = pdf.splitTextToSize(detalle.producto_nombre, nombreMaxWidth)
-        pdf.text(lineasNombre, margin, yPos)
-        yPos += lineasNombre.length * 3.5
-
-        // Precio del producto (derecha)
-        pdf.text(formatCurrency(detalle.subtotal), pageWidth - margin, yPos, { align: 'right' })
         
-        // Unidades (izquierda, en la misma línea)
-        pdf.text(`> UNIDADES: -> Cantidad: ${detalle.cantidad} x ${formatCurrency(detalle.precio_unitario)}`, margin, yPos)
+        // Primera línea: nombre a la izquierda, total a la derecha
+        pdf.text(lineasNombre[0], margin, yPos)
+        pdf.text(formatCurrency(detalle.subtotal), pageWidth - margin, yPos, { align: 'right' })
+        yPos += 4
+        
+        // Si el nombre tiene más de una línea, imprimir el resto
+        if (lineasNombre.length > 1) {
+          for (let i = 1; i < lineasNombre.length; i++) {
+            pdf.text(lineasNombre[i], margin, yPos)
+            yPos += 4
+          }
+        }
+        
+        // Unidades en la siguiente línea (en negrilla)
+        pdf.setFontSize(9)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text(`> UNIDADES: -> Cantidad:${detalle.cantidad.toFixed(2)} x ${formatCurrency(detalle.precio_unitario)}`, margin, yPos)
         yPos += 5
       })
 
