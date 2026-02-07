@@ -3302,19 +3302,30 @@ function FacturaDialog({ open, onClose, venta }) {
             });
             yPos += 4;
             // Productos
-            pdf.setFontSize(9);
             venta.detalles.forEach((detalle)=>{
-                // Nombre del producto
-                const nombreMaxWidth = pageWidth - 2 * margin;
+                // Nombre del producto (izquierda) y Total (derecha) en la misma línea
+                pdf.setFontSize(10); // Tamaño más grande para el nombre
+                pdf.setFont('helvetica', 'normal');
+                const nombreMaxWidth = pageWidth - margin * 2 - 20 // Espacio para el precio
+                ;
                 const lineasNombre = pdf.splitTextToSize(detalle.producto_nombre, nombreMaxWidth);
-                pdf.text(lineasNombre, margin, yPos);
-                yPos += lineasNombre.length * 3.5;
-                // Precio del producto (derecha)
+                // Primera línea: nombre a la izquierda, total a la derecha
+                pdf.text(lineasNombre[0], margin, yPos);
                 pdf.text((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(detalle.subtotal), pageWidth - margin, yPos, {
                     align: 'right'
                 });
-                // Unidades (izquierda, en la misma línea)
-                pdf.text(`> UNIDADES: -> Cantidad: ${detalle.cantidad} x ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(detalle.precio_unitario)}`, margin, yPos);
+                yPos += 4;
+                // Si el nombre tiene más de una línea, imprimir el resto
+                if (lineasNombre.length > 1) {
+                    for(let i = 1; i < lineasNombre.length; i++){
+                        pdf.text(lineasNombre[i], margin, yPos);
+                        yPos += 4;
+                    }
+                }
+                // Unidades en la siguiente línea (en negrilla)
+                pdf.setFontSize(9);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text(`> UNIDADES: -> Cantidad:${detalle.cantidad.toFixed(2)} x ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(detalle.precio_unitario)}`, margin, yPos);
                 yPos += 5;
             });
             // Línea separadora
@@ -3475,7 +3486,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                         children: "Factura de Venta"
                                     }, void 0, false, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 334,
+                                        lineNumber: 345,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
@@ -3485,13 +3496,13 @@ function FacturaDialog({ open, onClose, venta }) {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 335,
+                                        lineNumber: 346,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/factura-dialog.tsx",
-                                lineNumber: 333,
+                                lineNumber: 344,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3506,14 +3517,14 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 className: "h-4 w-4 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 341,
+                                                lineNumber: 352,
                                                 columnNumber: 17
                                             }, this),
                                             "Imprimir"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 340,
+                                        lineNumber: 351,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3525,31 +3536,31 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 className: "h-4 w-4 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 345,
+                                                lineNumber: 356,
                                                 columnNumber: 17
                                             }, this),
                                             "Descargar PDF"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 344,
+                                        lineNumber: 355,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/factura-dialog.tsx",
-                                lineNumber: 339,
+                                lineNumber: 350,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/factura-dialog.tsx",
-                        lineNumber: 332,
+                        lineNumber: 343,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/components/factura-dialog.tsx",
-                    lineNumber: 331,
+                    lineNumber: 342,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3565,7 +3576,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                     className: "h-20 w-20 object-cover rounded-lg mb-3"
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 355,
+                                    lineNumber: 366,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -3573,7 +3584,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                     children: "Valva Boutique"
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 360,
+                                    lineNumber: 371,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3581,7 +3592,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                     children: "Moda y Estilo"
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 361,
+                                    lineNumber: 372,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3589,7 +3600,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                     children: "Tel: (Por definir)"
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 362,
+                                    lineNumber: 373,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3600,7 +3611,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                             children: "FACTURA"
                                         }, void 0, false, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 364,
+                                            lineNumber: 375,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3608,7 +3619,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                             children: venta.numero_venta
                                         }, void 0, false, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 365,
+                                            lineNumber: 376,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3616,19 +3627,19 @@ function FacturaDialog({ open, onClose, venta }) {
                                             children: formatearFecha(venta.fecha_venta)
                                         }, void 0, false, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 366,
+                                            lineNumber: 377,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 363,
+                                    lineNumber: 374,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/factura-dialog.tsx",
-                            lineNumber: 354,
+                            lineNumber: 365,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3642,7 +3653,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                             children: "CLIENTE"
                                         }, void 0, false, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 373,
+                                            lineNumber: 384,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3653,7 +3664,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     children: venta.cliente_nombre || 'Cliente General'
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 375,
+                                                    lineNumber: 386,
                                                     columnNumber: 17
                                                 }, this),
                                                 venta.cliente_identificacion && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3663,7 +3674,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 379,
+                                                    lineNumber: 390,
                                                     columnNumber: 19
                                                 }, this),
                                                 venta.cliente_telefono && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3673,7 +3684,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 382,
+                                                    lineNumber: 393,
                                                     columnNumber: 19
                                                 }, this),
                                                 venta.cliente_direccion && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3683,19 +3694,19 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 385,
+                                                    lineNumber: 396,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 374,
+                                            lineNumber: 385,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 372,
+                                    lineNumber: 383,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3706,7 +3717,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                             children: "VENDEDOR"
                                         }, void 0, false, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 390,
+                                            lineNumber: 401,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3721,7 +3732,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 392,
+                                                    lineNumber: 403,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3732,7 +3743,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                             children: "Tipo:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/factura-dialog.tsx",
-                                                            lineNumber: 396,
+                                                            lineNumber: 407,
                                                             columnNumber: 19
                                                         }, this),
                                                         " ",
@@ -3740,7 +3751,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 395,
+                                                    lineNumber: 406,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3750,7 +3761,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                             children: "Pago:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/factura-dialog.tsx",
-                                                            lineNumber: 399,
+                                                            lineNumber: 410,
                                                             columnNumber: 19
                                                         }, this),
                                                         " ",
@@ -3758,25 +3769,25 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 398,
+                                                    lineNumber: 409,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 391,
+                                            lineNumber: 402,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 389,
+                                    lineNumber: 400,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/factura-dialog.tsx",
-                            lineNumber: 371,
+                            lineNumber: 382,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3787,7 +3798,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                     children: "PRODUCTOS"
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 411,
+                                    lineNumber: 422,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3800,7 +3811,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                     children: detalle.producto_nombre
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 417,
+                                                    lineNumber: 428,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3814,7 +3825,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/factura-dialog.tsx",
-                                                            lineNumber: 419,
+                                                            lineNumber: 430,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3825,30 +3836,30 @@ function FacturaDialog({ open, onClose, venta }) {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/factura-dialog.tsx",
-                                                            lineNumber: 420,
+                                                            lineNumber: 431,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/factura-dialog.tsx",
-                                                    lineNumber: 418,
+                                                    lineNumber: 429,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, detalle.id, true, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 416,
+                                            lineNumber: 427,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 414,
+                                    lineNumber: 425,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/factura-dialog.tsx",
-                            lineNumber: 410,
+                            lineNumber: 421,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3864,7 +3875,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 children: "Subtotal:"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 431,
+                                                lineNumber: 442,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3875,13 +3886,13 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 432,
+                                                lineNumber: 443,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 430,
+                                        lineNumber: 441,
                                         columnNumber: 15
                                     }, this),
                                     venta.descuento > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3892,7 +3903,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 children: "Descuento:"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 436,
+                                                lineNumber: 447,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3903,13 +3914,13 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 437,
+                                                lineNumber: 448,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 435,
+                                        lineNumber: 446,
                                         columnNumber: 17
                                     }, this),
                                     venta.iva > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3920,7 +3931,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 children: "IVA (15%):"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 442,
+                                                lineNumber: 453,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3931,13 +3942,13 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 443,
+                                                lineNumber: 454,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 441,
+                                        lineNumber: 452,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3948,7 +3959,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 children: "TOTAL:"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 447,
+                                                lineNumber: 458,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3959,13 +3970,13 @@ function FacturaDialog({ open, onClose, venta }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 448,
+                                                lineNumber: 459,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 446,
+                                        lineNumber: 457,
                                         columnNumber: 15
                                     }, this),
                                     venta.tipo_venta === 'credito' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3979,7 +3990,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                         children: "Abono Inicial:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/factura-dialog.tsx",
-                                                        lineNumber: 455,
+                                                        lineNumber: 466,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3990,13 +4001,13 @@ function FacturaDialog({ open, onClose, venta }) {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/factura-dialog.tsx",
-                                                        lineNumber: 456,
+                                                        lineNumber: 467,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 454,
+                                                lineNumber: 465,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4007,7 +4018,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                                         children: "Saldo Pendiente:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/factura-dialog.tsx",
-                                                        lineNumber: 459,
+                                                        lineNumber: 470,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4018,30 +4029,30 @@ function FacturaDialog({ open, onClose, venta }) {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/factura-dialog.tsx",
-                                                        lineNumber: 460,
+                                                        lineNumber: 471,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/factura-dialog.tsx",
-                                                lineNumber: 458,
+                                                lineNumber: 469,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/factura-dialog.tsx",
-                                        lineNumber: 453,
+                                        lineNumber: 464,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/factura-dialog.tsx",
-                                lineNumber: 429,
+                                lineNumber: 440,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/factura-dialog.tsx",
-                            lineNumber: 428,
+                            lineNumber: 439,
                             columnNumber: 11
                         }, this),
                         venta.tipo_venta === 'contado' && venta.metodo_pago !== 'transferencia' && venta.efectivo_recibido && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4055,7 +4066,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                             children: "Efectivo Recibido:"
                                         }, void 0, false, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 471,
+                                            lineNumber: 482,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4066,13 +4077,13 @@ function FacturaDialog({ open, onClose, venta }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 472,
+                                            lineNumber: 483,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 470,
+                                    lineNumber: 481,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4083,7 +4094,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                             children: "Cambio:"
                                         }, void 0, false, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 475,
+                                            lineNumber: 486,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4094,19 +4105,19 @@ function FacturaDialog({ open, onClose, venta }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/factura-dialog.tsx",
-                                            lineNumber: 476,
+                                            lineNumber: 487,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 474,
+                                    lineNumber: 485,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/factura-dialog.tsx",
-                            lineNumber: 469,
+                            lineNumber: 480,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4117,7 +4128,7 @@ function FacturaDialog({ open, onClose, venta }) {
                                     children: "¡Gracias por su compra!"
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 483,
+                                    lineNumber: 494,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4125,30 +4136,30 @@ function FacturaDialog({ open, onClose, venta }) {
                                     children: "Este documento es un comprobante de venta"
                                 }, void 0, false, {
                                     fileName: "[project]/components/factura-dialog.tsx",
-                                    lineNumber: 484,
+                                    lineNumber: 495,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/factura-dialog.tsx",
-                            lineNumber: 482,
+                            lineNumber: 493,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/factura-dialog.tsx",
-                    lineNumber: 352,
+                    lineNumber: 363,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/factura-dialog.tsx",
-            lineNumber: 330,
+            lineNumber: 341,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/factura-dialog.tsx",
-        lineNumber: 329,
+        lineNumber: 340,
         columnNumber: 5
     }, this);
 }

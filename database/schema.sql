@@ -33,13 +33,14 @@ CREATE TABLE usuarios (
 -- =========================================
 CREATE TABLE categorias_padre (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL UNIQUE,
+  nombre VARCHAR(100) NOT NULL,
   descripcion TEXT,
   orden INT DEFAULT 0,
   estado ENUM('activo','inactivo') DEFAULT 'activo',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY nombre (nombre)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- =========================================
 -- TIPOS DE PRENDA (Subcategorías)
@@ -51,10 +52,11 @@ CREATE TABLE tipos_prenda (
   descripcion TEXT,
   orden INT DEFAULT 0,
   estado ENUM('activo','inactivo') DEFAULT 'activo',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (categoria_padre_id) REFERENCES categorias_padre(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY categoria_padre_id (categoria_padre_id),
+  CONSTRAINT tipos_prenda_ibfk_1 FOREIGN KEY (categoria_padre_id) REFERENCES categorias_padre(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- =========================================
 -- SISTEMAS DE TALLAS
@@ -64,9 +66,9 @@ CREATE TABLE sistemas_tallas (
   nombre VARCHAR(100) NOT NULL,
   descripcion TEXT,
   tipo ENUM('letras','numeros','mixto') DEFAULT 'letras',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- =========================================
 -- TALLAS
@@ -75,13 +77,14 @@ CREATE TABLE tallas (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   sistema_talla_id INT UNSIGNED NOT NULL,
   valor VARCHAR(20) NOT NULL,
-  descripcion VARCHAR(100),
+  descripcion VARCHAR(100) DEFAULT NULL,
   orden INT DEFAULT 0,
   estado ENUM('activo','inactivo') DEFAULT 'activo',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (sistema_talla_id) REFERENCES sistemas_tallas(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY sistema_talla_id (sistema_talla_id),
+  CONSTRAINT tallas_ibfk_1 FOREIGN KEY (sistema_talla_id) REFERENCES sistemas_tallas(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- =========================================
 -- RELACIÓN: TIPO PRENDA - SISTEMA TALLA
@@ -90,9 +93,10 @@ CREATE TABLE tipo_prenda_sistema_talla (
   tipo_prenda_id INT UNSIGNED NOT NULL,
   sistema_talla_id INT UNSIGNED NOT NULL,
   PRIMARY KEY (tipo_prenda_id, sistema_talla_id),
-  FOREIGN KEY (tipo_prenda_id) REFERENCES tipos_prenda(id) ON DELETE CASCADE,
-  FOREIGN KEY (sistema_talla_id) REFERENCES sistemas_tallas(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  KEY sistema_talla_id (sistema_talla_id),
+  CONSTRAINT tipo_prenda_sistema_talla_ibfk_1 FOREIGN KEY (tipo_prenda_id) REFERENCES tipos_prenda(id) ON DELETE CASCADE,
+  CONSTRAINT tipo_prenda_sistema_talla_ibfk_2 FOREIGN KEY (sistema_talla_id) REFERENCES sistemas_tallas(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- =========================================
 -- PRODUCTOS
@@ -133,6 +137,7 @@ CREATE TABLE movimientos_inventario (
   stock_anterior INT NOT NULL,
   stock_nuevo INT NOT NULL,
   motivo VARCHAR(255),
+  referencia_id INT UNSIGNED COMMENT 'ID de referencia adicional',
   venta_id INT UNSIGNED COMMENT 'ID de la venta si es salida por venta',
   usuario_id INT UNSIGNED,
   fecha_movimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -322,6 +327,7 @@ CREATE TABLE pagos_mixtos_ventas (
   venta_id INT UNSIGNED NOT NULL,
   monto_efectivo DECIMAL(10,2) DEFAULT 0.00,
   monto_transferencia DECIMAL(10,2) DEFAULT 0.00,
+  monto_tarjeta DECIMAL(10,2) DEFAULT 0.00,
   referencia_transferencia VARCHAR(50) DEFAULT NULL COMMENT 'Origen de la transferencia en pagos mixtos',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE,
@@ -368,6 +374,7 @@ CREATE TABLE pagos_mixtos_abonos (
   abono_id INT UNSIGNED NOT NULL,
   monto_efectivo DECIMAL(10,2) DEFAULT 0.00,
   monto_transferencia DECIMAL(10,2) DEFAULT 0.00,
+  monto_tarjeta DECIMAL(10,2) DEFAULT 0.00,
   referencia_transferencia VARCHAR(50) DEFAULT NULL COMMENT 'Origen de la transferencia en pagos mixtos',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (abono_id) REFERENCES abonos(id) ON DELETE CASCADE,
@@ -592,158 +599,124 @@ INSERT INTO tallas (sistema_talla_id, valor, descripcion, orden) VALUES
 -- ============================================
 -- RELACIONES: TIPO PRENDA - SISTEMA TALLA (PREDEFINIDAS)
 -- ============================================
+-- Datos reales de la base de datos (72 registros)
 
--- PANTALONES (IDs 1-12) → Tallas Numéricas y Jeans
 INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
--- Pantalones formales y casuales → Tallas Numéricas (2-16)
 (1, 2),   -- Pantalón de Vestir → Numéricas
 (2, 2),   -- Pantalón Casual → Numéricas
 (3, 2),   -- Pantalón Cargo → Numéricas
-(4, 1),   -- Pantalón Palazzo → Letras (XS-XXL)
+(4, 1),   -- Pantalón Palazzo → Letras
 (5, 2),   -- Pantalón Capri → Numéricas
-(6, 1),   -- Leggings → Letras (XS-XXL)
-(7, 1),   -- Joggers → Letras (XS-XXL)
+(6, 1),   -- Leggings → Letras
+(7, 1),   -- Joggers → Letras
 (8, 2),   -- Pantalón Acampanado → Numéricas
 (9, 2),   -- Pantalón Recto → Numéricas
 (10, 2),  -- Pantalón Pitillo → Numéricas
-(11, 3),  -- Pantalón Jean → Tallas Jeans (24-34)
-(12, 2);  -- Pantalón Lino → Numéricas
-
--- BLUSAS (IDs 13-26) → Tallas Estándar (Letras)
-INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
-(13, 1),  -- Blusa Manga Larga → Letras (XS-XXL)
-(14, 1),  -- Blusa Manga Corta → Letras (XS-XXL)
-(15, 1),  -- Blusa Sin Mangas → Letras (XS-XXL)
-(16, 1),  -- Blusa de Encaje → Letras (XS-XXL)
-(17, 1),  -- Blusa Campesina → Letras (XS-XXL)
-(18, 1),  -- Blusa Crop Top → Letras (XS-XXL)
-(19, 1),  -- Blusa Oversize → Letras (XS-XXL)
-(20, 1),  -- Blusa con Botones → Letras (XS-XXL)
-(21, 1),  -- Blusa Cuello V → Letras (XS-XXL)
-(22, 1),  -- Blusa Cuello Redondo → Letras (XS-XXL)
-(23, 1),  -- Blusa Estampada → Letras (XS-XXL)
-(24, 1),  -- Blusa Lisa → Letras (XS-XXL)
-(25, 1),  -- Blusa Satinada → Letras (XS-XXL)
-(26, 1);  -- Blusa Transparente → Letras (XS-XXL)
-
--- CONJUNTOS (IDs 27-34) → Tallas Estándar (Letras)
-INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
-(27, 1),  -- Conjunto Deportivo → Letras (XS-XXL)
-(28, 1),  -- Conjunto Casual → Letras (XS-XXL)
-(29, 1),  -- Conjunto de Vestir → Letras (XS-XXL)
-(30, 1),  -- Conjunto Crop Top + Falda → Letras (XS-XXL)
-(31, 1),  -- Conjunto Blusa + Pantalón → Letras (XS-XXL)
-(32, 1),  -- Conjunto Top + Short → Letras (XS-XXL)
-(33, 1),  -- Conjunto Blazer + Pantalón → Letras (XS-XXL)
-(34, 1);  -- Conjunto Playero → Letras (XS-XXL)
-
--- FALDAS (IDs 35-44) → Tallas Estándar y Numéricas
-INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
-(35, 1),  -- Falda Corta → Letras (XS-XXL)
-(35, 2),  -- Falda Corta → Numéricas (2-16)
-(36, 1),  -- Falda Midi → Letras (XS-XXL)
-(36, 2),  -- Falda Midi → Numéricas (2-16)
-(37, 1),  -- Falda Larga → Letras (XS-XXL)
-(37, 2),  -- Falda Larga → Numéricas (2-16)
-(38, 1),  -- Falda Plisada → Letras (XS-XXL)
-(39, 2),  -- Falda Tubo → Numéricas (2-16)
-(40, 1),  -- Falda Acampanada → Letras (XS-XXL)
-(41, 1),  -- Falda con Vuelo → Letras (XS-XXL)
-(42, 3),  -- Falda Jean → Tallas Jeans (24-34)
-(43, 1),  -- Falda Asimétrica → Letras (XS-XXL)
-(44, 2);  -- Falda Recta → Numéricas (2-16)
-
--- SHORTS (IDs 45-52) → Tallas Estándar, Numéricas y Jeans
-INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
-(45, 3),  -- Short Jean → Tallas Jeans (24-34)
-(46, 1),  -- Short de Tela → Letras (XS-XXL)
-(47, 1),  -- Short Deportivo → Letras (XS-XXL)
-(48, 2),  -- Short Cargo → Numéricas (2-16)
-(49, 2),  -- Short Bermuda → Numéricas (2-16)
-(50, 2),  -- Short Tiro Alto → Numéricas (2-16)
-(51, 2),  -- Short Tiro Medio → Numéricas (2-16)
-(52, 1);  -- Short Ciclista → Letras (XS-XXL)
-
--- VESTIDOS (IDs 53-63) → Tallas Estándar y Numéricas
-INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
-(53, 1),  -- Vestido Casual → Letras (XS-XXL)
-(53, 2),  -- Vestido Casual → Numéricas (2-16)
-(54, 1),  -- Vestido de Fiesta → Letras (XS-XXL)
-(54, 2),  -- Vestido de Fiesta → Numéricas (2-16)
-(55, 2),  -- Vestido Formal → Numéricas (2-16)
-(56, 1),  -- Vestido Midi → Letras (XS-XXL)
-(56, 2),  -- Vestido Midi → Numéricas (2-16)
-(57, 1),  -- Vestido Maxi → Letras (XS-XXL)
-(57, 2),  -- Vestido Maxi → Numéricas (2-16)
-(58, 1),  -- Vestido Corto → Letras (XS-XXL)
-(59, 2),  -- Vestido Cóctel → Numéricas (2-16)
-(60, 1),  -- Vestido Camisero → Letras (XS-XXL)
-(61, 2),  -- Vestido Tubo → Numéricas (2-16)
-(62, 1),  -- Vestido Playero → Letras (XS-XXL)
-(63, 1);  -- Vestido Acampanado → Letras (XS-XXL)
-
--- BOLSOS (IDs 64-73) → Talla Única
-INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
-(64, 5),  -- Bolso de Mano → Única
-(65, 5),  -- Bolso Bandolera → Única
-(66, 5),  -- Bolso Tote → Única
-(67, 5),  -- Mochila → Única
-(68, 5),  -- Clutch → Única
-(69, 5),  -- Bolso Shopper → Única
-(70, 5),  -- Cartera → Única
-(71, 5),  -- Riñonera → Única
-(72, 5),  -- Bolso Satchel → Única
-(73, 5);  -- Bolso Bucket → Única
+(11, 3),  -- Pantalón Jean → Tallas Jeans
+(12, 2),  -- Pantalón Lino → Numéricas
+(13, 1),  -- Blusa Manga Larga → Letras
+(14, 1),  -- Blusa Manga Corta → Letras
+(15, 1),  -- Blusa Sin Mangas → Letras
+(16, 1),  -- Blusa de Encaje → Letras
+(17, 1),  -- Blusa Campesina → Letras
+(18, 1),  -- Blusa Crop Top → Letras
+(19, 1),  -- Blusa Oversize → Letras
+(20, 1),  -- Blusa con Botones → Letras
+(21, 1),  -- Blusa Cuello V → Letras
+(22, 1),  -- Blusa Cuello Redondo → Letras
+(23, 1),  -- Blusa Estampada → Letras
+(24, 1),  -- Blusa Lisa → Letras
+(25, 1),  -- Blusa Satinada → Letras
+(26, 1),  -- Blusa Transparente → Letras
+(27, 1),  -- Conjunto Deportivo → Letras
+(27, 2),  -- Conjunto Deportivo → Numéricas
+(28, 1),  -- Conjunto Casual → Letras
+(28, 2),  -- Conjunto Casual → Numéricas
+(29, 1),  -- Conjunto de Vestir → Letras
+(29, 2),  -- Conjunto de Vestir → Numéricas
+(30, 1),  -- Conjunto Crop Top + Falda → Letras
+(31, 2),  -- Conjunto Blusa + Pantalón → Numéricas
+(32, 1),  -- Conjunto Top + Short → Letras
+(33, 1),  -- Conjunto Blazer + Pantalón → Letras
+(34, 3),  -- Conjunto Playero → Tallas Jeans
+(35, 1),  -- Falda Corta → Letras
+(36, 2),  -- Falda Midi → Numéricas
+(37, 3),  -- Falda Larga → Tallas Jeans
+(38, 1),  -- Falda Plisada → Letras
+(39, 1),  -- Falda Tubo → Letras
+(40, 2),  -- Falda Acampanada → Numéricas
+(41, 2),  -- Falda con Vuelo → Numéricas
+(42, 2),  -- Falda Jean → Numéricas
+(43, 2),  -- Falda Asimétrica → Numéricas
+(44, 1),  -- Falda Recta → Letras
+(45, 1),  -- Short Jean → Letras
+(45, 2),  -- Short Jean → Numéricas
+(46, 1),  -- Short de Tela → Letras
+(46, 2),  -- Short de Tela → Numéricas
+(47, 2),  -- Short Deportivo → Numéricas
+(48, 1),  -- Short Cargo → Letras
+(48, 2),  -- Short Cargo → Numéricas
+(49, 1),  -- Short Bermuda → Letras
+(49, 2),  -- Short Bermuda → Numéricas
+(50, 1),  -- Short Tiro Alto → Letras
+(51, 2),  -- Short Tiro Medio → Numéricas
+(52, 1),  -- Short Ciclista → Letras
+(53, 2),  -- Vestido Casual → Numéricas
+(54, 1),  -- Vestido de Fiesta → Letras
+(55, 1),  -- Vestido Formal → Letras
+(56, 5),  -- Vestido Midi → Talla Única
+(57, 5),  -- Vestido Maxi → Talla Única
+(58, 5),  -- Vestido Corto → Talla Única
+(59, 5),  -- Vestido Cóctel → Talla Única
+(60, 5),  -- Vestido Camisero → Talla Única
+(61, 5),  -- Vestido Tubo → Talla Única
+(62, 5),  -- Vestido Playero → Talla Única
+(63, 5),  -- Vestido Acampanado → Talla Única
+(64, 5),  -- Bolso de Mano → Talla Única
+(65, 5);  -- Bolso Bandolera → Talla Única
 
 -- =========================================
--- TRIGGERS PARA ABONOS A PEDIDOS
+-- TRIGGERS
 -- =========================================
+-- Nota: Ejecutar cada trigger por separado en DBeaver
 
-DELIMITER //
-
--- Trigger: Actualizar saldos al insertar un abono a pedido
-CREATE TRIGGER after_abono_insert
-AFTER INSERT ON abonos_pedidos
-FOR EACH ROW
-BEGIN
-  UPDATE pedidos 
-  SET total_abonado = total_abonado + NEW.monto,
-      saldo_pendiente = saldo_pendiente - NEW.monto
-  WHERE id = NEW.pedido_id;
-END//
-
--- Trigger: Actualizar saldos al eliminar un abono a pedido
-CREATE TRIGGER after_abono_delete
-AFTER DELETE ON abonos_pedidos
-FOR EACH ROW
-BEGIN
-  UPDATE pedidos 
-  SET total_abonado = total_abonado - OLD.monto,
-      saldo_pendiente = saldo_pendiente + OLD.monto
-  WHERE id = OLD.pedido_id;
-END//
-
-DELIMITER ;
-
--- =========================================
--- TRIGGER PARA ACTUALIZAR SALDO DEL CLIENTE
--- =========================================
--- Este trigger actualiza automáticamente el saldo del cliente
--- cuando se registra un abono a una cuenta por cobrar
-
+-- Trigger 1: Actualizar saldo del cliente cuando se registra un abono
 DROP TRIGGER IF EXISTS actualizar_saldo_cliente_abono;
-
 CREATE TRIGGER actualizar_saldo_cliente_abono
 AFTER INSERT ON abonos
 FOR EACH ROW
 UPDATE cuentas_por_cobrar cpc
 INNER JOIN clientes c ON c.id = cpc.cliente_id
-SET 
+SET
   cpc.saldo_pendiente = cpc.saldo_pendiente - NEW.monto,
   cpc.estado = IF((cpc.saldo_pendiente - NEW.monto) <= 0, 'pagada', cpc.estado),
   c.saldo_pendiente = c.saldo_pendiente - NEW.monto,
   c.saldo_actual = c.saldo_pendiente - NEW.monto
 WHERE cpc.id = NEW.cuenta_por_cobrar_id;
+
+-- Trigger 2: Actualizar saldos al insertar un abono a pedido
+DROP TRIGGER IF EXISTS after_abono_insert;
+CREATE TRIGGER after_abono_insert
+AFTER INSERT ON abonos_pedidos
+FOR EACH ROW
+BEGIN
+  UPDATE pedidos
+  SET total_abonado = total_abonado + NEW.monto,
+      saldo_pendiente = saldo_pendiente - NEW.monto
+  WHERE id = NEW.pedido_id;
+END;
+
+-- Trigger 3: Actualizar saldos al eliminar un abono a pedido
+DROP TRIGGER IF EXISTS after_abono_delete;
+CREATE TRIGGER after_abono_delete
+AFTER DELETE ON abonos_pedidos
+FOR EACH ROW
+BEGIN
+  UPDATE pedidos
+  SET total_abonado = total_abonado - OLD.monto,
+      saldo_pendiente = saldo_pendiente + OLD.monto
+  WHERE id = OLD.pedido_id;
+END;
 
 -- =========================================
 -- VISTAS
