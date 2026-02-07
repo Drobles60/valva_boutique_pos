@@ -32,6 +32,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Search, Plus, Eye, ShoppingBag, Package, CheckCircle, Clock, X, DollarSign, Wallet } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
+import { formatCurrency } from "@/lib/utils"
 
 type Proveedor = {
   id: number
@@ -364,7 +365,7 @@ export function PedidosContent() {
       setSelectedPedido(null)
       
       toast.success('Abono registrado correctamente', {
-        description: `Pedido ${selectedPedido.numero_pedido}: $${monto.toLocaleString()}`
+        description: `Pedido ${selectedPedido.numero_pedido}: $${formatCurrency(monto)}`
       })
     } catch (error: any) {
       console.error('Error al registrar abono:', error)
@@ -416,7 +417,7 @@ export function PedidosContent() {
       setSelectedProveedor(null)
       
       toast.success('Abono distribuido correctamente', {
-        description: `${data.pedidos_afectados} pedido(s) afectado(s) - Total: $${data.monto_aplicado.toLocaleString()}`
+        description: `${data.pedidos_afectados} pedido(s) afectado(s) - Total: $${formatCurrency(data.monto_aplicado)}`
       })
     } catch (error: any) {
       console.error('Error al registrar abono:', error)
@@ -449,6 +450,8 @@ export function PedidosContent() {
   const pedidosPendientes = pedidos.filter(p => p.estado === 'pendiente').length
   const pedidosRecibidos = pedidos.filter(p => p.estado === 'recibido').length
   const totalSaldoPendiente = pedidos.reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
+  const totalAbonado = pedidos.reduce((sum, p) => sum + parseFloat(p.total_abonado?.toString() || '0'), 0)
+  const pedidosConSaldoPendiente = pedidos.filter(p => parseFloat(p.saldo_pendiente.toString()) > 0).length
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -482,7 +485,7 @@ export function PedidosContent() {
           </div>
 
           {/* Stats */}
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Pedidos</CardTitle>
@@ -512,12 +515,32 @@ export function PedidosContent() {
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Abonado</CardTitle>
+                <Wallet className="h-4 w-4 text-blue-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-blue-600">
+                  ${formatCurrency(totalAbonado)}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Pedidos con Saldo</CardTitle>
+                <Package className="h-4 w-4 text-amber-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-amber-600">{pedidosConSaldoPendiente}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Saldo Pendiente</CardTitle>
                 <DollarSign className="h-4 w-4 text-red-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
-                  ${totalSaldoPendiente.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  ${formatCurrency(totalSaldoPendiente)}
                 </div>
               </CardContent>
             </Card>
@@ -598,16 +621,16 @@ export function PedidosContent() {
                           )}
                         </TableCell>
                         <TableCell className="text-right font-medium">
-                          ${Number(pedido.costo_total).toFixed(2)}
+                          ${formatCurrency(pedido.costo_total)}
                         </TableCell>
                         <TableCell className="text-right">
                           <span className="font-medium text-blue-600">
-                            ${Number(pedido.total_abonado || 0).toFixed(2)}
+                            ${formatCurrency(pedido.total_abonado || 0)}
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
                           <span className={`font-medium ${Number(pedido.saldo_pendiente || 0) === 0 ? 'text-green-600' : 'text-orange-600'}`}>
-                            ${Number(pedido.saldo_pendiente || pedido.costo_total).toFixed(2)}
+                            ${formatCurrency(pedido.saldo_pendiente || pedido.costo_total)}
                           </span>
                         </TableCell>
                         <TableCell>
@@ -663,7 +686,7 @@ export function PedidosContent() {
 
       {/* Dialog Nuevo Pedido */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto w-[95vw] sm:w-full">
+        <DialogContent className="max-w-7xl max-h-[150vh] overflow-y-auto w-[150vw] sm:w-full">
           <DialogHeader>
             <DialogTitle>Nuevo Pedido a Proveedor</DialogTitle>
             <DialogDescription>
@@ -731,21 +754,44 @@ export function PedidosContent() {
                   </div>
                   <div className="sm:col-span-2">
                     <Input
-                      type="number"
+                      type="text"
                       placeholder="Cantidad"
-                      value={nuevaLinea.cantidad}
-                      onChange={(e) => setNuevaLinea({ ...nuevaLinea, cantidad: e.target.value })}
-                      min="1"
+                      value={nuevaLinea.cantidad ? formatCurrency(nuevaLinea.cantidad) : ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                        setNuevaLinea({ ...nuevaLinea, cantidad: value })
+                      }}
+                      onFocus={(e) => {
+                        if (nuevaLinea.cantidad) {
+                          e.target.value = nuevaLinea.cantidad
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (nuevaLinea.cantidad) {
+                          e.target.value = formatCurrency(nuevaLinea.cantidad)
+                        }
+                      }}
                     />
                   </div>
                   <div className="sm:col-span-3">
                     <Input
-                      type="number"
-                      step="0.01"
+                      type="text"
                       placeholder="Precio Total"
-                      value={nuevaLinea.precioTotal}
-                      onChange={(e) => setNuevaLinea({ ...nuevaLinea, precioTotal: e.target.value })}
-                      min="0"
+                      value={nuevaLinea.precioTotal ? formatCurrency(nuevaLinea.precioTotal) : ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                        setNuevaLinea({ ...nuevaLinea, precioTotal: value })
+                      }}
+                      onFocus={(e) => {
+                        if (nuevaLinea.precioTotal) {
+                          e.target.value = nuevaLinea.precioTotal
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (nuevaLinea.precioTotal) {
+                          e.target.value = formatCurrency(nuevaLinea.precioTotal)
+                        }
+                      }}
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -771,7 +817,7 @@ export function PedidosContent() {
                           <TableRow key={index}>
                             <TableCell>{detalle.descripcion}</TableCell>
                             <TableCell className="text-center">{detalle.cantidad}</TableCell>
-                            <TableCell className="text-right font-medium">${Number(detalle.precioTotal).toFixed(2)}</TableCell>
+                            <TableCell className="text-right font-medium">${formatCurrency(detalle.precioTotal)}</TableCell>
                             <TableCell>
                               <Button
                                 type="button"
@@ -787,7 +833,7 @@ export function PedidosContent() {
                         ))}
                         <TableRow>
                           <TableCell colSpan={2} className="text-right font-bold">Total:</TableCell>
-                          <TableCell className="text-right font-bold text-lg">${calcularTotal().toFixed(2)}</TableCell>
+                          <TableCell className="text-right font-bold text-lg">${formatCurrency(calcularTotal())}</TableCell>
                           <TableCell></TableCell>
                         </TableRow>
                       </TableBody>
@@ -878,13 +924,13 @@ export function PedidosContent() {
                         <TableRow key={index}>
                           <TableCell>{detalle.descripcion}</TableCell>
                           <TableCell className="text-center">{detalle.cantidad}</TableCell>
-                          <TableCell className="text-right font-medium">${Number(detalle.precioTotal).toFixed(2)}</TableCell>
+                          <TableCell className="text-right font-medium">${formatCurrency(detalle.precioTotal)}</TableCell>
                         </TableRow>
                       ))}
                       <TableRow>
                         <TableCell colSpan={2} className="text-right font-bold">Total:</TableCell>
                         <TableCell className="text-right font-bold text-lg">
-                          ${Number(selectedPedido.costo_total).toFixed(2)}
+                          ${formatCurrency(selectedPedido.costo_total)}
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -930,42 +976,50 @@ export function PedidosContent() {
         <DialogContent className="w-[95vw] sm:w-full max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Registrar Abono a Pedido</DialogTitle>
-            <DialogDescription>
-              {selectedPedido && (
-                <div className="space-y-2 mt-2">
-                  <p><span className="font-semibold">Pedido:</span> {selectedPedido.numero_pedido}</p>
-                  <p><span className="font-semibold">Proveedor:</span> {selectedPedido.proveedor_nombre}</p>
-                  <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm pt-2 border-t">
-                    <div>
-                      <p className="text-muted-foreground">Costo Total</p>
-                      <p className="font-semibold">${Number(selectedPedido.costo_total).toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Abonado</p>
-                      <p className="font-semibold text-blue-600">${Number(selectedPedido.total_abonado).toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Saldo</p>
-                      <p className="font-semibold text-orange-600">${Number(selectedPedido.saldo_pendiente).toLocaleString()}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </DialogDescription>
           </DialogHeader>
+          {selectedPedido && (
+            <div className="space-y-2">
+              <p><span className="font-semibold">Pedido:</span> {selectedPedido.numero_pedido}</p>
+              <p><span className="font-semibold">Proveedor:</span> {selectedPedido.proveedor_nombre}</p>
+              <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm pt-2 border-t">
+                <div>
+                  <p className="text-muted-foreground">Costo Total</p>
+                  <p className="font-semibold">${formatCurrency(selectedPedido.costo_total)}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Abonado</p>
+                  <p className="font-semibold text-blue-600">${formatCurrency(selectedPedido.total_abonado)}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Saldo</p>
+                  <p className="font-semibold text-orange-600">${formatCurrency(selectedPedido.saldo_pendiente)}</p>
+                </div>
+              </div>
+            </div>
+          )}
           <form onSubmit={registrarAbonoPedido}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="monto-abono">Monto del Abono *</Label>
                 <Input
                   id="monto-abono"
-                  type="number"
-                  step="0.01"
-                  min="0.01"
-                  max={selectedPedido?.saldo_pendiente}
-                  placeholder="0.00"
-                  value={abonoForm.monto}
-                  onChange={(e) => setAbonoForm({ ...abonoForm, monto: e.target.value })}
+                  type="text"
+                  placeholder="0"
+                  value={abonoForm.monto ? formatCurrency(abonoForm.monto) : ''}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                    setAbonoForm({ ...abonoForm, monto: value })
+                  }}
+                  onFocus={(e) => {
+                    if (abonoForm.monto) {
+                      e.target.value = abonoForm.monto
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (abonoForm.monto) {
+                      e.target.value = formatCurrency(abonoForm.monto)
+                    }
+                  }}
                   required
                 />
               </div>
@@ -1058,7 +1112,7 @@ export function PedidosContent() {
                         
                         return (
                           <SelectItem key={proveedor.id} value={proveedor.id.toString()}>
-                            {proveedor.razon_social} - {numPedidos} pedido(s) - Deuda: ${saldoTotal.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {proveedor.razon_social} - {numPedidos} pedido(s) - Deuda: ${formatCurrency(saldoTotal)}
                           </SelectItem>
                         )
                       })}
@@ -1070,12 +1124,23 @@ export function PedidosContent() {
                 <Label htmlFor="monto-proveedor">Monto del Abono *</Label>
                 <Input
                   id="monto-proveedor"
-                  type="number"
-                  step="0.01"
-                  min="0.01"
-                  placeholder="0.00"
-                  value={abonoForm.monto}
-                  onChange={(e) => setAbonoForm({ ...abonoForm, monto: e.target.value })}
+                  type="text"
+                  placeholder="0"
+                  value={abonoForm.monto ? formatCurrency(abonoForm.monto) : ''}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                    setAbonoForm({ ...abonoForm, monto: value })
+                  }}
+                  onFocus={(e) => {
+                    if (abonoForm.monto) {
+                      e.target.value = abonoForm.monto
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (abonoForm.monto) {
+                      e.target.value = formatCurrency(abonoForm.monto)
+                    }
+                  }}
                   required
                 />
               </div>

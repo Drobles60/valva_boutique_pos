@@ -25,6 +25,7 @@ import { getProducts, saveProduct, deleteProduct, getCurrentUser } from "@/lib/s
 import { SidebarToggle } from "@/components/app-sidebar"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toast } from "sonner"
+import { formatCurrency } from "@/lib/utils"
 
 export function ProductosContent() {
   const [productos, setProductos] = useState<Product[]>([])
@@ -596,7 +597,7 @@ export function ProductosContent() {
               <div class="ref-label">REF</div>
               <div class="ref-value">${labelData.sku}</div>
             </div>
-            <div class="precio">$${labelData.precio_venta.toFixed(2)}</div>
+            <div class="precio">$${formatCurrency(labelData.precio_venta)}</div>
           </div>
         </div>
       `
@@ -852,7 +853,7 @@ export function ProductosContent() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${totalInventario.toLocaleString()}</div>
+              <div className="text-2xl font-bold">${formatCurrency(totalInventario)}</div>
               <p className="text-xs text-muted-foreground">Costo total</p>
             </CardContent>
           </Card>
@@ -951,18 +952,18 @@ export function ProductosContent() {
                   </TableCell>
                   {mounted && canViewCosts && (
                     <TableCell className="text-center">
-                      <span className="text-sm">${producto.precioCosto?.toFixed(2)}</span>
+                      <span className="text-sm">${formatCurrency(producto.precioCosto)}</span>
                     </TableCell>
                   )}
                   <TableCell className="text-center">
                     <span className="font-medium">
-                      ${((producto as any).precio_original || producto.precioVentaPublico)?.toFixed(2)}
+                      ${formatCurrency((producto as any).precio_original || producto.precioVentaPublico)}
                     </span>
                   </TableCell>
                   <TableCell className="text-center">
                     {(producto as any).tiene_descuento ? (
                       <span className="font-medium text-green-600">
-                        ${producto.precioVentaPublico?.toFixed(2)}
+                        ${formatCurrency(producto.precioVentaPublico)}
                       </span>
                     ) : (
                       <Badge variant="secondary" className="text-xs">Sin descuento</Badge>
@@ -970,7 +971,7 @@ export function ProductosContent() {
                   </TableCell>
                   <TableCell className="hidden lg:table-cell text-center">
                     <span className="text-sm text-muted-foreground">
-                      ${producto.precioEspecial?.toFixed(2)}
+                      ${formatCurrency(producto.precioEspecial)}
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
@@ -1198,11 +1199,22 @@ export function ProductosContent() {
                     <Label htmlFor="precio_compra">Precio Compra *</Label>
                     <Input
                       id="precio_compra"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={formData.precio_compra}
-                      onChange={(e) => setFormData({ ...formData, precio_compra: e.target.value })}
+                      type="text"
+                      value={formData.precio_compra ? formatCurrency(formData.precio_compra) : ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                        setFormData({ ...formData, precio_compra: value })
+                      }}
+                      onFocus={(e) => {
+                        if (formData.precio_compra) {
+                          e.target.value = formData.precio_compra
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (formData.precio_compra) {
+                          e.target.value = formatCurrency(formData.precio_compra)
+                        }
+                      }}
                       required
                     />
                   </div>
@@ -1211,11 +1223,22 @@ export function ProductosContent() {
                     <Label htmlFor="precio_venta">Precio Venta *</Label>
                     <Input
                       id="precio_venta"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={formData.precio_venta}
-                      onChange={(e) => setFormData({ ...formData, precio_venta: e.target.value })}
+                      type="text"
+                      value={formData.precio_venta ? formatCurrency(formData.precio_venta) : ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                        setFormData({ ...formData, precio_venta: value })
+                      }}
+                      onFocus={(e) => {
+                        if (formData.precio_venta) {
+                          e.target.value = formData.precio_venta
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (formData.precio_venta) {
+                          e.target.value = formatCurrency(formData.precio_venta)
+                        }
+                      }}
                       required
                     />
                     {formData.precio_compra && formData.precio_venta && (
@@ -1234,11 +1257,22 @@ export function ProductosContent() {
                     <Label htmlFor="precio_minimo">Precio Mínimo</Label>
                     <Input
                       id="precio_minimo"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={formData.precio_minimo}
-                      onChange={(e) => setFormData({ ...formData, precio_minimo: e.target.value })}
+                      type="text"
+                      value={formData.precio_minimo ? formatCurrency(formData.precio_minimo) : ''}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                        setFormData({ ...formData, precio_minimo: value })
+                      }}
+                      onFocus={(e) => {
+                        if (formData.precio_minimo) {
+                          e.target.value = formData.precio_minimo
+                        }
+                      }}
+                      onBlur={(e) => {
+                        if (formData.precio_minimo) {
+                          e.target.value = formatCurrency(formData.precio_minimo)
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -1247,11 +1281,22 @@ export function ProductosContent() {
                   <Label htmlFor="stock_actual">Cantidad en Stock *</Label>
                   <Input
                     id="stock_actual"
-                    type="number"
-                    step="1"
-                    min="0"
-                    value={formData.stock_actual}
-                    onChange={(e) => setFormData({ ...formData, stock_actual: e.target.value })}
+                    type="text"
+                    value={formData.stock_actual ? formatCurrency(formData.stock_actual) : ''}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                      setFormData({ ...formData, stock_actual: value })
+                    }}
+                    onFocus={(e) => {
+                      if (formData.stock_actual) {
+                        e.target.value = formData.stock_actual
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (formData.stock_actual) {
+                        e.target.value = formatCurrency(formData.stock_actual)
+                      }
+                    }}
                     required
                   />
                   <p className="text-xs text-muted-foreground">

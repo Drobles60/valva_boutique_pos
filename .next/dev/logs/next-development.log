@@ -1,824 +1,132 @@
-[00:00:01.649] Server  LOG      ✓ Ready in 1219ms
-[00:00:49.230] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:49.638] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:49.638] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
-[00:00:49.638] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769653978754}
-[00:00:49.944] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:00:50.110] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:00:50.111] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:00:50.112] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:00:50.112] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:00:50.112] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:00:50.113] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:00:50.118] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:00:50.119] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:00:50.120] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:00:50.121] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:00:50.122] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:00:50.138] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:00:50.139] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:00:50.140] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:50.140] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:50.141] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:50.141] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:50.150] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:00:50.151] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:00:50.151] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:00:50.152] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:00:50.152] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:00:50.152] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:00:50.153] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:00:50.153] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:50.153] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:00:50.153] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:00:50.154] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:00:50.154] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:00:50.154] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:00:50.154] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:50.155] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:50.155] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:50.156] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:50.156] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:00:50.156] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:00:50.157] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:00:50.157] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:00:50.157] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:00:50.157] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:00:50.158] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:00:50.158] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:00:50.208] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
-[00:00:50.208] Browser LOG     Categorías cargadas: 7
-[00:01:42.795] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:42.902] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:01:42.902] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
-[00:01:42.902] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654032032}
-[00:02:03.003] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:02:03.281] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:02:03.282] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
-[00:02:03.282] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654052404}
-[00:02:17.519] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:02:17.725] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:02:17.725] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
-[00:02:17.725] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654066848}
-[00:02:20.078] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:02:20.188] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:02:20.190] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:02:20.190] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:02:20.191] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:02:20.191] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:02:20.191] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:02:20.191] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:02:20.192] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:02:20.193] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:02:20.193] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:02:20.194] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:02:20.194] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:02:20.195] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:02:20.196] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:02:20.198] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:02:20.199] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:02:20.199] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:02:20.200] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:02:20.201] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:02:20.202] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:02:20.202] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:02:20.202] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:02:20.203] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:02:20.203] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:02:20.203] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:02:20.214] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:02:20.214] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:02:20.215] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:02:20.215] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:02:20.215] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:02:20.216] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:02:20.216] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:02:20.216] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:02:20.217] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:02:20.218] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:02:20.218] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:02:20.218] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:02:20.219] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:02:20.219] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:02:20.219] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:02:20.219] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:02:20.220] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:02:20.220] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:02:20.387] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:02:20.387] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
-[00:02:20.387] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654069517}
-[00:09:00.440] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:09:00.825] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:09:00.825] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/descuentos","route":"/inventario/descuentos"}
-[00:09:00.825] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/descuentos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/descuentos","o":"http://localhost:3000/inventario/descuentos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654469950}
-[00:09:01.830] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:09:01.942] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:09:01.968] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:09:01.969] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:09:01.969] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:09:01.969] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:09:01.970] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:09:01.972] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:09:01.978] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:09:01.979] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:09:01.980] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:09:01.984] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:09:01.985] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:09:01.985] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:09:01.986] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:09:01.999] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:09:01.999] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:09:02.000] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:09:02.000] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:09:02.001] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:09:02.001] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:09:02.001] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:09:02.002] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:09:02.002] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:09:02.002] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:09:02.003] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:09:02.003] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:09:02.003] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:09:02.003] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:09:02.004] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:09:02.006] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:09:02.009] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:09:02.010] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:09:02.011] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:09:02.013] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:09:02.013] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:09:02.014] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:09:02.014] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:09:02.014] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:09:02.015] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:09:02.015] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:09:02.016] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:09:02.016] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:09:02.017] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:09:02.200] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
-[00:09:02.200] Browser LOG     Categorías cargadas: 7
-[00:09:02.200] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:09:02.200] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
-[00:09:02.200] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654471292}
-[00:09:03.794] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:09:04.099] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:09:04.099] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/descuentos","route":"/inventario/descuentos"}
-[00:09:04.099] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/descuentos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/descuentos","o":"http://localhost:3000/inventario/descuentos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654473227}
-[00:16:08.493] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:16:08.497] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:16:08.497] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:16:08.498] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:16:08.498] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:16:08.498] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:16:08.498] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:16:08.499] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:16:08.500] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:16:08.500] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:16:08.501] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:16:08.502] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:16:08.502] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:16:08.503] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:16:08.503] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:16:08.503] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:16:08.504] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:16:08.504] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:16:08.505] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:16:08.505] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:16:08.506] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:16:08.506] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:16:08.506] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:16:08.506] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:16:08.506] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:16:08.507] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:16:08.507] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:16:08.507] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:16:08.507] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:16:08.507] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:16:08.508] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:16:08.508] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:16:08.508] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:16:08.508] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:16:08.509] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:16:08.509] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:16:08.509] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:16:08.509] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:16:08.509] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:16:08.510] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:16:08.510] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:16:08.510] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:16:08.510] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:17:20.390] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:20.509] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:17:20.529] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:17:20.529] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:17:20.530] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:17:20.530] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:17:20.530] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:17:20.531] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:17:20.536] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:17:20.536] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:17:20.537] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:17:20.544] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:20.544] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:20.545] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:17:20.546] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:20.547] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:17:20.548] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:20.548] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:20.549] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:17:20.549] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:17:20.549] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:17:20.550] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:17:20.550] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:20.551] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:17:20.552] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:20.552] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:20.552] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:17:20.553] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:17:20.553] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:17:20.553] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:17:20.566] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:17:20.568] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:17:20.570] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:20.572] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:20.574] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:17:20.574] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:20.574] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:20.575] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:17:20.575] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:17:20.575] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:17:20.575] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:17:20.575] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:20.576] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:17:20.576] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:17:20.738] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
-[00:17:20.738] Browser LOG     Categorías cargadas: 7
-[00:17:20.738] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:20.738] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
-[00:17:20.738] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654969856}
-[00:17:23.234] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:23.544] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:23.544] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/reportes","route":"/reportes"}
-[00:17:23.544] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/reportes color: rgb(120, 120, 120) color: inherit {"dp":"/reportes","o":"http://localhost:3000/reportes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654972665}
-[00:17:26.037] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:26.037] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:26.037] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/usuarios","route":"/usuarios"}
-[00:17:26.037] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/usuarios color: rgb(120, 120, 120) color: inherit {"dp":"/usuarios","o":"http://localhost:3000/usuarios","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654975247}
-[00:17:44.354] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:44.766] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-%s%s https://react.dev/link/hydration-mismatch 
-
-  ...
-    <SidebarMenu>
-      <ul data-slot="sidebar-menu" data-sidebar="menu" className="flex w-ful...">
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <SidebarMenuItem>
-        <Collapsible className="group/coll..." defaultOpen={false}>
-          <Collapsible data-slot="collapsible" className="group/coll..." defaultOpen={false}>
-            <CollapsibleProvider scope={undefined} disabled={undefined} contentId="radix-_R_a..." open={false} ...>
-              <Primitive.div data-state="closed" data-disabled={undefined} data-slot="collapsible" ...>
-                <div data-state="closed" data-disabled={undefined} data-slot="collapsible" className="group/coll..." ...>
-                  <SidebarMenuItem>
-                    <li data-slot="sidebar-me..." data-sidebar="menu-item" className="group/menu...">
-                      <CollapsibleTrigger asChild={true}>
-                        <CollapsibleTrigger data-slot="collapsibl..." asChild={true}>
-                          <Primitive.button type="button" aria-controls="radix-_R_a..." aria-expanded={false} ...>
-                            <Slot type="button" aria-controls="radix-_R_a..." aria-expanded={false} data-state="closed" ...>
-                              <SlotClone type="button" aria-controls="radix-_R_a..." aria-expanded={false} ...>
-                                <SidebarMenuButton type="button" aria-controls="radix-_R_a..." aria-expanded={false} ...>
-                                  <button
-                                    data-slot="collapsible-trigger"
-                                    data-sidebar="menu-button"
-                                    data-size="default"
-                                    data-active={false}
-                                    className={"peer/menu-button flex w-full items-center gap-2 overflow-hidden round..."}
-                                    type="button"
-+                                   aria-controls="radix-_R_aklesndlb_"
--                                   aria-controls="radix-_R_1aj5esndlb_"
-                                    aria-expanded={false}
-                                    data-state="closed"
-                                    data-disabled={undefined}
-                                    disabled={undefined}
-                                    onClick={function handleEvent}
-                                    ref={null}
-                                  >
-                      <CollapsibleContent>
-                        <CollapsibleContent data-slot="collapsibl...">
-                          <Presence present={false}>
-                            <Primitive.div data-state="closed" data-disabled={undefined} id="radix-_R_a..." hidden={true} ...>
-                              <div
-                                data-state="closed"
-                                data-disabled={undefined}
-+                               id="radix-_R_aklesndlb_"
--                               id="radix-_R_1aj5esndlb_"
-                                hidden={true}
-                                data-slot="collapsible-content"
-                                style={{--radix-collapsible-content-height:undefined, ...}}
-                                ref={function}
-                              >
-                  ...
-
-[00:17:44.766] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:44.766] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
-[00:17:44.766] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654993813}
-[00:17:45.048] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:45.165] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:17:45.170] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:17:45.170] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:17:45.170] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:17:45.171] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:17:45.171] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:17:45.171] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:17:45.173] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:17:45.178] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:17:45.179] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:17:45.179] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:17:45.180] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:17:45.181] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:45.182] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:17:45.182] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:45.183] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:45.184] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:45.185] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:45.186] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:17:45.186] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:45.187] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:45.187] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:17:45.187] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:17:45.188] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:17:45.188] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:17:45.188] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:45.189] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:45.189] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:17:45.189] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:17:45.190] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:17:45.190] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:17:45.190] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:45.191] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:17:45.191] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:17:45.192] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:45.192] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:45.192] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:17:45.192] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:17:45.193] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:17:45.193] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:17:45.193] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:45.194] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:17:45.194] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:17:45.393] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:45.393] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
-[00:17:45.393] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654994523}
-[00:17:46.405] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:46.686] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:46.686] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
-[00:17:46.686] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654995810}
-[00:17:48.677] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:48.962] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:48.962] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
-[00:17:48.962] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654998081}
-[00:17:49.613] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:49.724] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:17:49.726] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:17:49.727] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:17:49.727] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:17:49.728] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:17:49.728] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:17:49.728] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:17:49.730] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:17:49.732] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:17:49.733] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:17:49.735] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:17:49.736] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:17:49.737] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:49.739] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:17:49.739] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:49.741] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:49.741] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:49.742] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:17:49.743] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:17:49.743] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:49.743] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:49.744] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:17:49.744] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:17:49.744] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:17:49.745] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:17:49.759] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:49.759] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:49.760] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:17:49.760] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:17:49.760] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:17:49.760] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:17:49.761] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:49.761] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:17:49.762] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:17:49.762] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:17:49.763] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:17:49.763] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:17:49.763] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:17:49.764] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:17:49.764] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:17:49.764] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:17:49.765] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:17:49.765] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:17:49.988] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:49.988] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
-[00:17:49.988] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769654999079}
-[00:29:31.086] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:29:31.377] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:29:31.377] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
-[00:29:31.377] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769655700498}
-[00:30:05.641] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:30:05.946] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:30:05.946] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/descuentos","route":"/inventario/descuentos"}
-[00:30:05.946] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/descuentos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/descuentos","o":"http://localhost:3000/inventario/descuentos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769655735076}
-[00:30:06.374] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:30:06.444] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:30:06.468] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:30:06.469] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:30:06.470] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:30:06.471] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:30:06.471] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:30:06.472] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:30:06.473] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:30:06.481] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:30:06.481] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:30:06.482] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:30:06.483] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:30:06.487] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:06.491] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:30:06.492] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:30:06.493] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:06.494] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:06.495] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:06.496] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:30:06.496] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:30:06.497] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:30:06.497] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:30:06.497] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:30:06.498] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:30:06.498] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:30:06.499] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:30:06.499] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:30:06.499] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:30:06.500] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:30:06.500] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:30:06.500] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:30:06.501] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:30:06.501] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:30:06.501] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:30:06.502] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:30:06.502] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:30:06.502] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:30:06.503] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:30:06.503] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:30:06.504] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:30:06.504] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:30:06.505] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:30:06.505] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:30:06.612] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
-[00:30:06.612] Browser LOG     Categorías cargadas: 7
-[00:30:06.729] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:30:06.729] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
-[00:30:06.729] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769655735853}
-[00:30:14.440] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:30:14.760] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:30:14.760] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/descuentos","route":"/inventario/descuentos"}
-[00:30:14.760] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/descuentos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/descuentos","o":"http://localhost:3000/inventario/descuentos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769655743834}
-[00:30:17.173] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:30:17.258] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:30:17.280] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[00:30:17.280] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:30:17.281] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:30:17.281] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:30:17.281] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:30:17.282] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:30:17.284] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:30:17.293] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:30:17.294] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:30:17.294] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:30:17.295] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:30:17.295] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:17.300] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[00:30:17.301] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:30:17.301] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:17.302] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:17.302] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:30:17.303] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:30:17.304] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:30:17.304] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:30:17.305] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[00:30:17.305] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[00:30:17.305] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[00:30:17.305] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[00:30:17.311] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:30:17.311] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:30:17.312] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[00:30:17.312] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[00:30:17.312] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[00:30:17.312] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[00:30:17.313] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:30:17.313] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:30:17.314] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[00:30:17.314] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[00:30:17.315] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[00:30:17.315] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[00:30:17.315] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[00:30:17.315] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[00:30:17.316] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[00:30:17.316] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:30:17.317] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:30:17.317] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[00:30:17.525] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
-[00:30:17.525] Browser LOG     Categorías cargadas: 7
-[00:30:17.525] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:30:17.525] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
-[00:30:17.525] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769655746639}
-[00:41:35.993] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:41:36.366] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:41:36.366] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/reportes","route":"/reportes"}
-[00:41:36.366] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/reportes color: rgb(120, 120, 120) color: inherit {"dp":"/reportes","o":"http://localhost:3000/reportes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769656425492}
-[00:41:40.001] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:41:40.346] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:41:40.346] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
-[00:41:40.346] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769656429431}
-[00:44:40.195] Server  LOG      ✓ Compiled in 138ms
-[00:55:00.062] Server  LOG      ✓ Compiled in 124ms
-[00:55:08.946] Server  LOG      ✓ Compiled in 83ms
-[01:02:05.955] Server  LOG      ✓ Compiled in 129ms
-[01:02:31.618] Server  LOG      ✓ Compiled in 112ms
-[01:02:45.758] Server  LOG      ✓ Compiled in 120ms
-[01:03:14.208] Server  LOG      ✓ Compiled in 112ms
-[01:05:52.823] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
-This will cause a hydration error.%s <p> p 
-
-  ...
-    <FocusScope asChild={true} loop={true} trapped={true} onMountAutoFocus={undefined} ...>
-      <Primitive.div tabIndex={-1} asChild={true} ref={function} ...>
-        <Slot tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-          <SlotClone tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-            <DismissableLayer role="dialog" id="radix-_r_i_" aria-describedby="radix-_r_k_" aria-labelledby="radix-_r_j_" ...>
-              <Primitive.div role="dialog" id="radix-_r_i_" aria-describedby="radix-_r_k_" aria-labelledby="radix-_r_j_" ...>
-                <div role="dialog" id="radix-_r_i_" aria-describedby="radix-_r_k_" aria-labelledby="radix-_r_j_" ...>
-                  <DialogHeader>
-                    <div data-slot="dialog-header" className="flex flex-...">
-                      <DialogTitle>
-                      <DialogDescription>
-                        <DialogDescription data-slot="dialog-des..." className="text-muted...">
-                          <Primitive.p id="radix-_r_k_" data-slot="dialog-des..." className="text-muted..." ref={null}>
->                           <p
->                             id="radix-_r_k_"
->                             data-slot="dialog-description"
->                             className="text-muted-foreground text-sm"
->                             ref={null}
->                           >
-                              <div className="space-y-2 ...">
->                               <p>
-                                ...
-                  ...
-                  ...
-    ...
-
-[01:05:52.823] Browser ERROR   <%s> cannot contain a nested %s.
-See this log for the ancestor stack trace. p <p>
-[01:05:52.824] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
-This will cause a hydration error.%s <div> p 
-
-  ...
-    <FocusScope asChild={true} loop={true} trapped={true} onMountAutoFocus={undefined} ...>
-      <Primitive.div tabIndex={-1} asChild={true} ref={function} ...>
-        <Slot tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-          <SlotClone tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-            <DismissableLayer role="dialog" id="radix-_r_i_" aria-describedby="radix-_r_k_" aria-labelledby="radix-_r_j_" ...>
-              <Primitive.div role="dialog" id="radix-_r_i_" aria-describedby="radix-_r_k_" aria-labelledby="radix-_r_j_" ...>
-                <div role="dialog" id="radix-_r_i_" aria-describedby="radix-_r_k_" aria-labelledby="radix-_r_j_" ...>
-                  <DialogHeader>
-                    <div data-slot="dialog-header" className="flex flex-...">
-                      <DialogTitle>
-                      <DialogDescription>
-                        <DialogDescription data-slot="dialog-des..." className="text-muted...">
-                          <Primitive.p id="radix-_r_k_" data-slot="dialog-des..." className="text-muted..." ref={null}>
->                           <p
->                             id="radix-_r_k_"
->                             data-slot="dialog-description"
->                             className="text-muted-foreground text-sm"
->                             ref={null}
->                           >
-                              <div className="space-y-2 ...">
-                                <p>
-                                <p>
-                                <div className="grid grid-...">
->                                 <div>
-                                  ...
-                  ...
-                  ...
-    ...
-
-[01:05:52.824] Browser ERROR   <%s> cannot contain a nested %s.
-See this log for the ancestor stack trace. p <div>
-[01:06:26.666] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:06:26.667] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__3bcaf544._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:06:26.669] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:06:26.670] Server  WARN    Error: Route "/api/pedidos/[id]/abonos" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-[01:06:26.777] Browser ERROR   Error al registrar abono: {}
-[01:07:26.916] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:07:26.917] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__3bcaf544._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:07:26.918] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:07:26.918] Server  WARN    Error: Route "/api/pedidos/[id]/abonos" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-[01:10:54.139] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:10:54.140] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__3bcaf544._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:10:54.140] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:10:54.141] Server  WARN    Error: Route "/api/pedidos/[id]/abonos" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-[01:10:54.259] Browser ERROR   Error al registrar abono: {}
-[01:12:47.682] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[01:12:48.061] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[01:12:48.061] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
-[01:12:48.061] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769658297185}
-[01:24:41.780] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
-This will cause a hydration error.%s <p> p 
-
-  ...
-    <FocusScope asChild={true} loop={true} trapped={true} onMountAutoFocus={undefined} ...>
-      <Primitive.div tabIndex={-1} asChild={true} ref={function} ...>
-        <Slot tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-          <SlotClone tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-            <DismissableLayer role="dialog" id="radix-_R_1..." aria-describedby="radix-_R_1..." ...>
-              <Primitive.div role="dialog" id="radix-_R_1..." aria-describedby="radix-_R_1..." ...>
-                <div role="dialog" id="radix-_R_1..." aria-describedby="radix-_R_1..." aria-labelledby="radix-_R_1..." ...>
-                  <DialogHeader>
-                    <div data-slot="dialog-header" className="flex flex-...">
-                      <DialogTitle>
-                      <DialogDescription>
-                        <DialogDescription data-slot="dialog-des..." className="text-muted...">
-                          <Primitive.p id="radix-_R_1..." data-slot="dialog-des..." className="text-muted..." ref={null}>
->                           <p
->                             id="radix-_R_1d5esndlbH2_"
->                             data-slot="dialog-description"
->                             className="text-muted-foreground text-sm"
->                             ref={null}
->                           >
-                              <div className="space-y-2 ...">
->                               <p>
-                                ...
-                  ...
-                  ...
-    ...
-
-[01:24:41.780] Browser ERROR   <%s> cannot contain a nested %s.
-See this log for the ancestor stack trace. p <p>
-[01:24:41.780] Browser ERROR   In HTML, %s cannot be a descendant of <%s>.
-This will cause a hydration error.%s <div> p 
-
-  ...
-    <FocusScope asChild={true} loop={true} trapped={true} onMountAutoFocus={undefined} ...>
-      <Primitive.div tabIndex={-1} asChild={true} ref={function} ...>
-        <Slot tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-          <SlotClone tabIndex={-1} onKeyDown={function FocusScope.useCallback[handleKeyDown]} ref={function}>
-            <DismissableLayer role="dialog" id="radix-_R_1..." aria-describedby="radix-_R_1..." ...>
-              <Primitive.div role="dialog" id="radix-_R_1..." aria-describedby="radix-_R_1..." ...>
-                <div role="dialog" id="radix-_R_1..." aria-describedby="radix-_R_1..." aria-labelledby="radix-_R_1..." ...>
-                  <DialogHeader>
-                    <div data-slot="dialog-header" className="flex flex-...">
-                      <DialogTitle>
-                      <DialogDescription>
-                        <DialogDescription data-slot="dialog-des..." className="text-muted...">
-                          <Primitive.p id="radix-_R_1..." data-slot="dialog-des..." className="text-muted..." ref={null}>
->                           <p
->                             id="radix-_R_1d5esndlbH2_"
->                             data-slot="dialog-description"
->                             className="text-muted-foreground text-sm"
->                             ref={null}
->                           >
-                              <div className="space-y-2 ...">
-                                <p>
-                                <p>
-                                <div className="grid grid-...">
->                                 <div>
-                                  ...
-                  ...
-                  ...
-    ...
-
-[01:24:41.780] Browser ERROR   <%s> cannot contain a nested %s.
-See this log for the ancestor stack trace. p <div>
-[01:24:57.659] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:24:57.659] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__3bcaf544._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:24:57.659] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[01:24:57.661] Server  WARN    Error: Route "/api/pedidos/[id]/abonos" used `params.id`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
-[01:24:57.779] Browser ERROR   Error al registrar abono: {}
-[01:41:02.014] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[01:41:02.352] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[01:41:02.352] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
-[01:41:02.352] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769659991483}
-[01:43:33.035] Server  LOG      ✓ Compiled in 121ms
-[01:44:59.884] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[01:45:00.100] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[01:45:00.100] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
-[01:45:00.100] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769660229221}
-[02:08:12.149] Server  LOG      ✓ Compiled in 100ms
-[02:08:20.575] Server  LOG      ✓ Compiled in 108ms
-[02:12:12.134] Server  LOG      ✓ Compiled in 106ms
-[02:12:12.364] Server  LOG      ✓ Compiled in 176ms
-[02:12:22.807] Server  LOG      ✓ Compiled in 97ms
-[02:12:32.286] Server  LOG      ✓ Compiled in 120ms
-[02:12:43.808] Server  LOG      ✓ Compiled in 134ms
-[02:12:53.536] Server  LOG      ✓ Compiled in 131ms
-[02:13:00.479] Server  LOG      ✓ Compiled in 151ms
-[02:13:08.288] Server  LOG      ✓ Compiled in 96ms
-[02:13:26.344] Server  LOG      ✓ Compiled in 90ms
-[02:15:01.685] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:15:02.070] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:15:02.070] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
-[02:15:02.070] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769662031200}
-[02:20:39.288] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:20:39.527] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:20:39.527] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
-[02:20:39.527] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769662368656}
-[02:21:20.194] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:21:20.409] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:21:20.409] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
-[02:21:20.409] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769662409536}
-[02:26:56.754] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:26:56.994] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:26:56.994] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
-[02:26:56.994] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769662746123}
-[02:30:41.241] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:30:41.466] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:30:41.466] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
-[02:30:41.466] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769662970574}
-[02:31:34.060] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:31:34.321] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:31:34.321] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
-[02:31:34.321] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769663023406}
-[02:35:57.118] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:35:57.251] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[02:35:57.387] Server  LOG     [API PRODUCTOS] Productos obtenidos: 5
-[02:35:57.388] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[02:35:57.389] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[02:35:57.390] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[02:35:57.395] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[02:35:57.396] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[02:35:57.402] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:35:57.402] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
-[02:35:57.402] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769663286521}
-[02:35:57.405] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[02:35:57.432] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[02:35:57.442] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[02:35:57.450] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[02:35:57.451] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[02:35:57.452] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[02:35:57.454] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[02:35:57.455] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[02:35:57.455] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[02:35:57.456] Server  LOG     [CALC] Calculando descuento para precio: $60000.00, descuentos disponibles: 1
-[02:35:57.456] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $60000.00 = -$9000.00 → Precio final: $51000.00
-[02:35:57.456] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $51000
-[02:35:57.457] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa satanica" con descuento: $60000.00 → $51000
-[02:35:57.460] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[02:35:57.461] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[02:35:57.462] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 1
-[02:35:57.462] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[02:35:57.463] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[02:35:57.465] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[02:35:57.466] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[02:35:57.467] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 1
-[02:35:57.467] Server  LOG     [DESCUENTOS] Detalles: [{...}]
-[02:35:57.467] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[02:35:57.468] Server  LOG     [CALC] Calculando descuento para precio: $100000.00, descuentos disponibles: 1
-[02:35:57.468] Server  LOG     [CALC] Descuento "descuento 2" (porcentaje): 15.00% sobre $100000.00 = -$15000.00 → Precio final: $85000.00
-[02:35:57.468] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 2" - Precio final: $85000
-[02:35:57.468] Server  LOG     [API PRODUCTOS] ✓ Producto "blusa manga larga azul" con descuento: $100000.00 → $85000
-[02:35:57.469] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[02:35:57.469] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 1
-[02:35:57.469] Server  LOG     [CALC] Calculando descuento para precio: $200000.00, descuentos disponibles: 1
-[02:35:57.470] Server  LOG     [CALC] Descuento "descuento 1" (fijo): Precio fijo $50000.00 → Precio final: $50000.00
-[02:35:57.470] Server  LOG     [CALC] Mejor descuento seleccionado: "descuento 1" - Precio final: $50000
-[02:35:57.470] Server  LOG     [API PRODUCTOS] ✓ Producto "jean oscuro" con descuento: $200000.00 → $50000
-[02:35:57.471] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[02:35:57.471] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[02:35:57.471] Server  LOG     [API PRODUCTOS] Total productos con descuento: 3/5
-[02:35:57.522] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
-[02:35:57.522] Browser LOG     Categorías cargadas: 7
-[02:36:07.940] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:36:08.300] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:36:08.300] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
-[02:36:08.300] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769663297394}
-[02:36:16.893] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:36:17.174] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[02:36:17.174] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
-[02:36:17.174] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769663306303}
+[00:00:01.222] Server  LOG      ✓ Ready in 805ms
+[00:00:06.763] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:07.106] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:07.106] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:00:07.106] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770440416939}
+[00:01:58.514] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:58.838] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[00:01:58.860] Server  LOG     [API PRODUCTOS] Productos obtenidos: 6
+[00:01:58.862] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[00:01:58.863] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[00:01:58.865] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[00:01:58.866] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[00:01:58.867] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[00:01:58.868] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[00:01:58.876] Server  LOG     [DESCUENTOS] Producto: short, Tipo Prenda ID: 40
+[00:01:58.918] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:01:58.918] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
+[00:01:58.918] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770440528693}
+[00:01:58.920] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:01:58.921] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[00:01:58.922] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[00:01:58.923] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[00:01:58.924] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[00:01:58.925] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[00:01:58.929] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:01:58.929] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:01:58.930] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:01:58.931] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:01:58.932] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:01:58.933] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:01:58.934] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:01:58.938] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:01:58.939] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:01:58.939] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:01:58.939] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:01:58.940] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:01:58.940] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:01:58.941] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:01:58.941] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:01:58.942] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:01:58.942] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:01:58.942] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/6
+[00:05:38.658] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[00:05:38.660] Server  LOG     [API PRODUCTOS] Productos obtenidos: 6
+[00:05:38.660] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[00:05:38.661] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[00:05:38.661] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[00:05:38.661] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[00:05:38.662] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[00:05:38.662] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[00:05:38.664] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[00:05:38.665] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[00:05:38.666] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[00:05:38.669] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[00:05:38.670] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[00:05:38.671] Server  LOG     [DESCUENTOS] Producto: short, Tipo Prenda ID: 40
+[00:05:38.671] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:05:38.672] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:05:38.673] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:05:38.674] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:05:38.674] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:05:38.675] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:05:38.675] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:05:38.676] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:05:38.676] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:05:38.677] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:05:38.677] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:05:38.678] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:05:38.678] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:05:38.679] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:05:38.680] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:05:38.680] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:05:38.683] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:05:38.684] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:05:38.686] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/6
+[00:12:44.278] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:44.608] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:12:44.608] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
+[00:12:44.608] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770441174420}
+[00:17:38.198] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:17:38.533] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:17:38.534] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
+[00:17:38.534] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770441468339}
+[00:17:42.708] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:17:42.708] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:17:42.708] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/usuarios","route":"/usuarios"}
+[00:17:42.708] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/usuarios color: rgb(120, 120, 120) color: inherit {"dp":"/usuarios","o":"http://localhost:3000/usuarios","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770441472641}
+[00:17:58.572] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:17:58.851] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:17:58.851] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
+[00:17:58.851] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770441488692}
+[00:18:04.838] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:18:05.136] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:18:05.137] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/reportes","route":"/reportes"}
+[00:18:05.137] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/reportes color: rgb(120, 120, 120) color: inherit {"dp":"/reportes","o":"http://localhost:3000/reportes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770441494967}
+[00:18:06.566] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:18:06.648] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[00:18:06.654] Server  LOG     [API PRODUCTOS] Productos obtenidos: 6
+[00:18:06.654] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[00:18:06.654] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[00:18:06.655] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[00:18:06.655] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[00:18:06.655] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[00:18:06.656] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[00:18:06.657] Server  LOG     [DESCUENTOS] Producto: short, Tipo Prenda ID: 40
+[00:18:06.659] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[00:18:06.660] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[00:18:06.660] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[00:18:06.662] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[00:18:06.662] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[00:18:06.663] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:18:06.664] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:18:06.664] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:18:06.665] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:18:06.665] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:18:06.665] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[00:18:06.666] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:18:06.666] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:18:06.667] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:18:06.668] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:18:06.668] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:18:06.668] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:18:06.668] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:18:06.669] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:18:06.669] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:18:06.669] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:18:06.670] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[00:18:06.670] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[00:18:06.671] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/6
+[00:18:06.931] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:18:06.931] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
+[00:18:06.931] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770441496761}

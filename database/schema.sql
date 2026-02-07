@@ -175,30 +175,22 @@ CREATE TABLE descuento_tipos_prenda (
   FOREIGN KEY (descuento_id) REFERENCES descuentos(id) ON DELETE CASCADE,
   FOREIGN KEY (tipo_prenda_id) REFERENCES tipos_prenda(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+--pendeinte
 -- =========================================
 -- CLIENTES
 -- =========================================
 CREATE TABLE clientes (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  tipo_cliente VARCHAR(30),
-  tipo_documento VARCHAR(30),
-  numero_documento VARCHAR(50),
-  nombre VARCHAR(100),
-  apellido VARCHAR(100),
-  razon_social VARCHAR(200),
-  email VARCHAR(150),
+  nombre VARCHAR(200) NOT NULL,
+  identificacion VARCHAR(50),
   telefono VARCHAR(30),
-  celular VARCHAR(30),
   direccion TEXT,
-  ciudad VARCHAR(100),
-  provincia VARCHAR(100),
-  codigo_postal VARCHAR(20),
-  fecha_nacimiento DATE,
-  limite_credito DECIMAL(10,2),
-  saldo_pendiente DECIMAL(10,2),
-  puntos_acumulados INT DEFAULT 0,
-  estado VARCHAR(30),
+  email VARCHAR(150),
+  tipo_cliente ENUM('publico', 'mayorista', 'especial') DEFAULT 'publico',
+  limite_credito DECIMAL(10,2) DEFAULT 0,
+  saldo_pendiente DECIMAL(10,2) DEFAULT 0,
+  saldo_actual DECIMAL(10,2) DEFAULT 0,
+  estado ENUM('activo', 'inactivo') DEFAULT 'activo',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -262,7 +254,7 @@ CREATE TABLE abonos_pedidos (
   pedido_id INT UNSIGNED NOT NULL,
   monto DECIMAL(10,2) NOT NULL,
   fecha_abono TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  metodo_pago ENUM('efectivo', 'transferencia', 'tarjeta', 'cheque', 'otro') DEFAULT 'efectivo',
+  metodo_pago ENUM('efectivo', 'transferencia', 'cheque', 'otro') DEFAULT 'efectivo',
   referencia VARCHAR(100),
   notas TEXT,
   usuario_id INT UNSIGNED,
@@ -284,17 +276,22 @@ CREATE TABLE cajas (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+--pendiente
 CREATE TABLE ventas (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  numero_venta VARCHAR(50),
+  numero_venta VARCHAR(50) UNIQUE,
   cliente_id INT UNSIGNED,
   fecha_venta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  subtotal DECIMAL(10,2),
-  iva DECIMAL(10,2),
-  descuento DECIMAL(10,2),
-  total DECIMAL(10,2),
-  estado VARCHAR(30),
+  subtotal DECIMAL(10,2) DEFAULT 0,
+  iva DECIMAL(10,2) DEFAULT 0,
+  descuento DECIMAL(10,2) DEFAULT 0,
+  total DECIMAL(10,2) NOT NULL,
+  estado ENUM('completada', 'credito', 'anulada') DEFAULT 'completada',
+  tipo_venta ENUM('contado', 'credito') DEFAULT 'contado',
+  metodo_pago ENUM('efectivo', 'transferencia', 'mixto') DEFAULT 'efectivo',
+  efectivo_recibido DECIMAL(10,2) DEFAULT NULL COMMENT 'Monto en efectivo recibido del cliente',
+  cambio DECIMAL(10,2) DEFAULT NULL COMMENT 'Cambio devuelto al cliente',
+  referencia_transferencia VARCHAR(50) DEFAULT NULL COMMENT 'Origen de la transferencia: Nequi, Bancolombia, Daviplata, Otro',
   descuento_id INT UNSIGNED,
   usuario_id INT UNSIGNED,
   caja_id INT UNSIGNED,
@@ -315,6 +312,66 @@ CREATE TABLE detalle_ventas (
   subtotal DECIMAL(10,2),
   FOREIGN KEY (venta_id) REFERENCES ventas(id),
   FOREIGN KEY (producto_id) REFERENCES productos(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- =========================================
+-- PAGOS MIXTOS PARA VENTAS
+-- =========================================
+CREATE TABLE pagos_mixtos_ventas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  venta_id INT UNSIGNED NOT NULL,
+  monto_efectivo DECIMAL(10,2) DEFAULT 0.00,
+  monto_transferencia DECIMAL(10,2) DEFAULT 0.00,
+  referencia_transferencia VARCHAR(50) DEFAULT NULL COMMENT 'Origen de la transferencia en pagos mixtos',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE,
+  INDEX idx_venta_id (venta_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+--pendiente
+
+-- =========================================
+-- CUENTAS POR COBRAR Y ABONOS
+-- =========================================
+CREATE TABLE cuentas_por_cobrar (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  cliente_id INT UNSIGNED NOT NULL,
+  venta_id INT UNSIGNED NOT NULL,
+  monto_total DECIMAL(10,2) NOT NULL,
+  saldo_pendiente DECIMAL(10,2) NOT NULL,
+  fecha_vencimiento DATE,
+  estado ENUM('pendiente', 'pagada', 'vencida') DEFAULT 'pendiente',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+  FOREIGN KEY (venta_id) REFERENCES ventas(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE abonos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  cuenta_por_cobrar_id INT UNSIGNED NOT NULL,
+  monto DECIMAL(10,2) NOT NULL,
+  metodo_pago ENUM('efectivo', 'transferencia', 'mixto') DEFAULT 'efectivo',
+  referencia_transferencia VARCHAR(50) DEFAULT NULL COMMENT 'Origen de la transferencia: Nequi, Bancolombia, Daviplata, Otro',
+  fecha_abono TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  usuario_id INT UNSIGNED,
+  notas TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (cuenta_por_cobrar_id) REFERENCES cuentas_por_cobrar(id),
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- =========================================
+-- PAGOS MIXTOS PARA ABONOS
+-- =========================================
+CREATE TABLE pagos_mixtos_abonos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  abono_id INT UNSIGNED NOT NULL,
+  monto_efectivo DECIMAL(10,2) DEFAULT 0.00,
+  monto_transferencia DECIMAL(10,2) DEFAULT 0.00,
+  referencia_transferencia VARCHAR(50) DEFAULT NULL COMMENT 'Origen de la transferencia en pagos mixtos',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (abono_id) REFERENCES abonos(id) ON DELETE CASCADE,
+  INDEX idx_abono_id (abono_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =========================================
@@ -644,7 +701,7 @@ INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES
 
 DELIMITER //
 
--- Trigger: Actualizar saldos al insertar un abono
+-- Trigger: Actualizar saldos al insertar un abono a pedido
 CREATE TRIGGER after_abono_insert
 AFTER INSERT ON abonos_pedidos
 FOR EACH ROW
@@ -655,7 +712,7 @@ BEGIN
   WHERE id = NEW.pedido_id;
 END//
 
--- Trigger: Actualizar saldos al eliminar un abono
+-- Trigger: Actualizar saldos al eliminar un abono a pedido
 CREATE TRIGGER after_abono_delete
 AFTER DELETE ON abonos_pedidos
 FOR EACH ROW
@@ -667,6 +724,26 @@ BEGIN
 END//
 
 DELIMITER ;
+
+-- =========================================
+-- TRIGGER PARA ACTUALIZAR SALDO DEL CLIENTE
+-- =========================================
+-- Este trigger actualiza automáticamente el saldo del cliente
+-- cuando se registra un abono a una cuenta por cobrar
+
+DROP TRIGGER IF EXISTS actualizar_saldo_cliente_abono;
+
+CREATE TRIGGER actualizar_saldo_cliente_abono
+AFTER INSERT ON abonos
+FOR EACH ROW
+UPDATE cuentas_por_cobrar cpc
+INNER JOIN clientes c ON c.id = cpc.cliente_id
+SET 
+  cpc.saldo_pendiente = cpc.saldo_pendiente - NEW.monto,
+  cpc.estado = IF((cpc.saldo_pendiente - NEW.monto) <= 0, 'pagada', cpc.estado),
+  c.saldo_pendiente = c.saldo_pendiente - NEW.monto,
+  c.saldo_actual = c.saldo_pendiente - NEW.monto
+WHERE cpc.id = NEW.cuenta_por_cobrar_id;
 
 -- =========================================
 -- VISTAS

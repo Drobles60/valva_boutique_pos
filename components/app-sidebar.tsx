@@ -40,22 +40,77 @@ import {
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Button } from "@/components/ui/button"
+import { hasPermission, type Role, type Permission } from "@/lib/auth/permissions"
 
+// Definir permisos requeridos para cada elemento del menú
 const menuItems = [
-  { title: "Dashboard", icon: LayoutDashboard, href: "/" },
-  { title: "Caja", icon: DollarSign, href: "/caja" },
-  { title: "Ventas (POS)", icon: ShoppingCart, href: "/ventas" },
-  { title: "Clientes", icon: Users, href: "/clientes" },
-  { title: "Proveedores", icon: Building2, href: "/proveedores" },
-  { title: "Pedidos", icon: ShoppingBag, href: "/pedidos" },
-  { title: "Reportes", icon: FileText, href: "/reportes" },
-  { title: "Usuarios y Roles", icon: Shield, href: "/usuarios" },
-  { title: "Webhooks", icon: Settings, href: "/configuracion/webhooks" },
+  { 
+    title: "Dashboard", 
+    icon: LayoutDashboard, 
+    href: "/",
+    permissions: [] as Permission[] // Dashboard visible para todos
+  },
+  { 
+    title: "Caja", 
+    icon: DollarSign, 
+    href: "/caja",
+    permissions: ['caja.abrir', 'caja.ver'] as Permission[] // Cualquiera de estos permisos
+  },
+  { 
+    title: "Ventas (POS)", 
+    icon: ShoppingCart, 
+    href: "/ventas",
+    permissions: ['ventas.crear', 'ventas.ver'] as Permission[]
+  },
+  { 
+    title: "Clientes", 
+    icon: Users, 
+    href: "/clientes",
+    permissions: ['clientes.ver'] as Permission[]
+  },
+  { 
+    title: "Proveedores", 
+    icon: Building2, 
+    href: "/proveedores",
+    permissions: ['proveedores.ver'] as Permission[]
+  },
+  { 
+    title: "Pedidos", 
+    icon: ShoppingBag, 
+    href: "/pedidos",
+    permissions: ['compras.ver'] as Permission[]
+  },
+  { 
+    title: "Reportes", 
+    icon: FileText, 
+    href: "/reportes",
+    permissions: ['reportes.ventas', 'reportes.inventario', 'reportes.financieros', 'reportes.clientes'] as Permission[]
+  },
+  { 
+    title: "Usuarios y Roles", 
+    icon: Shield, 
+    href: "/usuarios",
+    permissions: ['usuarios.ver'] as Permission[]
+  },
+  { 
+    title: "Webhooks", 
+    icon: Settings, 
+    href: "/configuracion/webhooks",
+    permissions: ['config.webhooks'] as Permission[]
+  },
 ]
 
 const inventorySubmenu = [
-  { title: "Productos", href: "/inventario/productos" },
-  { title: "Descuentos", href: "/inventario/descuentos" },
+  { 
+    title: "Productos", 
+    href: "/inventario/productos",
+    permissions: ['productos.ver', 'inventario.ver'] as Permission[]
+  },
+  { 
+    title: "Descuentos", 
+    href: "/inventario/descuentos",
+    permissions: ['descuentos.ver'] as Permission[]
+  },
 ]
 
 export function SidebarToggle() {
@@ -86,6 +141,32 @@ export function AppSidebar() {
     await signOut({ callbackUrl: '/login' })
   }
 
+  // Función para verificar si el usuario tiene acceso a un item del menú
+  const hasAccess = React.useCallback((permissions: Permission[]) => {
+    if (!session?.user?.rol) return false
+    
+    // Si no se requieren permisos, está disponible para todos
+    if (permissions.length === 0) return true
+    
+    const userRole = session.user.rol as Role
+    
+    // Verificar si el usuario tiene al menos uno de los permisos requeridos
+    return permissions.some(permission => hasPermission(userRole, permission))
+  }, [session?.user?.rol])
+
+  // Filtrar items del menú según permisos
+  const visibleMenuItems = React.useMemo(() => {
+    return menuItems.filter(item => hasAccess(item.permissions))
+  }, [hasAccess])
+
+  // Filtrar submenu de inventario
+  const visibleInventorySubmenu = React.useMemo(() => {
+    return inventorySubmenu.filter(item => hasAccess(item.permissions))
+  }, [hasAccess])
+
+  // Determinar si mostrar la sección de inventario
+  const showInventorySection = visibleInventorySubmenu.length > 0
+
   return (
     <Sidebar>
         <SidebarHeader className="border-b border-sidebar-border">
@@ -114,7 +195,7 @@ export function AppSidebar() {
             <SidebarGroupLabel>Menú Principal</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {menuItems.map((item) => (
+                {visibleMenuItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
@@ -128,32 +209,39 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 ))}
 
-                <Collapsible className="group/collapsible" defaultOpen={pathname.startsWith("/inventario")}>
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton>
-                        <Tag className="h-4 w-4" />
-                        <span>Inventario</span>
-                        <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {inventorySubmenu.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={pathname === subItem.href}
-                            >
-                              <a href={subItem.href}>
-                                <span>{subItem.title}</span>
-                              </a>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
+                {showInventorySection && (
+                  <Collapsible className="group/collapsible" defaultOpen={pathname.startsWith("/inventario")}>
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton>
+                          <Tag className="h-4 w-4" />
+                          <span>Inventario</span>
+                          <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {visibleInventorySubmenu.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={pathname === subItem.href}
+                              >
+                                <a href={subItem.href}>
+                                  <span>{subItem.title}</span>
+                                </a>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                )}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
         
         <SidebarFooter className="border-t border-sidebar-border p-4">
           <div className="space-y-3">
@@ -183,11 +271,6 @@ export function AppSidebar() {
             </Button>
           </div>
         </SidebarFooter>
-                </Collapsible>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
       </Sidebar>
   )
 }

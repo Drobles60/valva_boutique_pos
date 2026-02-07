@@ -6,6 +6,7 @@ import { Button } from './button'
 import { Input } from './input'
 import { Label } from './label'
 import { Printer, X } from 'lucide-react'
+import { formatCurrency } from '@/lib/utils'
 
 interface ProductLabelProps {
   sku: string
@@ -226,7 +227,7 @@ export function ProductLabel({
                   fontWeight: '700',
                   color: '#000'
                 }}>
-                  ${precio.toFixed(2)}
+                  ${formatCurrency(precio)}
                 </div>
               </div>
             </div>
