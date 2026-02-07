@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
     // Obtener el pedido recién creado con sus detalles
     const nuevoPedido = await query<any[]>(
       `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              p.total_abonado, p.saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p

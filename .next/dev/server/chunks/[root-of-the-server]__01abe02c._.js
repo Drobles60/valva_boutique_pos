@@ -298,6 +298,7 @@ async function POST(request) {
         }
         // Obtener el pedido recién creado con sus detalles
         const nuevoPedido = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              p.total_abonado, p.saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Lock, Unlock } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
+import { formatCurrency } from "@/lib/utils"
 
 export function CajaContent() {
   const [cajaAbierta, setCajaAbierta] = React.useState(false)
@@ -82,10 +83,23 @@ export function CajaContent() {
               <Label htmlFor="base">Base Inicial *</Label>
               <Input
                 id="base"
-                type="number"
-                placeholder="500000"
-                value={baseInicial}
-                onChange={(e) => setBaseInicial(e.target.value)}
+                type="text"
+                placeholder="500.000"
+                value={baseInicial ? formatCurrency(baseInicial) : ''}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                  setBaseInicial(value)
+                }}
+                onFocus={(e) => {
+                  if (baseInicial) {
+                    e.target.value = baseInicial
+                  }
+                }}
+                onBlur={(e) => {
+                  if (baseInicial) {
+                    e.target.value = formatCurrency(baseInicial)
+                  }
+                }}
               />
             </div>
             <div className="space-y-2">
@@ -114,7 +128,7 @@ export function CajaContent() {
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-lg border bg-secondary p-4">
                   <p className="text-sm text-muted-foreground">Base Inicial</p>
-                  <p className="text-2xl font-bold">${Number.parseInt(baseInicial).toLocaleString("es-CO")}</p>
+                  <p className="text-2xl font-bold">${formatCurrency(Number.parseInt(baseInicial))}</p>
                 </div>
                 <div className="rounded-lg border bg-secondary p-4">
                   <p className="text-sm text-muted-foreground">Ventas del Turno</p>
@@ -123,7 +137,7 @@ export function CajaContent() {
                 <div className="rounded-lg border bg-secondary p-4">
                   <p className="text-sm text-muted-foreground">Total en Caja</p>
                   <p className="text-2xl font-bold">
-                    ${(Number.parseInt(baseInicial) + 2450000).toLocaleString("es-CO")}
+                    ${formatCurrency(Number.parseInt(baseInicial) + 2450000)}
                   </p>
                 </div>
               </div>
@@ -163,10 +177,23 @@ export function CajaContent() {
                   <Label htmlFor="efectivo-contado">Efectivo Contado en Caja</Label>
                   <Input
                     id="efectivo-contado"
-                    type="number"
+                    type="text"
                     placeholder="Ingrese el monto contado"
-                    value={efectivoContado}
-                    onChange={(e) => setEfectivoContado(e.target.value)}
+                    value={efectivoContado ? formatCurrency(efectivoContado) : ''}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                      setEfectivoContado(value)
+                    }}
+                    onFocus={(e) => {
+                      if (efectivoContado) {
+                        e.target.value = efectivoContado
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (efectivoContado) {
+                        e.target.value = formatCurrency(efectivoContado)
+                      }
+                    }}
                   />
                 </div>
 
@@ -176,22 +203,19 @@ export function CajaContent() {
                       <div className="flex justify-between">
                         <span className="text-sm">Esperado:</span>
                         <span className="font-medium">
-                          ${(Number.parseInt(baseInicial) + 1350000).toLocaleString("es-CO")}
+                          ${formatCurrency(Number.parseInt(baseInicial) + 1350000)}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm">Real:</span>
-                        <span className="font-medium">${Number.parseInt(efectivoContado).toLocaleString("es-CO")}</span>
+                        <span className="font-medium">${formatCurrency(Number.parseInt(efectivoContado))}</span>
                       </div>
                       <div className="flex justify-between border-t pt-2">
                         <span className="font-semibold">Diferencia:</span>
                         <span
                           className={`font-bold ${Number.parseInt(efectivoContado) - (Number.parseInt(baseInicial) + 1350000) === 0 ? "text-primary" : "text-destructive"}`}
                         >
-                          $
-                          {(Number.parseInt(efectivoContado) - (Number.parseInt(baseInicial) + 1350000)).toLocaleString(
-                            "es-CO",
-                          )}
+                          ${formatCurrency(Number.parseInt(efectivoContado) - (Number.parseInt(baseInicial) + 1350000))}
                         </span>
                       </div>
                     </div>

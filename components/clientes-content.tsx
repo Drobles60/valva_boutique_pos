@@ -26,6 +26,7 @@ import { getClientes, saveCliente, deleteCliente, saveAbono, getAbonosByCliente,
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import { formatCurrency } from "@/lib/utils"
 
 export function ClientesContent() {
   const [clientes, setClientes] = useState<Cliente[]>([])
@@ -93,7 +94,7 @@ export function ClientesContent() {
     const monto = Number.parseFloat(abonoData.monto)
     if (monto <= 0 || monto > selectedClient.saldoActual) {
       toast.error("Monto inválido", {
-        description: `El monto debe ser mayor a 0 y no puede exceder el saldo actual de $${selectedClient.saldoActual.toLocaleString()}`
+        description: `El monto debe ser mayor a 0 y no puede exceder el saldo actual de $${formatCurrency(selectedClient.saldoActual)}`
       })
       return
     }
@@ -113,7 +114,7 @@ export function ClientesContent() {
     loadClientes()
     handleCloseAbonoDialog()
     toast.success("¡Abono registrado!", {
-      description: `Se registró un abono de $${monto.toLocaleString()} para ${selectedClient.nombre}`
+      description: `Se registró un abono de $${formatCurrency(monto)} para ${selectedClient.nombre}`
     })
   }
 
@@ -238,7 +239,7 @@ export function ClientesContent() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">${totalPorCobrar.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-primary">${formatCurrency(totalPorCobrar)}</div>
           </CardContent>
         </Card>
         <Card>
@@ -310,10 +311,10 @@ export function ClientesContent() {
                     </TableCell>
                     <TableCell className="text-right">
                       <span className={cliente.saldoActual > 0 ? "font-semibold text-[#D4AF37]" : ""}>
-                        ${cliente.saldoActual.toLocaleString()}
+                        ${formatCurrency(cliente.saldoActual)}
                       </span>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell text-right">${cliente.limiteCredito.toLocaleString()}</TableCell>
+                    <TableCell className="hidden lg:table-cell text-right">${formatCurrency(cliente.limiteCredito)}</TableCell>
                     <TableCell className="hidden xl:table-cell text-right">
                       {cliente.limiteCredito > 0 && (
                         <div>
@@ -322,7 +323,7 @@ export function ClientesContent() {
                               porcentajeUsado >= 80 ? "text-destructive font-semibold" : "text-muted-foreground"
                             }
                           >
-                            ${disponible.toLocaleString()}
+                            ${formatCurrency(disponible)}
                           </span>
                         </div>
                       )}
@@ -434,10 +435,22 @@ export function ClientesContent() {
                   <Label htmlFor="limiteCredito">Límite de Crédito</Label>
                   <Input
                     id="limiteCredito"
-                    type="number"
-                    step="0.01"
-                    value={formData.limiteCredito}
-                    onChange={(e) => setFormData({ ...formData, limiteCredito: e.target.value })}
+                    type="text"
+                    value={formData.limiteCredito ? formatCurrency(formData.limiteCredito) : ''}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                      setFormData({ ...formData, limiteCredito: value })
+                    }}
+                    onFocus={(e) => {
+                      if (formData.limiteCredito) {
+                        e.target.value = formData.limiteCredito
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (formData.limiteCredito) {
+                        e.target.value = formatCurrency(formData.limiteCredito)
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -460,7 +473,7 @@ export function ClientesContent() {
             <DialogDescription>
               Cliente: {selectedClient?.nombre}
               <br />
-              Saldo Actual: ${selectedClient?.saldoActual.toLocaleString()}
+              Saldo Actual: ${formatCurrency(selectedClient?.saldoActual)}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleAbonoSubmit}>
@@ -469,11 +482,22 @@ export function ClientesContent() {
                 <Label htmlFor="monto">Monto del Abono *</Label>
                 <Input
                   id="monto"
-                  type="number"
-                  step="0.01"
-                  value={abonoData.monto}
-                  onChange={(e) => setAbonoData({ ...abonoData, monto: e.target.value })}
-                  max={selectedClient?.saldoActual}
+                  type="text"
+                  value={abonoData.monto ? formatCurrency(abonoData.monto) : ''}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                    setAbonoData({ ...abonoData, monto: value })
+                  }}
+                  onFocus={(e) => {
+                    if (abonoData.monto) {
+                      e.target.value = abonoData.monto
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (abonoData.monto) {
+                      e.target.value = formatCurrency(abonoData.monto)
+                    }
+                  }}
                   required
                 />
               </div>
@@ -519,16 +543,16 @@ export function ClientesContent() {
                 <div className="rounded-lg bg-secondary p-4">
                   <div className="flex justify-between mb-2">
                     <span>Saldo Actual:</span>
-                    <span className="font-bold">${selectedClient.saldoActual.toLocaleString()}</span>
+                    <span className="font-bold">${formatCurrency(selectedClient.saldoActual)}</span>
                   </div>
                   <div className="flex justify-between mb-2">
                     <span>Abono:</span>
-                    <span className="font-bold">-${Number.parseFloat(abonoData.monto).toLocaleString()}</span>
+                    <span className="font-bold">-${formatCurrency(Number.parseFloat(abonoData.monto))}</span>
                   </div>
                   <div className="flex justify-between border-t pt-2">
                     <span className="font-bold">Nuevo Saldo:</span>
                     <span className="font-bold text-[#D4AF37]">
-                      ${(selectedClient.saldoActual - Number.parseFloat(abonoData.monto || "0")).toLocaleString()}
+                      ${formatCurrency(selectedClient.saldoActual - Number.parseFloat(abonoData.monto || "0"))}
                     </span>
                   </div>
                 </div>
@@ -550,7 +574,7 @@ export function ClientesContent() {
           <DialogHeader>
             <DialogTitle>Historial de Abonos</DialogTitle>
             <DialogDescription>
-              Cliente: {selectedClient?.nombre} | Saldo Actual: ${selectedClient?.saldoActual.toLocaleString()}
+              Cliente: {selectedClient?.nombre} | Saldo Actual: ${formatCurrency(selectedClient?.saldoActual)}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
@@ -571,7 +595,7 @@ export function ClientesContent() {
                   {abonos.map((abono) => (
                     <TableRow key={abono.id}>
                       <TableCell>{new Date(abono.fecha).toLocaleString()}</TableCell>
-                      <TableCell className="font-bold text-[#D4AF37]">${abono.monto.toLocaleString()}</TableCell>
+                      <TableCell className="font-bold text-[#D4AF37]">${formatCurrency(abono.monto)}</TableCell>
                       <TableCell>
                         <Badge variant="outline">{abono.metodoPago}</Badge>
                       </TableCell>

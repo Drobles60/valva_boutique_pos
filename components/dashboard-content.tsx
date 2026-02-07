@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DollarSign, Package, TrendingUp, Users, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SidebarToggle } from "@/components/app-sidebar"
+import { formatCurrency } from "@/lib/utils"
 
 export function DashboardContent() {
   const stats = [
@@ -99,7 +100,7 @@ export function DashboardContent() {
                     <p className="text-sm text-muted-foreground">Venta #{sale.id}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold">${sale.total.toLocaleString("es-CO")}</p>
+                    <p className="font-bold">${formatCurrency(sale.total)}</p>
                     <p className="text-sm text-muted-foreground">{sale.tipo}</p>
                   </div>
                 </div>

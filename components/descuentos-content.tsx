@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { SidebarToggle } from "@/components/app-sidebar"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toast } from "sonner"
+import { formatCurrency } from "@/lib/utils"
 
 interface Descuento {
   id: string
@@ -365,7 +366,7 @@ export function DescuentosContent() {
                     <TableCell>
                       {descuento.tipo === 'porcentaje' 
                         ? `${Number(descuento.valor).toFixed(0)}% de descuento` 
-                        : `Precio fijo: $${Number(descuento.valor).toLocaleString('es-CO')}`}
+                        : `Precio fijo: $${formatCurrency(Number(descuento.valor))}`}
                     </TableCell>
                     <TableCell>
                       {descuento.aplicable_a === 'productos' ? (
@@ -465,16 +466,30 @@ export function DescuentosContent() {
                 </Label>
                 <Input
                   id="valor"
-                  type="number"
-                  placeholder={formData.tipo === 'porcentaje' ? '20' : '80000'}
-                  value={formData.valor}
+                  type={formData.tipo === 'porcentaje' ? 'number' : 'text'}
+                  placeholder={formData.tipo === 'porcentaje' ? '20' : '80.000'}
+                  value={formData.tipo === 'porcentaje' ? formData.valor : (formData.valor ? formatCurrency(formData.valor) : '')}
                   onChange={(e) => {
-                    const value = e.target.value
-                    // Si es porcentaje, limitar a 100
-                    if (formData.tipo === 'porcentaje' && parseFloat(value) > 100) {
-                      setFormData({ ...formData, valor: '100' })
+                    if (formData.tipo === 'porcentaje') {
+                      const value = e.target.value
+                      if (parseFloat(value) > 100) {
+                        setFormData({ ...formData, valor: '100' })
+                      } else {
+                        setFormData({ ...formData, valor: value })
+                      }
                     } else {
+                      const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
                       setFormData({ ...formData, valor: value })
+                    }
+                  }}
+                  onFocus={(e) => {
+                    if (formData.tipo === 'fijo' && formData.valor) {
+                      e.target.value = formData.valor
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (formData.tipo === 'fijo' && formData.valor) {
+                      e.target.value = formatCurrency(formData.valor)
                     }
                   }}
                   min="0"
@@ -571,12 +586,12 @@ export function DescuentosContent() {
                               <span>{producto.nombre} - {producto.sku || producto.codigo_barras || 'Sin SKU'}</span>
                               {formData.valor && formData.productos_seleccionados.includes(producto.id.toString()) && (
                                 <span className="text-xs text-muted-foreground mt-1">
-                                  <span className="line-through">${precioOriginal.toLocaleString('es-CO')}</span>
+                                  <span className="line-through">${formatCurrency(precioOriginal)}</span>
                                   <span className="text-green-600 font-semibold ml-2">
-                                    ${precioFinal.toLocaleString('es-CO')}
+                                    ${formatCurrency(precioFinal)}
                                   </span>
                                   <span className="text-red-600 ml-2">
-                                    (-${descuento.toLocaleString('es-CO')})
+                                    (-${formatCurrency(descuento)})
                                   </span>
                                 </span>
                               )}
@@ -682,7 +697,7 @@ export function DescuentosContent() {
                       <p className="font-medium text-lg">
                         {descuentoDetalles.tipo === 'porcentaje' 
                           ? `${descuentoDetalles.valor}% de descuento` 
-                          : `Precio final: $${descuentoDetalles.valor.toLocaleString()}`}
+                          : `Precio final: $${formatCurrency(descuentoDetalles.valor)}`}
                       </p>
                     </div>
                     <div>
@@ -766,10 +781,10 @@ export function DescuentosContent() {
                                     {producto.nombre || 'Sin nombre'}
                                   </TableCell>
                                   <TableCell className="text-right text-sm whitespace-nowrap">
-                                    ${precioOriginal.toLocaleString()}
+                                    ${formatCurrency(precioOriginal)}
                                   </TableCell>
                                   <TableCell className="text-right font-medium text-green-600 text-sm whitespace-nowrap">
-                                    ${Math.max(0, precioConDescuento).toLocaleString()}
+                                    ${formatCurrency(Math.max(0, precioConDescuento))}
                                   </TableCell>
                                 </TableRow>
                               )

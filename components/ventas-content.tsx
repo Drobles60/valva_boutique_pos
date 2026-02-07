@@ -7,11 +7,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Trash2, ShoppingCart, Search } from "lucide-react"
+import { Plus, Trash2, ShoppingCart, Search, Loader2 } from "lucide-react"
 import type { Product, Cliente } from "@/lib/types"
-import { getProducts, getClientes, saveVenta } from "@/lib/storage"
+import { getClientes } from "@/lib/storage"
 import { SidebarToggle } from "./app-sidebar"
+import { FacturaDialog } from "./factura-dialog"
+import { CambioDialog } from "./cambio-dialog"
+import { CreditoDialog } from "./credito-dialog"
 import { toast } from "sonner"
+import { formatCurrency } from "@/lib/utils"
+import { useSession } from "next-auth/react"
 
 type CartItem = {
   product: Product
@@ -21,6 +26,7 @@ type CartItem = {
 }
 
 export function VentasContent() {
+  const { data: session } = useSession()
   const [carrito, setCarrito] = React.useState<CartItem[]>([])
   const [productos, setProductos] = React.useState<Product[]>([])
   const [clientes, setClientes] = React.useState<Cliente[]>([])
@@ -28,11 +34,34 @@ export function VentasContent() {
   const [tipoVenta, setTipoVenta] = React.useState("contado")
   const [metodoPago, setMetodoPago] = React.useState("efectivo")
   const [clienteSeleccionado, setClienteSeleccionado] = React.useState<Cliente | null>(null)
+  const [procesando, setProcesando] = React.useState(false)
+  const [facturaOpen, setFacturaOpen] = React.useState(false)
+  const [ventaActual, setVentaActual] = React.useState<any>(null)
+  const [cambioDialogOpen, setCambioDialogOpen] = React.useState(false)
+  const [creditoDialogOpen, setCreditoDialogOpen] = React.useState(false)
 
   React.useEffect(() => {
     loadProductos()
-    setClientes(getClientes())
+    loadClientes()
   }, [])
+
+  const loadClientes = async () => {
+    try {
+      const response = await fetch('/api/clientes')
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && result.data) {
+          setClientes(result.data)
+        }
+      } else {
+        // Fallback a localStorage
+        setClientes(getClientes())
+      }
+    } catch (error) {
+      console.error('Error cargando clientes:', error)
+      setClientes(getClientes())
+    }
+  }
 
   const loadProductos = async () => {
     try {
@@ -71,8 +100,7 @@ export function VentasContent() {
       }
     } catch (error) {
       console.error('Error cargando productos:', error)
-      // Fallback a localStorage
-      setProductos(getProducts())
+      toast.error('Error al cargar productos')
     }
   }
 
@@ -142,49 +170,214 @@ export function VentasContent() {
   const subtotal = carrito.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0)
   const total = subtotal
 
-  const procesarVenta = () => {
-    if (carrito.length === 0) return
-
-    const venta = {
-      id: Date.now().toString(),
-      fecha: new Date().toISOString(),
-      cliente: clienteSeleccionado || {
-        id: "0",
-        nombre: "Cliente General",
-        identificacion: "N/A",
-        telefono: "",
-        tipoCliente: "publico" as const,
-        limiteCredito: 0,
-        saldoActual: 0,
-        createdAt: new Date().toISOString(),
-      },
-      productos: carrito.map((item) => ({
-        producto: item.product,
-        cantidad: item.cantidad,
-        precioUnitario: item.precioUnitario,
-        subtotal: item.precioUnitario * item.cantidad,
-      })),
-      subtotal,
-      impuestos: 0,
-      descuento: 0,
-      total,
-      metodoPago: [metodoPago],
-      estado: tipoVenta === "credito" ? ("credito" as const) : ("completada" as const),
-      vendedor: "Usuario",
+  const procesarVenta = async () => {
+    if (carrito.length === 0) {
+      toast.error('El carrito está vacío')
+      return
     }
 
-    saveVenta(venta)
-    setCarrito([])
-    toast.success("¡Venta completada!", {
-      description: `Total: $${total.toLocaleString()} - ${tipoVenta === "credito" ? "Venta a crédito" : "Venta de contado"}`
-    })
+    // Abrir diálogo según tipo de venta
+    if (tipoVenta === 'contado') {
+      setCambioDialogOpen(true)
+    } else {
+      setCreditoDialogOpen(true)
+    }
+  }
+
+  const finalizarVentaContado = async (data: {
+    efectivoRecibido: number
+    cambio: number
+    pagoMixto?: { efectivo: number; transferencia: number }
+    referenciaTransferencia?: string
+  }) => {
+    setCambioDialogOpen(false)
+    setProcesando(true)
+
+    try {
+      // Preparar datos de la venta de contado
+      const ventaData = {
+        cliente_id: clienteSeleccionado?.id || null,
+        tipo_venta: 'contado',
+        metodo_pago: metodoPago,
+        productos: carrito.map(item => ({
+          producto_id: parseInt(item.product.id),
+          cantidad: item.cantidad,
+          precio_unitario: item.precioUnitario
+        })),
+        subtotal,
+        iva: 0,
+        descuento: 0,
+        total,
+        descuento_id: null,
+        efectivo_recibido: data.efectivoRecibido,
+        cambio: data.cambio,
+        pago_mixto: data.pagoMixto,
+        referencia_transferencia: data.referenciaTransferencia
+      }
+
+      // Enviar a la API
+      const response = await fetch('/api/ventas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ventaData)
+      })
+
+      if (!response.ok) {
+        // Intentar parsear el JSON del error
+        let errorMessage = 'Error al procesar la venta'
+        try {
+          const errorResult = await response.json()
+          errorMessage = errorResult.error || errorMessage
+        } catch (e) {
+          // Si no se puede parsear el JSON, usar el texto de la respuesta
+          const errorText = await response.text()
+          errorMessage = errorText || `Error ${response.status}: ${response.statusText}`
+        }
+        throw new Error(errorMessage)
+      }
+
+      const result = await response.json()
+
+      if (result.success && result.data) {
+        // Limpiar carrito
+        setCarrito([])
+        setClienteSeleccionado(null)
+        
+        // Recargar productos para actualizar stock
+        await loadProductos()
+        
+        // Mostrar factura
+        setVentaActual(result.data)
+        setFacturaOpen(true)
+        
+        toast.success('¡Venta completada!', {
+          description: `Venta ${result.data.numero_venta} registrada exitosamente`
+        })
+      }
+    } catch (error: any) {
+      console.error('Error al procesar venta:', error)
+      toast.error('Error al procesar venta', {
+        description: error.message || 'Ocurrió un error inesperado'
+      })
+    } finally {
+      setProcesando(false)
+    }
+  }
+
+  const finalizarVentaCredito = async (data: {
+    cliente: any
+    abono?: any
+    esNuevoCliente: boolean
+  }) => {
+    setCreditoDialogOpen(false)
+    setProcesando(true)
+
+    try {
+      // Si es nuevo cliente, primero registrarlo
+      let clienteId = null
+      if (data.esNuevoCliente) {
+        const clienteResponse = await fetch('/api/clientes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data.cliente)
+        })
+
+        if (!clienteResponse.ok) {
+          // Intentar parsear el JSON del error
+          let errorMessage = 'Error al registrar cliente'
+          try {
+            const errorResult = await clienteResponse.json()
+            errorMessage = errorResult.error || errorMessage
+          } catch (e) {
+            // Si no se puede parsear el JSON, usar el texto de la respuesta
+            const errorText = await clienteResponse.text()
+            errorMessage = errorText || `Error ${clienteResponse.status}: ${clienteResponse.statusText}`
+          }
+          throw new Error(errorMessage)
+        }
+
+        const clienteResult = await clienteResponse.json()
+        clienteId = clienteResult.data.id
+      } else {
+        clienteId = data.cliente.id
+      }
+
+      // Preparar datos de la venta a crédito
+      const ventaData = {
+        cliente_id: clienteId,
+        tipo_venta: 'credito',
+        metodo_pago: null,
+        productos: carrito.map(item => ({
+          producto_id: parseInt(item.product.id),
+          cantidad: item.cantidad,
+          precio_unitario: item.precioUnitario
+        })),
+        subtotal,
+        iva: 0,
+        descuento: 0,
+        total,
+        descuento_id: null,
+        abono: data.abono
+      }
+
+      // Enviar a la API
+      const response = await fetch('/api/ventas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ventaData)
+      })
+
+      if (!response.ok) {
+        // Intentar parsear el JSON del error
+        let errorMessage = 'Error al procesar la venta'
+        try {
+          const errorResult = await response.json()
+          errorMessage = errorResult.error || errorMessage
+        } catch (e) {
+          // Si no se puede parsear el JSON, usar el texto de la respuesta
+          const errorText = await response.text()
+          errorMessage = errorText || `Error ${response.status}: ${response.statusText}`
+        }
+        throw new Error(errorMessage)
+      }
+
+      const result = await response.json()
+
+      if (result.success && result.data) {
+        // Limpiar carrito
+        setCarrito([])
+        setClienteSeleccionado(null)
+        
+        // Recargar productos y clientes
+        await loadProductos()
+        await loadClientes()
+        
+        // Mostrar factura
+        setVentaActual(result.data)
+        setFacturaOpen(true)
+        
+        toast.success('¡Venta a crédito completada!', {
+          description: `Venta ${result.data.numero_venta} registrada exitosamente`
+        })
+      }
+    } catch (error: any) {
+      console.error('Error al procesar venta a crédito:', error)
+      toast.error('Error al procesar venta', {
+        description: error.message || 'Ocurrió un error inesperado'
+      })
+    } finally {
+      setProcesando(false)
+    }
   }
 
   const productosFiltrados = productos.filter(
     (p) =>
-      p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.cantidad > 0 && // Solo mostrar productos con stock disponible
+      (p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.referencia.toLowerCase().includes(searchTerm.toLowerCase()),
+      p.referencia.toLowerCase().includes(searchTerm.toLowerCase())),
   )
 
   return (
@@ -197,9 +390,18 @@ export function VentasContent() {
             <p className="text-muted-foreground">Sistema POS con múltiples precios</p>
           </div>
         </div>
-        <Button size="lg" disabled={carrito.length === 0} onClick={procesarVenta}>
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          Procesar Venta
+        <Button size="lg" disabled={carrito.length === 0 || procesando} onClick={procesarVenta}>
+          {procesando ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Procesando...
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Procesar Venta
+            </>
+          )}
         </Button>
       </div>
 
@@ -269,7 +471,7 @@ export function VentasContent() {
                                 tipoCliente === "publico" ? "font-bold text-[#D4AF37]" : "text-muted-foreground"
                               }
                             >
-                              ${producto.precioVentaPublico.toLocaleString()}
+                              ${formatCurrency(producto.precioVentaPublico)}
                             </span>
                           </div>
                           <div className="flex justify-between">
@@ -279,7 +481,7 @@ export function VentasContent() {
                                 tipoCliente === "mayorista" ? "font-bold text-[#D4AF37]" : "text-muted-foreground"
                               }
                             >
-                              ${producto.precioMayorista.toLocaleString()}
+                              ${formatCurrency(producto.precioMayorista)}
                             </span>
                           </div>
                           <div className="flex justify-between">
@@ -289,12 +491,12 @@ export function VentasContent() {
                                 tipoCliente === "especial" ? "font-bold text-[#D4AF37]" : "text-muted-foreground"
                               }
                             >
-                              ${producto.precioEspecial.toLocaleString()}
+                              ${formatCurrency(producto.precioEspecial)}
                             </span>
                           </div>
                         </div>
                         <div className="mt-2 pt-2 border-t">
-                          <p className="font-bold text-primary text-lg">${precioActual.toLocaleString()}</p>
+                          <p className="font-bold text-primary text-lg">${formatCurrency(precioActual)}</p>
                           <p className="text-xs text-muted-foreground">
                             Stock: {producto.cantidad} | {producto.categoria}
                           </p>
@@ -383,7 +585,7 @@ export function VentasContent() {
                       <div className="flex justify-between items-center pt-2 border-t">
                         <span className="text-xs text-muted-foreground">Subtotal:</span>
                         <span className="font-bold text-sm">
-                          ${(item.precioUnitario * item.cantidad).toLocaleString()}
+                          ${formatCurrency(item.precioUnitario * item.cantidad)}
                         </span>
                       </div>
                     </div>
@@ -449,7 +651,7 @@ export function VentasContent() {
                     <SelectContent>
                       <SelectItem value="efectivo">Efectivo</SelectItem>
                       <SelectItem value="transferencia">Transferencia</SelectItem>
-                      <SelectItem value="tarjeta">Tarjeta</SelectItem>
+                      <SelectItem value="mixto">Mixto</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -458,21 +660,53 @@ export function VentasContent() {
               <div className="space-y-2 border-t pt-4">
                 <div className="flex justify-between">
                   <span className="text-sm">Subtotal:</span>
-                  <span className="font-medium">${subtotal.toLocaleString()}</span>
+                  <span className="font-medium">${formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between border-t pt-2">
                   <span className="text-lg font-bold">Total:</span>
-                  <span className="text-2xl font-bold text-primary">${total.toLocaleString()}</span>
+                  <span className="text-2xl font-bold text-primary">${formatCurrency(total)}</span>
                 </div>
               </div>
 
-              <Button className="w-full" size="lg" disabled={carrito.length === 0} onClick={procesarVenta}>
-                Finalizar Venta
+              <Button className="w-full" size="lg" disabled={carrito.length === 0 || procesando} onClick={procesarVenta}>
+                {procesando ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Procesando...
+                  </>
+                ) : (
+                  'Finalizar Venta'
+                )}
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      {/* Diálogo de factura */}
+      <FacturaDialog
+        open={facturaOpen}
+        onClose={() => setFacturaOpen(false)}
+        venta={ventaActual}
+      />
+
+      {/* Diálogo de cambio (venta contado) */}
+      <CambioDialog
+        open={cambioDialogOpen}
+        onClose={() => setCambioDialogOpen(false)}
+        total={total}
+        metodoPago={metodoPago as 'efectivo' | 'transferencia' | 'mixto'}
+        onConfirmar={finalizarVentaContado}
+      />
+
+      {/* Diálogo de crédito */}
+      <CreditoDialog
+        open={creditoDialogOpen}
+        onClose={() => setCreditoDialogOpen(false)}
+        total={total}
+        clientesExistentes={clientes}
+        onConfirmar={finalizarVentaCredito}
+      />
     </div>
   )
 }

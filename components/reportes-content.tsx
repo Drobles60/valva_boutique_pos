@@ -12,6 +12,7 @@ import { FileText, Download, TrendingUp, DollarSign, ShoppingCart, Percent } fro
 import type { Venta } from "@/lib/types"
 import { getVentas, getProducts, getCurrentUser } from "@/lib/storage"
 import { SidebarToggle } from "./app-sidebar"
+import { formatCurrency } from "@/lib/utils"
 
 export function ReportesContent() {
   const [ventas, setVentas] = useState<Venta[]>([])
@@ -226,7 +227,7 @@ export function ReportesContent() {
             <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalVentas.toLocaleString()}</div>
+            <div className="text-2xl font-bold">${formatCurrency(totalVentas)}</div>
             <p className="text-xs text-muted-foreground">{ventasFiltradas.length} transacciones</p>
           </CardContent>
         </Card>
@@ -239,7 +240,7 @@ export function ReportesContent() {
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#D4AF37]">${utilidadData.utilidad.toLocaleString()}</div>
+                <div className="text-2xl font-bold text-[#D4AF37]">${formatCurrency(utilidadData.utilidad)}</div>
                 <p className="text-xs text-muted-foreground">Ventas menos costos</p>
               </CardContent>
             </Card>
@@ -263,7 +264,7 @@ export function ReportesContent() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${ticketPromedio.toLocaleString()}</div>
+            <div className="text-2xl font-bold">${formatCurrency(ticketPromedio)}</div>
             <p className="text-xs text-muted-foreground">Por transacción</p>
           </CardContent>
         </Card>
@@ -290,7 +291,7 @@ export function ReportesContent() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-green-600">${ventasContado.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-green-600">${formatCurrency(ventasContado)}</p>
               </div>
             </div>
 
@@ -307,7 +308,7 @@ export function ReportesContent() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-orange-600">${ventasCredito.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-orange-600">${formatCurrency(ventasCredito)}</p>
               </div>
             </div>
           </CardContent>
@@ -329,8 +330,8 @@ export function ReportesContent() {
                       <p className="text-sm text-muted-foreground">{data.transacciones} transacciones</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary">${data.total.toLocaleString()}</p>
-                      {canViewCosts && <p className="text-sm text-[#D4AF37]">+${data.utilidad.toLocaleString()}</p>}
+                      <p className="font-bold text-primary">${formatCurrency(data.total)}</p>
+                      {canViewCosts && <p className="text-sm text-[#D4AF37]">+${formatCurrency(data.utilidad)}</p>}
                     </div>
                   </div>
                 ))}
@@ -370,14 +371,14 @@ export function ReportesContent() {
                   </TableCell>
                   <TableCell className="font-medium">{item.producto.nombre}</TableCell>
                   <TableCell className="text-right">{item.cantidad}</TableCell>
-                  <TableCell className="text-right font-semibold">${item.totalVenta.toLocaleString()}</TableCell>
+                  <TableCell className="text-right font-semibold">${formatCurrency(item.totalVenta)}</TableCell>
                   {canViewCosts && (
                     <>
                       <TableCell className="text-right text-muted-foreground">
-                        ${item.totalCosto.toLocaleString()}
+                        ${formatCurrency(item.totalCosto)}
                       </TableCell>
                       <TableCell className="text-right font-semibold text-[#D4AF37]">
-                        ${item.utilidad.toLocaleString()}
+                        ${formatCurrency(item.utilidad)}
                       </TableCell>
                       <TableCell className="text-right">
                         <Badge variant="outline">{((item.utilidad / item.totalVenta) * 100).toFixed(1)}%</Badge>
@@ -418,13 +419,13 @@ export function ReportesContent() {
                     </TableCell>
                     <TableCell className="font-medium">{item.producto.nombre}</TableCell>
                     <TableCell className="text-right font-bold text-[#D4AF37]">
-                      ${item.utilidad.toLocaleString()}
+                      ${formatCurrency(item.utilidad)}
                     </TableCell>
                     <TableCell className="text-right">
                       <Badge variant="outline">{((item.utilidad / item.totalVenta) * 100).toFixed(1)}%</Badge>
                     </TableCell>
                     <TableCell className="text-right">{item.cantidad}</TableCell>
-                    <TableCell className="text-right font-semibold">${item.totalVenta.toLocaleString()}</TableCell>
+                    <TableCell className="text-right font-semibold">${formatCurrency(item.totalVenta)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
