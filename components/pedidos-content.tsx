@@ -456,10 +456,6 @@ export function PedidosContent() {
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="border-b bg-white z-10 flex items-center gap-4 px-6 h-14 shrink-0">
-          <SidebarToggle />
-          <h1 className="text-xl font-semibold">Pedidos a Proveedores</h1>
-        </header>
 
         <main className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Header con botón */}

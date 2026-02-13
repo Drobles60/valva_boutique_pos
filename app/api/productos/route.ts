@@ -115,6 +115,9 @@ export async function POST(request: Request) {
       )
     }
 
+    // Convertir nombre a mayúsculas
+    const nombreMayusculas = nombre.toUpperCase()
+
     const result = await query<any>(`
       INSERT INTO productos (
         codigo_barras,
@@ -135,7 +138,7 @@ export async function POST(request: Request) {
     `, [
       codigo_barras,
       sku,
-      nombre,
+      nombreMayusculas,
       descripcion || null,
       categoria_padre_id,
       tipo_prenda_id,
@@ -202,6 +205,9 @@ export async function PUT(request: Request) {
       )
     }
 
+    // Convertir nombre a mayúsculas
+    const nombreMayusculas = nombre.toUpperCase()
+
     await query(`
       UPDATE productos SET
         codigo_barras = ?,
@@ -222,7 +228,7 @@ export async function PUT(request: Request) {
     `, [
       codigo_barras,
       sku,
-      nombre,
+      nombreMayusculas,
       descripcion || null,
       categoria_padre_id,
       tipo_prenda_id,

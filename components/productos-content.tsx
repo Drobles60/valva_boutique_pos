@@ -87,9 +87,9 @@ export function ProductosContent() {
       )
       setTiposPrendaFiltrados(tiposFiltrados)
       
-      // Si es categoría con talla única, buscar y setear automáticamente la talla ÚNICA
+      // Si es categoría con talla única, buscar y setear automáticamente la talla U
       if (esBolsos) {
-        const tallaUnica = tallas.find((t) => t.valor?.toUpperCase() === 'ÚNICA')
+        const tallaUnica = tallas.find((t) => t.valor?.toUpperCase() === 'U')
         if (tallaUnica) {
           setFormData(prev => ({ ...prev, tipo_prenda_id: "", talla_id: tallaUnica.id.toString() }))
         } else {
@@ -355,7 +355,7 @@ export function ProductosContent() {
       // Si es categoría con talla única y aún no se ha asignado, buscarla
       let tallaId = formData.talla_id
       if (esCategoriaConTallaUnica && !tallaId) {
-        const tallaUnica = tallas.find((t) => t.valor?.toUpperCase() === 'ÚNICA')
+        const tallaUnica = tallas.find((t) => t.valor?.toUpperCase() === 'U')
         if (tallaUnica) {
           tallaId = tallaUnica.id.toString()
           setFormData(prev => ({ ...prev, talla_id: tallaId }))
@@ -1030,9 +1030,10 @@ export function ProductosContent() {
                 <Input
                   id="nombre"
                   value={formData.nombre}
-                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value.toUpperCase() })}
                   required
                   placeholder="Ej: Blusa Manga Larga Estampada"
+                  className="uppercase"
                 />
               </div>
 

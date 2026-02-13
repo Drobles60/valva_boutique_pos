@@ -472,6 +472,8 @@ async function POST(request) {
                 status: 400
             });
         }
+        // Convertir nombre a mayúsculas
+        const nombreMayusculas = nombre.toUpperCase();
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`
       INSERT INTO productos (
         codigo_barras,
@@ -492,7 +494,7 @@ async function POST(request) {
     `, [
             codigo_barras,
             sku,
-            nombre,
+            nombreMayusculas,
             descripcion || null,
             categoria_padre_id,
             tipo_prenda_id,
@@ -540,6 +542,8 @@ async function PUT(request) {
                 status: 400
             });
         }
+        // Convertir nombre a mayúsculas
+        const nombreMayusculas = nombre.toUpperCase();
         await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`
       UPDATE productos SET
         codigo_barras = ?,
@@ -560,7 +564,7 @@ async function PUT(request) {
     `, [
             codigo_barras,
             sku,
-            nombre,
+            nombreMayusculas,
             descripcion || null,
             categoria_padre_id,
             tipo_prenda_id,
