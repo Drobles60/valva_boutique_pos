@@ -14,6 +14,7 @@ import { SidebarToggle } from "./app-sidebar"
 import { FacturaDialog } from "./factura-dialog"
 import { CambioDialog } from "./cambio-dialog"
 import { CreditoDialog } from "./credito-dialog"
+import { ResumenPreciosDialog } from "./resumen-precios-dialog"
 import { toast } from "sonner"
 import { formatCurrency } from "@/lib/utils"
 import { useSession } from "next-auth/react"
@@ -39,6 +40,8 @@ export function VentasContent() {
   const [ventaActual, setVentaActual] = React.useState<any>(null)
   const [cambioDialogOpen, setCambioDialogOpen] = React.useState(false)
   const [creditoDialogOpen, setCreditoDialogOpen] = React.useState(false)
+  const [resumenDialogOpen, setResumenDialogOpen] = React.useState(false)
+  const [carritoParaProcesar, setCarritoParaProcesar] = React.useState<CartItem[]>([])
 
   React.useEffect(() => {
     loadProductos()
@@ -116,6 +119,21 @@ export function VentasContent() {
     }
   }, [clienteSeleccionado])
 
+  // Cuando cambia el tipo de venta, resetear cliente si es contado
+  React.useEffect(() => {
+    if (tipoVenta === "contado") {
+      setClienteSeleccionado(null)
+      // Actualizar precios del carrito a precio público
+      setCarrito((prevCarrito) =>
+        prevCarrito.map((item) => ({
+          ...item,
+          tipoCliente: "publico",
+          precioUnitario: getPrecioByTipo(item.product, "publico"),
+        })),
+      )
+    }
+  }, [tipoVenta])
+
   const getPrecioByTipo = (product: Product, tipoCliente: "publico" | "mayorista" | "especial") => {
     // Si el producto tiene descuento aplicado, usar el precio con descuento
     if ((product as any).tieneDescuento && product.precioConDescuento) {
@@ -176,7 +194,19 @@ export function VentasContent() {
       return
     }
 
-    // Abrir diálogo según tipo de venta
+    // Abrir diálogo de resumen de precios primero
+    setResumenDialogOpen(true)
+  }
+
+  const confirmarResumenPrecios = (carritoAjustado: CartItem[]) => {
+    // Guardar carrito ajustado y cerrar diálogo de resumen
+    setCarritoParaProcesar(carritoAjustado)
+    setResumenDialogOpen(false)
+
+    // Actualizar el carrito con los precios ajustados
+    setCarrito(carritoAjustado)
+
+    // Abrir diálogo de cobro según tipo de venta
     if (tipoVenta === 'contado') {
       setCambioDialogOpen(true)
     } else {
@@ -465,32 +495,14 @@ export function VentasContent() {
                         </div>
                         <div className="space-y-1 text-xs">
                           <div className="flex justify-between">
-                            <span className="text-muted-foreground">Público:</span>
-                            <span
-                              className={
-                                tipoCliente === "publico" ? "font-bold text-[#D4AF37]" : "text-muted-foreground"
-                              }
-                            >
+                            <span className="text-muted-foreground">Precio de venta:</span>
+                            <span className="font-semibold">
                               ${formatCurrency(producto.precioVentaPublico)}
                             </span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-muted-foreground">Mayorista:</span>
-                            <span
-                              className={
-                                tipoCliente === "mayorista" ? "font-bold text-[#D4AF37]" : "text-muted-foreground"
-                              }
-                            >
-                              ${formatCurrency(producto.precioMayorista)}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Especial:</span>
-                            <span
-                              className={
-                                tipoCliente === "especial" ? "font-bold text-[#D4AF37]" : "text-muted-foreground"
-                              }
-                            >
+                            <span className="text-muted-foreground">Precio mínimo:</span>
+                            <span className="font-semibold text-[#D4AF37]">
                               ${formatCurrency(producto.precioEspecial)}
                             </span>
                           </div>
@@ -601,34 +613,6 @@ export function VentasContent() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="cliente">Cliente</Label>
-                <Select
-                  value={clienteSeleccionado?.id || ""}
-                  onValueChange={(value) => {
-                    const cliente = clientes.find((c) => c.id === value)
-                    setClienteSeleccionado(cliente || null)
-                  }}
-                >
-                  <SelectTrigger id="cliente">
-                    <SelectValue placeholder="Cliente General (Precio Público)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="general">Cliente General (Precio Público)</SelectItem>
-                    {clientes.map((cliente) => (
-                      <SelectItem key={cliente.id} value={cliente.id}>
-                        {cliente.nombre} -{" "}
-                        {cliente.tipoCliente === "publico"
-                          ? "Público"
-                          : cliente.tipoCliente === "mayorista"
-                            ? "Mayorista"
-                            : "Especial"}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="tipo-venta">Tipo de Venta</Label>
                 <Select value={tipoVenta} onValueChange={setTipoVenta}>
                   <SelectTrigger id="tipo-venta">
@@ -642,19 +626,21 @@ export function VentasContent() {
               </div>
 
               {tipoVenta === "contado" && (
-                <div className="space-y-2">
-                  <Label htmlFor="metodo-pago">Método de Pago</Label>
-                  <Select value={metodoPago} onValueChange={setMetodoPago}>
-                    <SelectTrigger id="metodo-pago">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="efectivo">Efectivo</SelectItem>
-                      <SelectItem value="transferencia">Transferencia</SelectItem>
-                      <SelectItem value="mixto">Mixto</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="metodo-pago">Método de Pago</Label>
+                    <Select value={metodoPago} onValueChange={setMetodoPago}>
+                      <SelectTrigger id="metodo-pago">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="efectivo">Efectivo</SelectItem>
+                        <SelectItem value="transferencia">Transferencia</SelectItem>
+                        <SelectItem value="mixto">Mixto</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
               )}
 
               <div className="space-y-2 border-t pt-4">
@@ -668,7 +654,12 @@ export function VentasContent() {
                 </div>
               </div>
 
-              <Button className="w-full" size="lg" disabled={carrito.length === 0 || procesando} onClick={procesarVenta}>
+              <Button 
+                className="w-full" 
+                size="lg" 
+                disabled={carrito.length === 0 || procesando} 
+                onClick={procesarVenta}
+              >
                 {procesando ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -682,6 +673,14 @@ export function VentasContent() {
           </Card>
         </div>
       </div>
+
+      {/* Diálogo de resumen de precios */}
+      <ResumenPreciosDialog
+        open={resumenDialogOpen}
+        onClose={() => setResumenDialogOpen(false)}
+        carrito={carrito}
+        onConfirmar={confirmarResumenPrecios}
+      />
 
       {/* Diálogo de factura */}
       <FacturaDialog

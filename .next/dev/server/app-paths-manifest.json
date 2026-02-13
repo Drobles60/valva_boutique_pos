@@ -2,7 +2,5 @@
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
   "/api/clientes/route": "app/api/clientes/route.js",
   "/api/productos/route": "app/api/productos/route.js",
-  "/api/proveedores/route": "app/api/proveedores/route.js",
-  "/proveedores/page": "app/proveedores/page.js",
   "/ventas/page": "app/ventas/page.js"
 }

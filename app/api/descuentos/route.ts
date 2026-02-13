@@ -86,6 +86,10 @@ export async function POST(request: Request) {
       )
     }
 
+    // Convertir a mayúsculas
+    const nombreMayusculas = nombre.toUpperCase()
+    const descripcionMayusculas = descripcion ? descripcion.toUpperCase() : null
+
     // Validar porcentaje
     if (tipo === 'porcentaje' && (valor > 100 || valor <= 0)) {
       return NextResponse.json(
@@ -109,8 +113,8 @@ export async function POST(request: Request) {
         aplicable_a
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `, [
-      nombre,
-      descripcion || null,
+      nombreMayusculas,
+      descripcionMayusculas,
       tipo,
       valor,
       formatDateForMySQL(fecha_inicio),
@@ -192,6 +196,10 @@ export async function PUT(request: Request) {
       )
     }
 
+    // Convertir a mayúsculas
+    const nombreMayusculas = nombre.toUpperCase()
+    const descripcionMayusculas = descripcion ? descripcion.toUpperCase() : null
+
     // Validar porcentaje
     if (tipo === 'porcentaje' && (valor > 100 || valor <= 0)) {
       return NextResponse.json(
@@ -213,8 +221,8 @@ export async function PUT(request: Request) {
         aplicable_a = ?
       WHERE id = ?
     `, [
-      nombre,
-      descripcion || null,
+      nombreMayusculas,
+      descripcionMayusculas,
       tipo,
       valor,
       formatDateForMySQL(fecha_inicio),

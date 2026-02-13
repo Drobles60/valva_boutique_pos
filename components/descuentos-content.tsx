@@ -432,7 +432,8 @@ export function DescuentosContent() {
                 id="nombre"
                 placeholder="Ej: Descuento Temporada"
                 value={formData.nombre}
-                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, nombre: e.target.value.toUpperCase() })}
+                className="uppercase"
               />
             </div>
 
@@ -442,7 +443,8 @@ export function DescuentosContent() {
                 id="descripcion"
                 placeholder="Describe el descuento..."
                 value={formData.descripcion || ""}
-                onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, descripcion: e.target.value.toUpperCase() })}
+                className="uppercase"
               />
             </div>
 
