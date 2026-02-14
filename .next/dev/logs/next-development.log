@@ -1,77 +1,404 @@
-[00:00:01.066] Server  LOG      ✓ Ready in 709ms
-[00:00:08.487] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:08.957] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:08.957] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
-[00:00:08.957] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770959178286}
-[00:00:09.087] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:00:09.231] Server  LOG     [API PRODUCTOS] Productos obtenidos: 6
-[00:00:09.232] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
-[00:00:09.232] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:00:09.233] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:00:09.233] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:00:09.234] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:00:09.235] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:00:09.241] Server  LOG     [DESCUENTOS] Producto: short, Tipo Prenda ID: 40
-[00:00:09.248] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:09.249] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:00:09.250] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:00:09.250] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:00:09.251] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:00:09.252] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:00:09.253] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:09.253] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:09.254] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:09.255] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:09.255] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:09.256] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:09.258] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:09.258] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:09.259] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:00:09.259] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:09.260] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:09.260] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:09.260] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:09.261] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:09.261] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:09.261] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:00:09.261] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:00:09.262] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/6
-[00:01:19.139] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:19.242] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
-[00:01:19.255] Server  LOG     [API PRODUCTOS] Productos obtenidos: 6
-[00:01:19.256] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
-[00:01:19.257] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
-[00:01:19.257] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
-[00:01:19.258] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
-[00:01:19.258] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
-[00:01:19.259] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
-[00:01:19.261] Server  LOG     [DESCUENTOS] Producto: short, Tipo Prenda ID: 40
-[00:01:19.264] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
-[00:01:19.265] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
-[00:01:19.266] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
-[00:01:19.267] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
-[00:01:19.267] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
-[00:01:19.271] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:01:19.275] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:01:19.276] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:01:19.277] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:01:19.278] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:01:19.279] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
-[00:01:19.280] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:01:19.281] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:01:19.298] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:01:19.299] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:01:19.300] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:01:19.301] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:01:19.301] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:01:19.302] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:01:19.302] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:01:19.303] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:01:19.303] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
-[00:01:19.304] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
-[00:01:19.304] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/6
-[00:01:19.386] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:01:19.386] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
-[00:01:19.386] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1770959248702}
-[00:03:44.293] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-[00:03:44.293] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:00:01.359] Server  LOG      ✓ Ready in 965ms
+[00:00:06.215] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:06.572] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:06.572] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
+[00:00:06.573] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771049108176}
+[00:10:30.450] Server  LOG      ✓ Compiled in 163ms
+[00:10:40.541] Server  LOG      ✓ Compiled in 144ms
+[00:10:40.634] Browser ERROR   uncaughtError: ReferenceError: cuentas is not defined
+[00:10:57.250] Server  LOG      ✓ Compiled in 148ms
+[00:10:57.352] Browser ERROR   ./components/clientes-content.tsx:700:2
+Parsing ecmascript source code failed
+  698 |     </div>
+  699 |   )
+> 700 | }
+      |  ^
+  701 |
+  702 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:11:23.514] Browser ERROR   ./components/clientes-content.tsx:693:2
+Parsing ecmascript source code failed
+  691 |     </div>
+  692 |   )
+> 693 | }
+      |  ^
+  694 |
+  695 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:12:13.307] Browser ERROR   ./components/clientes-content.tsx:691:2
+Parsing ecmascript source code failed
+  689 |     </div>
+  690 |   )
+> 691 | }
+      |  ^
+  692 |
+  693 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:12:37.616] Browser ERROR   ./components/clientes-content.tsx:681:2
+Parsing ecmascript source code failed
+  679 |     </div>
+  680 |   )
+> 681 | }
+      |  ^
+  682 |
+  683 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:13:08.698] Browser ERROR   ./components/clientes-content.tsx:685:2
+Parsing ecmascript source code failed
+  683 |     </div>
+  684 |   )
+> 685 | }
+      |  ^
+  686 |
+  687 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:13:17.259] Browser ERROR   ./components/clientes-content.tsx:685:2
+Parsing ecmascript source code failed
+  683 |     </div>
+  684 |   )
+> 685 | }
+      |  ^
+  686 |
+  687 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:13:32.466] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:15:12.616] Server  ERROR    ⨯ ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+
+
+[00:15:12.731] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:15:13.507] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:15:13.507] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:15:14.026] Browser ERROR   uncaughtError: Error: ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+
+
+[00:15:14.248] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:15:14.248] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:15:23.184] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:15:51.134] Browser ERROR   ./components/clientes-content.tsx:754:2
+Parsing ecmascript source code failed
+  752 |     </div>
+  753 |   )
+> 754 | }
+      |  ^
+  755 |
+  756 |
+
+Expected '}', got '<eof>'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:17:14.991] Server  LOG      ✓ Compiled in 101ms
+[00:17:16.232] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:17:16.546] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:17:16.546] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
+[00:17:16.546] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771050138160}
+[00:20:00.118] Server  LOG      ✓ Compiled in 129ms
+[00:20:00.209] Browser ERROR   uncaughtError: ReferenceError: abonoDialogOpen is not defined
+[00:20:33.878] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:20:33.888] Server  LOG      ✓ Compiled in 108ms
+[00:20:34.143] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\.next\dev\server\chunks\ssr\_6699cede._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:20:34.144] Server  ERROR    ⨯ ReferenceError: totalClientes is not defined
+[00:20:34.157] Browser ERROR   uncaughtError: ReferenceError: totalClientes is not defined
+[00:20:34.988] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:20:35.179] Browser ERROR   uncaughtError: ReferenceError: totalClientes is not defined
+[00:21:18.170] Server  LOG      ✓ Compiled in 104ms
+[00:21:18.274] Browser ERROR   ./components/clientes-content.tsx:370:3
+Parsing ecmascript source code failed
+  368 |     const diasVencimiento = Math.ceil(
+  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+> 370 |   }).length
+      |   ^
+  371 |
+  372 |
+  373 |   return (
+
+Expected ',', got '}'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:22:14.667] Server  LOG      ✓ Compiled in 157ms
+[00:22:14.771] Browser ERROR   ./components/clientes-content.tsx:370:3
+Parsing ecmascript source code failed
+  368 |     const diasVencimiento = Math.ceil(
+  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+> 370 |   }).length
+      |   ^
+  371 |
+  372 |
+  373 |   return (
+
+Expected ',', got '}'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:22:42.323] Browser ERROR   ./components/clientes-content.tsx:370:3
+Parsing ecmascript source code failed
+  368 |     const diasVencimiento = Math.ceil(
+  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+> 370 |   }).length
+      |   ^
+  371 |
+  372 |
+  373 |   return (
+
+Expected ',', got '}'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:23:29.861] Browser ERROR   ./components/clientes-content.tsx:370:3
+Parsing ecmascript source code failed
+  368 |     const diasVencimiento = Math.ceil(
+  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+> 370 |   }).length
+      |   ^
+  371 |
+  372 |
+  373 |   return (
+
+Expected ',', got '}'
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:27:24.982] Server  LOG      ✓ Compiled in 117ms
+[00:27:25.099] Browser ERROR   ./components/clientes-content.tsx:562:13
+Parsing ecmascript source code failed
+  560 |                 <TableHead className="text-right">Acciones</TableHead>
+  561 |               </TableRow>
+> 562 |             </TableHeader>
+      |             ^
+  563 |             <TableBody>
+  564 |               {loading && clientes.length === 0 ? (
+  565 |                 <TableRow>
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:27:25.099] Browser ERROR   ./components/clientes-content.tsx:562:14
+Parsing ecmascript source code failed
+  560 |                 <TableHead className="text-right">Acciones</TableHead>
+  561 |               </TableRow>
+> 562 |             </TableHeader>
+      |              ^^^^^^^^^^^^^
+  563 |             <TableBody>
+  564 |               {loading && clientes.length === 0 ? (
+  565 |                 <TableRow>
+
+Unterminated regexp literal
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:28:14.729] Browser ERROR   ./components/clientes-content.tsx:562:13
+Parsing ecmascript source code failed
+  560 |                 <TableHead className="text-right">Acciones</TableHead>
+  561 |               </TableRow>
+> 562 |             </TableHeader>
+      |             ^
+  563 |             <TableBody>
+  564 |               {loading && clientes.length === 0 ? (
+  565 |                 <TableRow>
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:28:14.729] Browser ERROR   ./components/clientes-content.tsx:562:14
+Parsing ecmascript source code failed
+  560 |                 <TableHead className="text-right">Acciones</TableHead>
+  561 |               </TableRow>
+> 562 |             </TableHeader>
+      |              ^^^^^^^^^^^^^
+  563 |             <TableBody>
+  564 |               {loading && clientes.length === 0 ? (
+  565 |                 <TableRow>
+
+Unterminated regexp literal
+
+Import trace:
+  Server Component:
+    ./components/clientes-content.tsx
+    ./app/clientes/page.tsx
+[00:28:21.615] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:28:21.865] Browser ERROR   unhandledRejection: Error: No link element found for chunk /_next/static/chunks/%5Broot-of-the-server%5D__51d697a8._.css
+[00:28:22.753] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:28:23.152] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:28:23.152] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
+[00:28:23.152] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771050804704}

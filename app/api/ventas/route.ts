@@ -226,19 +226,18 @@ export async function POST(request: NextRequest) {
 
     // Si es venta a crédito, crear registro de cuenta por cobrar
     if (tipo_venta === 'credito' && cliente_id) {
-      const montoDeuda = abono ? total - abono.monto : total;
-      
+      // IMPORTANTE: saldo_pendiente inicial debe ser el total completo
+      // El trigger actualizar_saldo_cliente_abono se encargará de restar el abono cuando se inserte
       const resultCuenta = await query(
         `INSERT INTO cuentas_por_cobrar (
           cliente_id, venta_id, monto_total, saldo_pendiente, 
           fecha_vencimiento, estado
-        ) VALUES (?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY), ?)`,
+        ) VALUES (?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY), 'pendiente')`,
         [
           cliente_id, 
           venta_id, 
           total, 
-          montoDeuda,
-          montoDeuda > 0 ? 'pendiente' : 'pagada'
+          total  // Siempre usar el total completo, el trigger restará el abono después
         ]
       );
 
@@ -278,12 +277,14 @@ export async function POST(request: NextRequest) {
       }
 
       // Actualizar saldo del cliente
+      // IMPORTANTE: Se suma el total completo
+      // El trigger actualizar_saldo_cliente_abono se encargará de restar el abono del saldo
       await query(
         `UPDATE clientes 
          SET saldo_pendiente = saldo_pendiente + ?,
              saldo_actual = saldo_actual + ?
          WHERE id = ?`,
-        [montoDeuda, montoDeuda, cliente_id]
+        [total, total, cliente_id]
       );
     }
 

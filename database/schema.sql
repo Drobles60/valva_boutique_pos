@@ -874,3 +874,28 @@ INSERT IGNORE INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) 
 (71, 5),  -- Riñonera → Talla Única
 (72, 5),  -- Bolso Satchel → Talla Única
 (73, 5);  -- Bolso Bucket → Talla Única
+
+-- =========================================
+-- MANTENIMIENTO DE DESCUENTOS
+-- =========================================
+
+-- Query para desactivar descuentos vencidos manualmente
+-- Ejecutar periódicamente en DBeaver o cuando sea necesario
+-- 
+-- NOTA: Este proceso también se ejecuta automáticamente en:
+--   - GET /api/descuentos (cada vez que se consultan descuentos)
+--   - getDescuentosForProduct() (cada vez que se obtienen productos)
+-- 
+-- Para ejecutar manualmente:
+UPDATE descuentos 
+SET estado = 'inactivo' 
+WHERE fecha_fin IS NOT NULL 
+  AND fecha_fin < CURDATE() 
+  AND estado = 'activo';
+
+-- Para verificar descuentos que serán desactivados antes de ejecutar:
+-- SELECT id, nombre, tipo, valor, fecha_inicio, fecha_fin, estado 
+-- FROM descuentos 
+-- WHERE fecha_fin IS NOT NULL 
+--   AND fecha_fin < CURDATE() 
+--   AND estado = 'activo';

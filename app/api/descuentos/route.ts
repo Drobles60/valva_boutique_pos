@@ -16,6 +16,15 @@ function formatDateForMySQL(dateString: string | null | undefined): string | nul
 // GET: Obtener todos los descuentos
 export async function GET() {
   try {
+    // Primero, actualizar el estado de descuentos vencidos
+    await query(`
+      UPDATE descuentos 
+      SET estado = 'inactivo' 
+      WHERE fecha_fin IS NOT NULL 
+        AND fecha_fin < CURDATE() 
+        AND estado = 'activo'
+    `)
+
     const descuentos = await query<any[]>(`
       SELECT * FROM descuentos 
       ORDER BY created_at DESC

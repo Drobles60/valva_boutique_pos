@@ -21,6 +21,7 @@ export type Permission =
   | 'clientes.crear'
   | 'clientes.editar'
   | 'clientes.eliminar'
+  | 'clientes.abonar'
   // Proveedores
   | 'proveedores.ver'
   | 'proveedores.crear'
@@ -76,6 +77,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'clientes.crear',
     'clientes.editar',
     'clientes.eliminar',
+    'clientes.abonar',
     'proveedores.ver',
     'proveedores.crear',
     'proveedores.editar',
@@ -112,6 +114,7 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'ventas.crear',
     'ventas.ver',
     'clientes.ver', // Necesita ver clientes para asignar en ventas
+    'clientes.abonar', // Puede registrar abonos
   ],
 };
 

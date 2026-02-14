@@ -130,6 +130,8 @@ export function ResumenPreciosDialog({
                 : item.precioUnitario * item.cantidad
               const hayDiferencia = item.precioUnitario !== item.product.precioEspecial
               const descuento = item.precioUnitario - item.product.precioEspecial
+              const tieneDescuento = (item.product as any).tieneDescuento || false
+              const puedeAplicarMinimo = hayDiferencia && !tieneDescuento
 
               return (
                 <div
@@ -140,7 +142,7 @@ export function ResumenPreciosDialog({
                     id={`precio-${item.product.id}`}
                     checked={aplicarMinimo}
                     onCheckedChange={() => toggleAjuste(item.product.id)}
-                    disabled={!hayDiferencia}
+                    disabled={!puedeAplicarMinimo}
                     className="mt-1"
                   />
                   <div className="flex-1 space-y-2">
@@ -159,6 +161,11 @@ export function ResumenPreciosDialog({
                       {aplicarMinimo && (
                         <Badge variant="destructive" className="ml-2">
                           Precio mínimo aplicado
+                        </Badge>
+                      )}
+                      {tieneDescuento && (
+                        <Badge variant="secondary" className="ml-2">
+                          Descuento activo
                         </Badge>
                       )}
                     </div>
