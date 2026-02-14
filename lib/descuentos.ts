@@ -7,6 +7,15 @@ export async function getDescuentosForProduct(productoId: number) {
   try {
     console.log(`[DESCUENTOS] Buscando descuentos para producto ID: ${productoId}`)
     
+    // Primero, actualizar el estado de descuentos vencidos
+    await query(`
+      UPDATE descuentos 
+      SET estado = 'inactivo' 
+      WHERE fecha_fin IS NOT NULL 
+        AND fecha_fin < CURDATE() 
+        AND estado = 'activo'
+    `)
+    
     // Obtener el producto con su tipo de prenda
     const producto = await query<any[]>(`
       SELECT p.*, p.tipo_prenda_id, tp.id as tipo_prenda_id_join

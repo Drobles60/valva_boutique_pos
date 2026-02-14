@@ -13,6 +13,7 @@ import {
 import { Printer, Download, X } from "lucide-react"
 import { formatCurrency } from "@/lib/utils"
 import jsPDF from "jspdf"
+import { toast } from "sonner"
 
 interface DetalleVenta {
   id: number
@@ -93,21 +94,21 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
       // Nombre empresa (centrado)
       pdf.setFontSize(12)
-      pdf.setFont('helvetica', 'bold')
+      pdf.setFont('Lucida Console', 'bold')
       pdf.text('Valva Boutique', centerX, yPos, { align: 'center' })
       yPos += 5
 
-      pdf.setFontSize(8)
-      pdf.setFont('helvetica', 'normal')
-      pdf.text('Moda y Estilo', centerX, yPos, { align: 'center' })
-      yPos += 4
+      pdf.setFontSize(10)
+      pdf.setFont('Lucida Console', 'normal')
+      pdf.text('Descubre tu estilo y llévalo al siguiente nivel', centerX, yPos, { align: 'center' })
+      yPos += 6
 
       // NIT o identificación (centrado)
-      pdf.text('NIT: (Por definir)', centerX, yPos, { align: 'center' })
+      pdf.text('Telefono: 3224081839', centerX, yPos, { align: 'center' })
       yPos += 5
 
       // Teléfono (centrado)
-      pdf.text('Teléfono', centerX, yPos, { align: 'center' })
+      pdf.text('@valva_.boutique', centerX, yPos, { align: 'center' })
       yPos += 4
 
       // Línea separadora
@@ -117,18 +118,18 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
       // FACTURA DE VENTA POS (centrado)
       pdf.setFontSize(12)
-      pdf.setFont('helvetica', 'bold')
+      pdf.setFont('Lucida Console', 'bold')
       pdf.text('FACTURA DE VENTA POS', centerX, yPos, { align: 'center' })
       yPos += 4
 
       // Línea separadora
       pdf.setFontSize(12)
-      pdf.setFont('helvetica', 'normal')
+      pdf.setFont('Lucida Console', 'normal')
       pdf.text(lineaGuiones, centerX, yPos, { align: 'center' })
       yPos += 5
 
       // Información de la factura (alineado a la izquierda)
-      pdf.setFontSize(9)
+      pdf.setFontSize(11)
       const fechaFormateada = new Date(venta.fecha_venta).toLocaleString('es-EC', {
         year: 'numeric',
         month: '2-digit',
@@ -137,15 +138,44 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
         minute: '2-digit'
       }).replace(',', ' -')
       
-      pdf.text(`Fecha: ${fechaFormateada}`, margin, yPos)
-      yPos += 3.5
-      pdf.text(`Factura #: ${venta.numero_venta}`, margin, yPos)
-      yPos += 3.5
-      pdf.text(`Cajero: ${venta.vendedor_nombre || 'admin'} ${venta.vendedor_apellido || ''}`, margin, yPos)
-      yPos += 3.5
-      pdf.text(`Caja: Principal`, margin, yPos)
-      yPos += 3.5
-      pdf.text(`Máquina: POS001`, margin, yPos)
+      // Fecha
+      pdf.setFont('Lucida Console', 'bold')
+      pdf.text('Fecha:', margin, yPos)
+      const anchoFecha = pdf.getTextWidth('Fecha: ')
+      pdf.setFont('Lucida Console', 'normal')
+      pdf.text(fechaFormateada, margin + anchoFecha, yPos)
+      yPos += 4
+      
+      // Factura #
+      pdf.setFont('Lucida Console', 'bold')
+      pdf.text('Factura #:', margin, yPos)
+      const anchoFactura = pdf.getTextWidth('Factura #: ')
+      pdf.setFont('Lucida Console', 'normal')
+      pdf.text(venta.numero_venta, margin + anchoFactura, yPos)
+      yPos += 4
+      
+      // Cajero
+      pdf.setFont('Lucida Console', 'bold')
+      pdf.text('Cajero:', margin, yPos)
+      const anchoCajero = pdf.getTextWidth('Cajero: ')
+      pdf.setFont('Lucida Console', 'normal')
+      pdf.text(`${venta.vendedor_nombre || 'admin'} ${venta.vendedor_apellido || ''}`, margin + anchoCajero, yPos)
+      yPos += 4
+      
+      // Caja
+      pdf.setFont('Lucida Console', 'bold')
+      pdf.text('Caja:', margin, yPos)
+      const anchoCaja = pdf.getTextWidth('Caja: ')
+      pdf.setFont('Lucida Console', 'normal')
+      pdf.text('Principal', margin + anchoCaja, yPos)
+      yPos += 4
+      
+      // Máquina
+      pdf.setFont('Lucida Console', 'bold')
+      pdf.text('Máquina:', margin, yPos)
+      const anchoMaquina = pdf.getTextWidth('Máquina: ')
+      pdf.setFont('Lucida Console', 'normal')
+      pdf.text('POS001', margin + anchoMaquina, yPos)
       yPos += 5
 
       // Línea separadora
@@ -154,22 +184,22 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       yPos += 4
 
       // Encabezado de tabla
-      pdf.setFont('helvetica', 'bold')
+      pdf.setFont('Lucida Console', 'bold')
       pdf.text('Nombre', margin + 10, yPos)
       pdf.text('Total', pageWidth - margin - 10, yPos, { align: 'right' })
       yPos += 3
 
       // Línea separadora
       pdf.setFontSize(12)
-      pdf.setFont('helvetica', 'normal')
+      pdf.setFont('Lucida Console', 'normal')
       pdf.text(lineaGuiones, centerX, yPos, { align: 'center' })
       yPos += 4
 
       // Productos
       venta.detalles.forEach((detalle) => {
         // Nombre del producto (izquierda) y Total (derecha) en la misma línea
-        pdf.setFontSize(10) // Tamaño más grande para el nombre
-        pdf.setFont('helvetica', 'normal')
+        pdf.setFontSize(11) // Tamaño más grande para el nombre
+        pdf.setFont('Lucida Console', 'normal')
         const nombreMaxWidth = pageWidth - margin * 2 - 20 // Espacio para el precio
         const lineasNombre = pdf.splitTextToSize(detalle.producto_nombre, nombreMaxWidth)
         
@@ -188,7 +218,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
         
         // Unidades en la siguiente línea (en negrilla)
         pdf.setFontSize(9)
-        pdf.setFont('helvetica', 'bold')
+        pdf.setFont('Lucida Console', 'bold')
         pdf.text(`> UNIDADES: -> Cantidad:${detalle.cantidad.toFixed(2)} x ${formatCurrency(detalle.precio_unitario)}`, margin, yPos)
         yPos += 5
       })
@@ -200,7 +230,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
       // TOTAL A PAGAR
       pdf.setFontSize(11)
-      pdf.setFont('helvetica', 'bold')
+      pdf.setFont('Lucida Console', 'bold')
       pdf.text('TOTAL A PAGAR:', margin, yPos)
       pdf.text(`$ ${formatCurrency(venta.total)}`, pageWidth - margin, yPos, { align: 'right' })
       yPos += 5
@@ -208,7 +238,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       // Si es venta a crédito, mostrar abono y saldo pendiente
       if (venta.tipo_venta === 'credito') {
         pdf.setFontSize(10)
-        pdf.setFont('helvetica', 'normal')
+        pdf.setFont('Lucida Console', 'normal')
         
         // Abono inicial
         const abonoInicial = venta.credito_abono_total || 0
@@ -218,7 +248,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
         // Saldo pendiente
         const saldoPendiente = venta.credito_saldo_pendiente || venta.total
-        pdf.setFont('helvetica', 'bold')
+        pdf.setFont('Lucida Console', 'bold')
         pdf.text('Saldo Pendiente:', margin, yPos)
         pdf.text(`$ ${formatCurrency(saldoPendiente)}`, pageWidth - margin, yPos, { align: 'right' })
         yPos += 5
@@ -226,17 +256,17 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
       // Línea separadora
       pdf.setFontSize(12)
-      pdf.setFont('helvetica', 'normal')
+      pdf.setFont('Lucida Console', 'normal')
       pdf.text(lineaGuiones, centerX, yPos, { align: 'center' })
       yPos += 4
 
       // FORMA DE PAGO
       pdf.setFontSize(10)
-      pdf.setFont('helvetica', 'bold')
+      pdf.setFont('Lucida Console', 'bold')
       pdf.text('**FORMA DE PAGO**', centerX, yPos, { align: 'center' })
       yPos += 4
 
-      pdf.setFont('helvetica', 'normal')
+      pdf.setFont('Lucida Console', 'normal')
       const metodoPago = venta.metodo_pago === 'efectivo' ? 'Efectivo' :
                          venta.metodo_pago === 'transferencia' ? 'Transferencia' :
                          venta.metodo_pago === 'tarjeta' ? 'Tarjeta' : 'Mixto'
@@ -252,14 +282,14 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       yPos += 4
 
       // Mensaje de agradecimiento
-      pdf.setFont('helvetica', 'bold')
+      pdf.setFont('Lucida Console', 'bold')
       pdf.setFontSize(13)
       pdf.text('Gracias Por Su Compra', centerX, yPos, { align: 'center' })
       yPos += 5
 
       // Línea separadora
       pdf.setFontSize(12)
-      pdf.setFont('helvetica', 'normal')
+      pdf.setFont('Lucida Console', 'normal')
       pdf.text(lineaGuiones, centerX, yPos, { align: 'center' })
       yPos += 4
 
@@ -290,7 +320,10 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
     const pdf = await crearPDF()
     if (!pdf) return
     pdf.save(`Factura-${venta.numero_venta}.pdf`)
-    alert('PDF descargado exitosamente')
+    toast.success('¡Factura descargada exitosamente!', {
+      description: `Archivo: Factura-${venta.numero_venta}.pdf`,
+      duration: 4000,
+    })
   }
 
   const imprimirFactura = async () => {

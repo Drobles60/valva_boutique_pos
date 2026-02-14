@@ -918,7 +918,7 @@ export function ProductosContent() {
                 <TableHead className="text-center">P. Venta</TableHead>
                 <TableHead className="text-center">Descuento</TableHead>
                 <TableHead className="hidden lg:table-cell text-center">P. Mínimo</TableHead>
-                <TableHead className="text-center">Acciones</TableHead>
+                <TableHead className="text-center pl-8">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

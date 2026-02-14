@@ -9,18 +9,33 @@ export async function GET() {
     await requirePermission('clientes.ver');
 
     const clientes = await query<any[]>(
-      `SELECT id, nombre, identificacion, telefono, direccion, email,
-              tipo_cliente, limite_credito, saldo_actual, estado,
-              created_at, updated_at
-       FROM clientes 
-       WHERE estado = 'activo'
-       ORDER BY nombre ASC`
+      `SELECT 
+        c.id, c.nombre, c.identificacion, c.telefono, c.direccion, c.email,
+        c.tipo_cliente, c.limite_credito, c.saldo_actual, c.saldo_pendiente, c.estado,
+        c.created_at, c.updated_at,
+        COALESCE(SUM(DISTINCT cpc.monto_total), 0) as total_deuda,
+        COALESCE((
+          SELECT SUM(a.monto) 
+          FROM abonos a
+          INNER JOIN cuentas_por_cobrar cpc2 ON a.cuenta_por_cobrar_id = cpc2.id
+          WHERE cpc2.cliente_id = c.id
+        ), 0) as total_abonado,
+        COUNT(DISTINCT cpc.id) as total_cuentas
+       FROM clientes c
+       LEFT JOIN cuentas_por_cobrar cpc ON c.id = cpc.cliente_id
+       WHERE c.estado = 'activo'
+       GROUP BY c.id
+       ORDER BY c.nombre ASC`
     );
 
     // Convertir tipo_cliente al formato esperado
     const clientesFormateados = clientes.map(c => ({
       ...c,
-      tipoCliente: c.tipo_cliente
+      tipoCliente: c.tipo_cliente,
+      total_deuda: Number(c.total_deuda) || 0,
+      total_abonado: Number(c.total_abonado) || 0,
+      saldo_pendiente: Number(c.saldo_pendiente) || 0,
+      total_cuentas: Number(c.total_cuentas) || 0
     }))
 
     return NextResponse.json({ success: true, data: clientesFormateados });

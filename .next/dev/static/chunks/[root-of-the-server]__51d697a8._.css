@@ -203,6 +203,7 @@
     --container-lg: 32rem;
     --container-2xl: 42rem;
     --container-3xl: 48rem;
+    --container-4xl: 56rem;
     --container-5xl: 64rem;
     --container-7xl: 80rem;
     --text-xs: .75rem;
@@ -942,12 +943,20 @@
     max-height: var(--radix-select-content-available-height);
   }
 
+  .max-h-48 {
+    max-height: calc(var(--spacing) * 48);
+  }
+
   .max-h-60 {
     max-height: calc(var(--spacing) * 60);
   }
 
   .max-h-\[50vh\] {
     max-height: 50vh;
+  }
+
+  .max-h-\[70vh\] {
+    max-height: 70vh;
   }
 
   .max-h-\[90vh\] {
@@ -1060,6 +1069,10 @@
 
   .max-w-3xl {
     max-width: var(--container-3xl);
+  }
+
+  .max-w-4xl {
+    max-width: var(--container-4xl);
   }
 
   .max-w-5xl {
@@ -1825,6 +1838,10 @@
 
   .pl-2 {
     padding-left: calc(var(--spacing) * 2);
+  }
+
+  .pl-8 {
+    padding-left: calc(var(--spacing) * 8);
   }
 
   .pl-9 {
@@ -3212,14 +3229,14 @@
   }
 
   @media (min-width: 40rem) {
-    .sm\:inline {
-      display: inline;
+    .sm\:hidden {
+      display: none;
     }
   }
 
   @media (min-width: 40rem) {
-    .sm\:table-cell {
-      display: table-cell;
+    .sm\:inline {
+      display: inline;
     }
   }
 
