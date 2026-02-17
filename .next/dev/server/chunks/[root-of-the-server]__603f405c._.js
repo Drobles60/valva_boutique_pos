@@ -694,10 +694,15 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2f$check$2d$perm
 ;
 ;
 ;
-async function GET() {
+async function GET(request) {
     try {
         await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2f$check$2d$permission$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["requirePermission"])('clientes.ver');
-        const cuentas = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT 
+        // Obtener parámetros de fecha de la URL
+        const { searchParams } = new URL(request.url);
+        const fechaInicio = searchParams.get('fechaInicio');
+        const fechaFin = searchParams.get('fechaFin');
+        // Construir la consulta con filtros de fecha opcionales
+        let sqlQuery = `SELECT 
         cpc.id,
         cpc.venta_id,
         cpc.cliente_id,
@@ -720,8 +725,22 @@ async function GET() {
          WHERE a.cuenta_por_cobrar_id = cpc.id) as cantidad_abonos
       FROM cuentas_por_cobrar cpc
       INNER JOIN ventas v ON cpc.venta_id = v.id
-      INNER JOIN clientes c ON cpc.cliente_id = c.id
-      ORDER BY cpc.created_at DESC, cpc.estado ASC`);
+      INNER JOIN clientes c ON cpc.cliente_id = c.id`;
+        const queryParams = [];
+        const whereConditions = [];
+        if (fechaInicio) {
+            whereConditions.push(`DATE(v.fecha_venta) >= ?`);
+            queryParams.push(fechaInicio);
+        }
+        if (fechaFin) {
+            whereConditions.push(`DATE(v.fecha_venta) <= ?`);
+            queryParams.push(fechaFin);
+        }
+        if (whereConditions.length > 0) {
+            sqlQuery += ` WHERE ${whereConditions.join(' AND ')}`;
+        }
+        sqlQuery += ` ORDER BY cpc.created_at DESC, cpc.estado ASC`;
+        const cuentas = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(sqlQuery, queryParams);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
             data: cuentas

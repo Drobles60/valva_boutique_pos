@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { SidebarToggle } from "@/components/app-sidebar"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toast } from "sonner"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, normalizeText } from "@/lib/utils"
 
 interface Descuento {
   id: string
@@ -42,6 +42,7 @@ export function DescuentosContent() {
   const [tiposPrenda, setTiposPrenda] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [searchProductoTerm, setSearchProductoTerm] = useState("")
+  const [searchTipoPrendaTerm, setSearchTipoPrendaTerm] = useState("")
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -93,11 +94,11 @@ export function DescuentosContent() {
         const result = await response.json()
         const allProductos = result.data || []
         
-        const searchLower = searchText.toLowerCase()
+        const searchNormalized = normalizeText(searchText)
         const filtered = allProductos.filter((p: any) => 
-          p.nombre?.toLowerCase().includes(searchLower) ||
-          p.sku?.toLowerCase().includes(searchLower) ||
-          p.codigo_barras?.toLowerCase().includes(searchLower)
+          normalizeText(p.nombre || '').includes(searchNormalized) ||
+          normalizeText(p.sku || '').includes(searchNormalized) ||
+          normalizeText(p.codigo_barras || '').includes(searchNormalized)
         )
         setProductos(filtered)
       }
@@ -260,6 +261,8 @@ export function DescuentosContent() {
   const handleCloseDialog = () => {
     setDialogOpen(false)
     setEditingDescuento(null)
+    setSearchProductoTerm("")
+    setSearchTipoPrendaTerm("")
     setFormData({
       nombre: "",
       descripcion: "",
@@ -293,8 +296,8 @@ export function DescuentosContent() {
   }
 
   const filteredDescuentos = descuentos.filter(d =>
-    d.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+    normalizeText(d.nombre).includes(normalizeText(searchTerm)) ||
+    normalizeText(d.descripcion).includes(normalizeText(searchTerm))
   )
 
   return (
@@ -613,8 +616,21 @@ export function DescuentosContent() {
             {formData.aplicable_a === 'tipos_prenda' && (
               <div className="space-y-2">
                 <Label>Seleccionar Tipos de Prenda</Label>
+                <div className="relative mb-2">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar tipo de prenda..."
+                    value={searchTipoPrendaTerm}
+                    onChange={(e) => setSearchTipoPrendaTerm(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
                 <div className="border rounded-lg p-4 max-h-60 overflow-y-auto space-y-2">
-                  {tiposPrenda.map((tipo) => (
+                  {tiposPrenda
+                    .filter((tipo) => 
+                      normalizeText(tipo.nombre || '').includes(normalizeText(searchTipoPrendaTerm))
+                    )
+                    .map((tipo) => (
                     <div key={tipo.id} className="flex items-center space-x-2">
                       <input
                         type="checkbox"

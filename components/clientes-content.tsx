@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Search, DollarSign, CreditCard, History, AlertCircle, Users } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, normalizeText } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface CuentaPorCobrar {
@@ -86,6 +86,16 @@ export function ClientesContent() {
   const [historialSearchTerm, setHistorialSearchTerm] = useState("")
   const [abonoSearchTerm, setAbonoSearchTerm] = useState("")
   
+  // Estados para filtros de fecha (historial de abonos)
+  const [showDateFilters, setShowDateFilters] = useState(false)
+  const [fechaInicio, setFechaInicio] = useState("")
+  const [fechaFin, setFechaFin] = useState("")
+  
+  // Estados para filtros de fecha (facturas)
+  const [showFacturasDateFilters, setShowFacturasDateFilters] = useState(false)
+  const [facturasFechaInicio, setFacturasFechaInicio] = useState("")
+  const [facturasFechaFin, setFacturasFechaFin] = useState("")
+  
   // Estados generales
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(false)
@@ -127,10 +137,24 @@ export function ClientesContent() {
   }, [])
 
   // Cargar todas las facturas (cuentas por cobrar)
-  const loadCuentas = async () => {
+  const loadCuentas = async (fechaInicioParam?: string, fechaFinParam?: string) => {
     try {
       setLoading(true)
-      const response = await fetch('/api/cuentas-por-cobrar')
+      let url = '/api/cuentas-por-cobrar'
+      const params = new URLSearchParams()
+      
+      if (fechaInicioParam) {
+        params.append('fechaInicio', fechaInicioParam)
+      }
+      if (fechaFinParam) {
+        params.append('fechaFin', fechaFinParam)
+      }
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`
+      }
+      
+      const response = await fetch(url)
       const data = await response.json()
 
       if (!response.ok) {
@@ -184,9 +208,23 @@ export function ClientesContent() {
   }
 
   // Cargar historial general de abonos de un cliente (todas sus facturas)
-  const loadHistorialCliente = async (clienteId: number) => {
+  const loadHistorialCliente = async (clienteId: number, fechaInicioParam?: string, fechaFinParam?: string) => {
     try {
-      const response = await fetch(`/api/clientes/${clienteId}/abonos`)
+      let url = `/api/clientes/${clienteId}/abonos`
+      const params = new URLSearchParams()
+      
+      if (fechaInicioParam) {
+        params.append('fechaInicio', fechaInicioParam)
+      }
+      if (fechaFinParam) {
+        params.append('fechaFin', fechaFinParam)
+      }
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`
+      }
+      
+      const response = await fetch(url)
       const data = await response.json()
 
       if (!response.ok) {
@@ -381,28 +419,21 @@ export function ClientesContent() {
 
   const filteredCuentas = cuentas.filter(
     (c) =>
-      c.numero_venta.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.cliente_nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.cliente_identificacion.toLowerCase().includes(searchTerm.toLowerCase()),
+      normalizeText(c.numero_venta).includes(normalizeText(searchTerm)) ||
+      normalizeText(c.cliente_nombre).includes(normalizeText(searchTerm)) ||
+      normalizeText(c.cliente_identificacion).includes(normalizeText(searchTerm)),
   )
 
   const filteredClientes = clientes.filter(
     (c) =>
-      c.nombre.toLowerCase().includes(clienteSearchTerm.toLowerCase()) ||
-      c.identificacion.toLowerCase().includes(clienteSearchTerm.toLowerCase()),
+      normalizeText(c.nombre).includes(normalizeText(clienteSearchTerm)) ||
+      normalizeText(c.identificacion).includes(normalizeText(clienteSearchTerm)),
   )
 
   const totalCuentas = cuentas.length
   const cuentasPendientes = cuentas.filter((c) => c.saldo_pendiente > 0).length
-  const totalPorCobrar = cuentas.reduce((sum, c) => sum + (c.saldo_pendiente > 0 ? c.saldo_pendiente : 0), 0)
-  
-  const cuentasVencidas = cuentas.filter((c) => {
-    if (c.saldo_pendiente <= 0) return false
-    const diasVencimiento = Math.ceil(
-      (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
-    )
-    return diasVencimiento < 0
-  }).length
+  const totalPorCobrar = cuentas.reduce((sum, c) => sum + Number(c.saldo_pendiente), 0)
+  const totalAbonado = cuentas.reduce((sum, c) => sum + (Number(c.total_abonado) || 0), 0)
 
   return (
     <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
@@ -427,7 +458,7 @@ export function ClientesContent() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Facturas</CardTitle>
@@ -448,20 +479,20 @@ export function ClientesContent() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Facturas Vencidas</CardTitle>
-            <AlertCircle className="h-4 w-4 text-destructive" />
+            <CardTitle className="text-sm font-medium">Total Abonado</CardTitle>
+            <DollarSign className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">{cuentasVencidas}</div>
+            <div className="text-2xl font-bold text-green-600">${formatCurrency(totalAbonado)}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total por Cobrar</CardTitle>
-            <DollarSign className="h-4 w-4 text-primary" />
+            <CardTitle className="text-sm font-medium">Saldo Pendiente</CardTitle>
+            <DollarSign className="h-4 w-4 text-[#D4AF37]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">${formatCurrency(totalPorCobrar)}</div>
+            <div className="text-2xl font-bold text-[#D4AF37]">${formatCurrency(totalPorCobrar)}</div>
           </CardContent>
         </Card>
       </div>
@@ -469,16 +500,68 @@ export function ClientesContent() {
       {/* Search & Table */}
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                className="pl-9"
-                placeholder="Buscar por factura, cliente o identificación..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  className="pl-9"
+                  placeholder="Buscar por factura, cliente o identificación..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <Button
+                type="button"
+                variant={showFacturasDateFilters ? "default" : "outline"}
+                onClick={() => setShowFacturasDateFilters(!showFacturasDateFilters)}
+                className="whitespace-nowrap"
+              >
+                {showFacturasDateFilters ? "Ocultar Fechas" : "Buscar por Fechas"}
+              </Button>
             </div>
+            
+            {showFacturasDateFilters && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-md bg-muted/50">
+                <div className="space-y-2">
+                  <Label htmlFor="facturasFechaInicio">Fecha Inicio</Label>
+                  <Input
+                    id="facturasFechaInicio"
+                    type="date"
+                    value={facturasFechaInicio}
+                    onChange={(e) => setFacturasFechaInicio(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="facturasFechaFin">Fecha Fin</Label>
+                  <Input
+                    id="facturasFechaFin"
+                    type="date"
+                    value={facturasFechaFin}
+                    onChange={(e) => setFacturasFechaFin(e.target.value)}
+                  />
+                </div>
+                <div className="md:col-span-2 flex gap-2 justify-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setFacturasFechaInicio("")
+                      setFacturasFechaFin("")
+                      loadCuentas()
+                    }}
+                  >
+                    Limpiar Filtros
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => loadCuentas(facturasFechaInicio, facturasFechaFin)}
+                  >
+                    Aplicar Filtro
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </CardHeader>
         <CardContent className="overflow-x-auto">
@@ -736,7 +819,7 @@ export function ClientesContent() {
 
       {/* Diálogo: Buscar Cliente para Ver Historial */}
       <Dialog open={buscarHistorialDialogOpen} onOpenChange={setBuscarHistorialDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-full mx-4">
           <DialogHeader>
             <DialogTitle>Buscar Historial de Abonos</DialogTitle>
             <DialogDescription>
@@ -754,12 +837,13 @@ export function ClientesContent() {
                 autoFocus
               />
             </div>
+            
             {historialSearchTerm && (
               <ScrollArea className="h-[400px] border rounded-md">
                 {clientes
                   .filter((c) =>
-                    c.nombre.toLowerCase().includes(historialSearchTerm.toLowerCase()) ||
-                    c.identificacion.toLowerCase().includes(historialSearchTerm.toLowerCase())
+                    normalizeText(c.nombre).includes(normalizeText(historialSearchTerm)) ||
+                    normalizeText(c.identificacion).includes(normalizeText(historialSearchTerm))
                   )
                   .map((cliente) => (
                     <div
@@ -997,7 +1081,7 @@ export function ClientesContent() {
         setHistorialDialogOpen(open)
         if (!open) setAbonoSearchTerm("")
       }}>
-        <DialogContent className="w-[99vw] h-[95vh] flex flex-col p-0" style={{ maxWidth: '99vw' }}>
+        <DialogContent className="w-[99vw] h-[95vh] flex flex-col p-0" style={{ maxWidth: '60vw' }}>
           <DialogHeader className="px-6 pt-6 pb-4 border-b">
             <DialogTitle className="text-xl md:text-2xl">Historial de Abonos de Factura</DialogTitle>
             <DialogDescription className="text-sm md:text-base">
@@ -1056,14 +1140,14 @@ export function ClientesContent() {
               {(() => {
                 const filteredAbonos = abonos.filter(abono => {
                   if (!abonoSearchTerm) return true
-                  const searchLower = abonoSearchTerm.toLowerCase()
+                  const searchNormalized = normalizeText(abonoSearchTerm)
                   return (
-                    new Date(abono.fecha).toLocaleString('es-EC').toLowerCase().includes(searchLower) ||
-                    abono.monto.toString().includes(searchLower) ||
-                    abono.metodoPago.toLowerCase().includes(searchLower) ||
-                    (abono.referencia?.toLowerCase() || '').includes(searchLower) ||
-                    (abono.notas?.toLowerCase() || '').includes(searchLower) ||
-                    abono.usuario.toLowerCase().includes(searchLower)
+                    normalizeText(new Date(abono.fecha).toLocaleString('es-EC')).includes(searchNormalized) ||
+                    normalizeText(abono.monto.toString()).includes(searchNormalized) ||
+                    normalizeText(abono.metodoPago).includes(searchNormalized) ||
+                    normalizeText(abono.referencia || '').includes(searchNormalized) ||
+                    normalizeText(abono.notas || '').includes(searchNormalized) ||
+                    normalizeText(abono.usuario).includes(searchNormalized)
                   )
                 })
                 
@@ -1218,7 +1302,12 @@ export function ClientesContent() {
       {/* Diálogo: Historial General de Abonos del Cliente */}
       <Dialog open={historialClienteDialogOpen} onOpenChange={(open) => {
         setHistorialClienteDialogOpen(open)
-        if (!open) setAbonoSearchTerm("")
+        if (!open) {
+          setAbonoSearchTerm("")
+          setShowDateFilters(false)
+          setFechaInicio("")
+          setFechaFin("")
+        }
       }}>
         <DialogContent className="w-[99vw] h-[95vh] flex flex-col p-0" style={{ maxWidth: '60vw' }}>
           <DialogHeader className="px-6 pt-6 pb-4 border-b">
@@ -1243,28 +1332,86 @@ export function ClientesContent() {
             <div className="px-6 py-4">
               {/* Buscador */}
               {abonos.length > 0 && (
-                <div className="mb-4">
-                  <Input
-                    placeholder="Buscar por fecha, factura, monto, método, referencia, notas o usuario..."
-                    value={abonoSearchTerm}
-                    onChange={(e) => setAbonoSearchTerm(e.target.value)}
-                    className="max-w-2xl"
-                  />
+                <div className="mb-4 space-y-4">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Buscar por fecha, factura, monto, método, referencia, notas o usuario..."
+                      value={abonoSearchTerm}
+                      onChange={(e) => setAbonoSearchTerm(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant={showDateFilters ? "default" : "outline"}
+                      onClick={() => setShowDateFilters(!showDateFilters)}
+                      className="whitespace-nowrap"
+                    >
+                      {showDateFilters ? "Ocultar Fechas" : "Buscar por Fechas"}
+                    </Button>
+                  </div>
+                  
+                  {showDateFilters && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-md bg-muted/50">
+                      <div className="space-y-2">
+                        <Label htmlFor="fechaInicioHistorial">Fecha Inicio</Label>
+                        <Input
+                          id="fechaInicioHistorial"
+                          type="date"
+                          value={fechaInicio}
+                          onChange={(e) => setFechaInicio(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="fechaFinHistorial">Fecha Fin</Label>
+                        <Input
+                          id="fechaFinHistorial"
+                          type="date"
+                          value={fechaFin}
+                          onChange={(e) => setFechaFin(e.target.value)}
+                        />
+                      </div>
+                      <div className="md:col-span-2 flex gap-2 justify-end">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setFechaInicio("")
+                            setFechaFin("")
+                            if (selectedCliente) {
+                              loadHistorialCliente(selectedCliente.id)
+                            }
+                          }}
+                        >
+                          Limpiar Filtros
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            if (selectedCliente) {
+                              loadHistorialCliente(selectedCliente.id, fechaInicio, fechaFin)
+                            }
+                          }}
+                        >
+                          Aplicar Filtro
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               {(() => {
                 const filteredAbonos = abonos.filter(abono => {
                   if (!abonoSearchTerm) return true
-                  const searchLower = abonoSearchTerm.toLowerCase()
+                  const searchNormalized = normalizeText(abonoSearchTerm)
                   return (
-                    new Date(abono.fecha).toLocaleString('es-EC').toLowerCase().includes(searchLower) ||
-                    (abono.numero_venta?.toString() || '').includes(searchLower) ||
-                    abono.monto.toString().includes(searchLower) ||
-                    abono.metodoPago.toLowerCase().includes(searchLower) ||
-                    (abono.referencia?.toLowerCase() || '').includes(searchLower) ||
-                    (abono.notas?.toLowerCase() || '').includes(searchLower) ||
-                    abono.usuario.toLowerCase().includes(searchLower)
+                    normalizeText(new Date(abono.fecha).toLocaleString('es-EC')).includes(searchNormalized) ||
+                    normalizeText(abono.numero_venta?.toString() || '').includes(searchNormalized) ||
+                    normalizeText(abono.monto.toString()).includes(searchNormalized) ||
+                    normalizeText(abono.metodoPago).includes(searchNormalized) ||
+                    normalizeText(abono.referencia || '').includes(searchNormalized) ||
+                    normalizeText(abono.notas || '').includes(searchNormalized) ||
+                    normalizeText(abono.usuario).includes(searchNormalized)
                   )
                 })
                 

@@ -1,15 +1,20 @@
 // @ts-nocheck
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { requirePermission } from '@/lib/auth/check-permission'
 
 // GET - Listar todas las cuentas por cobrar con información del cliente
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     await requirePermission('clientes.ver')
 
-    const cuentas = await query(
-      `SELECT 
+    // Obtener parámetros de fecha de la URL
+    const { searchParams } = new URL(request.url)
+    const fechaInicio = searchParams.get('fechaInicio')
+    const fechaFin = searchParams.get('fechaFin')
+
+    // Construir la consulta con filtros de fecha opcionales
+    let sqlQuery = `SELECT 
         cpc.id,
         cpc.venta_id,
         cpc.cliente_id,
@@ -32,9 +37,28 @@ export async function GET() {
          WHERE a.cuenta_por_cobrar_id = cpc.id) as cantidad_abonos
       FROM cuentas_por_cobrar cpc
       INNER JOIN ventas v ON cpc.venta_id = v.id
-      INNER JOIN clientes c ON cpc.cliente_id = c.id
-      ORDER BY cpc.created_at DESC, cpc.estado ASC`
-    )
+      INNER JOIN clientes c ON cpc.cliente_id = c.id`
+    
+    const queryParams: any[] = []
+    const whereConditions: string[] = []
+    
+    if (fechaInicio) {
+      whereConditions.push(`DATE(v.fecha_venta) >= ?`)
+      queryParams.push(fechaInicio)
+    }
+    
+    if (fechaFin) {
+      whereConditions.push(`DATE(v.fecha_venta) <= ?`)
+      queryParams.push(fechaFin)
+    }
+    
+    if (whereConditions.length > 0) {
+      sqlQuery += ` WHERE ${whereConditions.join(' AND ')}`
+    }
+    
+    sqlQuery += ` ORDER BY cpc.created_at DESC, cpc.estado ASC`
+
+    const cuentas = await query(sqlQuery, queryParams)
 
     return NextResponse.json({
       success: true,

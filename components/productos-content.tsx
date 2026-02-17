@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { SearchableSelect } from "@/components/ui/searchable-select"
 import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
@@ -25,7 +26,7 @@ import { getProducts, saveProduct, deleteProduct, getCurrentUser } from "@/lib/s
 import { SidebarToggle } from "@/components/app-sidebar"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toast } from "sonner"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, normalizeText } from "@/lib/utils"
 
 export function ProductosContent() {
   const [productos, setProductos] = useState<Product[]>([])
@@ -551,6 +552,31 @@ export function ProductosContent() {
     setDialogOpen(true)
   }
 
+  const handleOpenNewProduct = () => {
+    // Limpiar todos los datos del formulario y estado
+    setEditingProduct(null)
+    setFormData({
+      sku: "",
+      codigo_barras: "",
+      nombre: "",
+      descripcion: "",
+      categoria_padre_id: "",
+      tipo_prenda_id: "",
+      talla_id: "",
+      proveedor_id: "",
+      color: "",
+      precio_compra: "",
+      precio_venta: "",
+      precio_minimo: "",
+      stock_actual: "",
+    })
+    setTiposPrendaFiltrados([])
+    setTallasFiltradas([])
+    setEsCategoriaConTallaUnica(false)
+    // Abrir el diálogo
+    setDialogOpen(true)
+  }
+
   const handleDelete = (id: string) => {
     setProductToDelete(id)
     setConfirmDeleteOpen(true)
@@ -808,10 +834,10 @@ export function ProductosContent() {
 
   const filteredProductos = productos.filter(
     (p) =>
-      p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.referencia.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.categoria.toLowerCase().includes(searchTerm.toLowerCase()),
+      normalizeText(p.nombre).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.codigo).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.referencia).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.categoria).includes(normalizeText(searchTerm)),
   )
 
   const totalInventario = productos.reduce((sum, p) => sum + p.cantidad * p.precioCosto, 0)
@@ -892,7 +918,7 @@ export function ProductosContent() {
           />
         </div>
         {mounted && canEditPrices && (
-          <Button onClick={() => setDialogOpen(true)} className="w-full md:w-auto">
+          <Button onClick={handleOpenNewProduct} className="w-full md:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             Nuevo Producto
           </Button>
@@ -1055,57 +1081,37 @@ export function ProductosContent() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="categoria_padre_id">Categoría Principal *</Label>
-                    <Select
+                    <SearchableSelect
                       value={formData.categoria_padre_id}
                       onValueChange={(value) => setFormData({ ...formData, categoria_padre_id: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar categoría" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.isArray(categoriasPadre) && categoriasPadre.length > 0 ? (
-                          categoriasPadre.map((cat) => (
-                            <SelectItem key={cat.id} value={cat.id.toString()}>
-                              {cat.nombre}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="0" disabled>
-                            No hay categorías disponibles
-                          </SelectItem>
-                        )}
-                      </SelectContent>
-                    </Select>
+                      items={categoriasPadre.map((cat) => ({
+                        value: cat.id.toString(),
+                        label: cat.nombre
+                      }))}
+                      placeholder="Seleccionar categoría"
+                      searchPlaceholder="Buscar categoría..."
+                      emptyMessage="No se encontraron categorías"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="tipo_prenda_id">Tipo Específico de Prenda *</Label>
-                    <Select
+                    <SearchableSelect
                       value={formData.tipo_prenda_id}
                       onValueChange={(value) => setFormData({ ...formData, tipo_prenda_id: value })}
                       disabled={!formData.categoria_padre_id}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={
-                          formData.categoria_padre_id 
-                            ? "Seleccionar tipo" 
-                            : "Primero seleccione categoría"
-                        } />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.isArray(tiposPrendaFiltrados) && tiposPrendaFiltrados.length > 0 ? (
-                          tiposPrendaFiltrados.map((tipo) => (
-                            <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                              {tipo.nombre}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="0" disabled>
-                            No hay tipos disponibles
-                          </SelectItem>
-                        )}
-                      </SelectContent>
-                    </Select>
+                      items={tiposPrendaFiltrados.map((tipo) => ({
+                        value: tipo.id.toString(),
+                        label: tipo.nombre
+                      }))}
+                      placeholder={
+                        formData.categoria_padre_id 
+                          ? "Seleccionar tipo" 
+                          : "Primero seleccione categoría"
+                      }
+                      searchPlaceholder="Buscar tipo de prenda..."
+                      emptyMessage="No se encontraron tipos de prenda"
+                    />
                   </div>
                 </div>
               </div>
@@ -1115,32 +1121,22 @@ export function ProductosContent() {
                 {!esCategoriaConTallaUnica && (
                   <div className="space-y-2">
                     <Label htmlFor="talla_id">Talla</Label>
-                    <Select
+                    <SearchableSelect
                       value={formData.talla_id}
                       onValueChange={(value) => setFormData({ ...formData, talla_id: value })}
                       disabled={!formData.tipo_prenda_id}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={
-                          formData.tipo_prenda_id 
-                            ? "Seleccionar talla" 
-                            : "Primero seleccione tipo"
-                        } />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.isArray(tallasFiltradas) && tallasFiltradas.length > 0 ? (
-                          tallasFiltradas.map((talla) => (
-                            <SelectItem key={talla.id} value={talla.id.toString()}>
-                              {talla.valor}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="0" disabled>
-                            No hay tallas disponibles
-                          </SelectItem>
-                        )}
-                      </SelectContent>
-                    </Select>
+                      items={tallasFiltradas.map((talla) => ({
+                        value: talla.id.toString(),
+                        label: talla.valor
+                      }))}
+                      placeholder={
+                        formData.tipo_prenda_id 
+                          ? "Seleccionar talla" 
+                          : "Primero seleccione tipo"
+                      }
+                      searchPlaceholder="Buscar talla..."
+                      emptyMessage="No se encontraron tallas"
+                    />
                   </div>
                 )}
 
@@ -1166,29 +1162,19 @@ export function ProductosContent() {
               {/* Proveedor */}
               <div className="space-y-2">
                 <Label htmlFor="proveedor_id">Proveedor *</Label>
-                <Select
+                <SearchableSelect
                   value={formData.proveedor_id}
                   onValueChange={(value) => setFormData({ ...formData, proveedor_id: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar proveedor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.isArray(proveedores) && proveedores.length > 0 ? (
-                      proveedores
-                        .filter(prov => prov.estado === 'activo')
-                        .map((prov) => (
-                          <SelectItem key={prov.id} value={prov.id.toString()}>
-                            {prov.razon_social} ({prov.ruc})
-                          </SelectItem>
-                        ))
-                    ) : (
-                      <SelectItem value="0" disabled>
-                        No hay proveedores disponibles
-                      </SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
+                  items={proveedores
+                    .filter(prov => prov.estado === 'activo')
+                    .map((prov) => ({
+                      value: prov.id.toString(),
+                      label: `${prov.razon_social} (${prov.ruc})`
+                    }))}
+                  placeholder="Seleccionar proveedor"
+                  searchPlaceholder="Buscar proveedor..."
+                  emptyMessage="No se encontraron proveedores"
+                />
               </div>
 
               {/* Precios */}

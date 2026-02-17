@@ -1,7 +1,20 @@
 {
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/categorias-padre/route": "app/api/categorias-padre/route.js",
   "/api/clientes/[id]/abonos/route": "app/api/clientes/[id]/abonos/route.js",
   "/api/clientes/cuentas-por-cobrar/route": "app/api/clientes/cuentas-por-cobrar/route.js",
+  "/api/cuentas-por-cobrar/[id]/abonos/route": "app/api/cuentas-por-cobrar/[id]/abonos/route.js",
   "/api/cuentas-por-cobrar/route": "app/api/cuentas-por-cobrar/route.js",
-  "/clientes/page": "app/clientes/page.js"
+  "/api/descuentos/route": "app/api/descuentos/route.js",
+  "/api/gastos/route": "app/api/gastos/route.js",
+  "/api/productos/route": "app/api/productos/route.js",
+  "/api/proveedores/route": "app/api/proveedores/route.js",
+  "/api/tallas/route": "app/api/tallas/route.js",
+  "/api/tipos-prenda/route": "app/api/tipos-prenda/route.js",
+  "/caja/page": "app/caja/page.js",
+  "/clientes/page": "app/clientes/page.js",
+  "/gastos/page": "app/gastos/page.js",
+  "/inventario/descuentos/page": "app/inventario/descuentos/page.js",
+  "/inventario/productos/page": "app/inventario/productos/page.js",
+  "/page": "app/page.js"
 }

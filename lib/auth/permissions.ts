@@ -55,7 +55,12 @@ export type Permission =
   | 'descuentos.ver'
   | 'descuentos.crear'
   | 'descuentos.editar'
-  | 'descuentos.eliminar';
+  | 'descuentos.eliminar'
+  // Gastos
+  | 'gastos.ver'
+  | 'gastos.crear'
+  | 'gastos.editar'
+  | 'gastos.eliminar';
 
 // Definir permisos por rol (FUENTE ÚNICA DE VERDAD)
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
@@ -105,6 +110,10 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'descuentos.crear',
     'descuentos.editar',
     'descuentos.eliminar',
+    'gastos.ver',
+    'gastos.crear',
+    'gastos.editar',
+    'gastos.eliminar',
   ],
   
   vendedor: [
@@ -187,4 +196,9 @@ export const PERMISSION_INFO: Record<Permission, { nombre: string; modulo: strin
   'descuentos.crear': { nombre: 'Crear Descuentos', modulo: 'Descuentos' },
   'descuentos.editar': { nombre: 'Editar Descuentos', modulo: 'Descuentos' },
   'descuentos.eliminar': { nombre: 'Eliminar Descuentos', modulo: 'Descuentos' },
+  'gastos.ver': { nombre: 'Ver Gastos', modulo: 'Gastos' },
+  'gastos.crear': { nombre: 'Crear Gastos', modulo: 'Gastos' },
+  'gastos.editar': { nombre: 'Editar Gastos', modulo: 'Gastos' },
+  'gastos.eliminar': { nombre: 'Eliminar Gastos', modulo: 'Gastos' },
+  'clientes.abonar': { nombre: 'Registrar Abonos', modulo: 'Clientes' },
 };

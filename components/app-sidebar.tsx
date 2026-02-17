@@ -21,6 +21,7 @@ import {
   User,
   Building2,
   ShoppingBag,
+  Receipt,
 } from "lucide-react"
 import {
   Sidebar,
@@ -67,6 +68,12 @@ const menuItems = [
     icon: Users, 
     href: "/clientes",
     permissions: ['clientes.ver'] as Permission[]
+  },
+  { 
+    title: "Gastos", 
+    icon: Receipt, 
+    href: "/gastos",
+    permissions: ['gastos.ver', 'gastos.crear'] as Permission[]
   },
   { 
     title: "Proveedores", 
