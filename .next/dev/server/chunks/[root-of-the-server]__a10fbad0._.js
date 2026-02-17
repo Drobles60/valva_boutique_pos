@@ -700,6 +700,10 @@ async function GET(request, { params }) {
     try {
         await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2f$check$2d$permission$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["requirePermission"])('clientes.ver');
         const { id: clienteId } = await params;
+        // Obtener parámetros de fecha de la URL
+        const { searchParams } = new URL(request.url);
+        const fechaInicio = searchParams.get('fechaInicio');
+        const fechaFin = searchParams.get('fechaFin');
         // Verificar que el cliente existe y obtener saldo
         const cliente = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])(`SELECT id, nombre, identificacion, telefono, email, saldo_pendiente 
        FROM clientes 
@@ -713,8 +717,8 @@ async function GET(request, { params }) {
                 status: 404
             });
         }
-        // Obtener todos los abonos del cliente a través de sus cuentas por cobrar
-        const abonos = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT 
+        // Construir la consulta con filtros de fecha opcionales
+        let sqlQuery = `SELECT 
         a.id,
         a.monto,
         a.fecha_abono,
@@ -732,10 +736,21 @@ async function GET(request, { params }) {
       INNER JOIN cuentas_por_cobrar cpc ON a.cuenta_por_cobrar_id = cpc.id
       LEFT JOIN usuarios u ON a.usuario_id = u.id
       LEFT JOIN ventas v ON cpc.venta_id = v.id
-      WHERE cpc.cliente_id = ?
-      ORDER BY a.fecha_abono DESC, a.created_at DESC`, [
+      WHERE cpc.cliente_id = ?`;
+        const queryParams = [
             clienteId
-        ]);
+        ];
+        if (fechaInicio) {
+            sqlQuery += ` AND DATE(a.fecha_abono) >= ?`;
+            queryParams.push(fechaInicio);
+        }
+        if (fechaFin) {
+            sqlQuery += ` AND DATE(a.fecha_abono) <= ?`;
+            queryParams.push(fechaFin);
+        }
+        sqlQuery += ` ORDER BY a.fecha_abono DESC, a.created_at DESC`;
+        // Obtener todos los abonos del cliente a través de sus cuentas por cobrar
+        const abonos = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(sqlQuery, queryParams);
         // Formatear los abonos
         const abonosFormateados = abonos.map((a)=>({
                 id: a.id,

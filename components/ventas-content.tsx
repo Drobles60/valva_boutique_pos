@@ -16,7 +16,7 @@ import { CambioDialog } from "./cambio-dialog"
 import { CreditoDialog } from "./credito-dialog"
 import { ResumenPreciosDialog } from "./resumen-precios-dialog"
 import { toast } from "sonner"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, normalizeText } from "@/lib/utils"
 import { useSession } from "next-auth/react"
 
 type CartItem = {
@@ -405,9 +405,9 @@ export function VentasContent() {
   const productosFiltrados = productos.filter(
     (p) =>
       p.cantidad > 0 && // Solo mostrar productos con stock disponible
-      (p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.referencia.toLowerCase().includes(searchTerm.toLowerCase())),
+      (normalizeText(p.nombre).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.codigo).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.referencia).includes(normalizeText(searchTerm))),
   )
 
   return (

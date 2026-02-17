@@ -12,6 +12,11 @@ export async function GET(
     await requirePermission('clientes.ver');
 
     const { id: clienteId } = await params;
+    
+    // Obtener parámetros de fecha de la URL
+    const { searchParams } = new URL(request.url);
+    const fechaInicio = searchParams.get('fechaInicio');
+    const fechaFin = searchParams.get('fechaFin');
 
     // Verificar que el cliente existe y obtener saldo
     const cliente = await queryOne<any>(
@@ -28,9 +33,8 @@ export async function GET(
       );
     }
 
-    // Obtener todos los abonos del cliente a través de sus cuentas por cobrar
-    const abonos = await query<any[]>(
-      `SELECT 
+    // Construir la consulta con filtros de fecha opcionales
+    let sqlQuery = `SELECT 
         a.id,
         a.monto,
         a.fecha_abono,
@@ -48,10 +52,24 @@ export async function GET(
       INNER JOIN cuentas_por_cobrar cpc ON a.cuenta_por_cobrar_id = cpc.id
       LEFT JOIN usuarios u ON a.usuario_id = u.id
       LEFT JOIN ventas v ON cpc.venta_id = v.id
-      WHERE cpc.cliente_id = ?
-      ORDER BY a.fecha_abono DESC, a.created_at DESC`,
-      [clienteId]
-    );
+      WHERE cpc.cliente_id = ?`;
+    
+    const queryParams: any[] = [clienteId];
+    
+    if (fechaInicio) {
+      sqlQuery += ` AND DATE(a.fecha_abono) >= ?`;
+      queryParams.push(fechaInicio);
+    }
+    
+    if (fechaFin) {
+      sqlQuery += ` AND DATE(a.fecha_abono) <= ?`;
+      queryParams.push(fechaFin);
+    }
+    
+    sqlQuery += ` ORDER BY a.fecha_abono DESC, a.created_at DESC`;
+
+    // Obtener todos los abonos del cliente a través de sus cuentas por cobrar
+    const abonos = await query<any[]>(sqlQuery, queryParams);
 
     // Formatear los abonos
     const abonosFormateados = abonos.map(a => ({

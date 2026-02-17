@@ -23,6 +23,7 @@ import { Search, Plus, Edit, Trash2, Building2, Phone, Mail, Ban, CheckCircle } 
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import { normalizeText } from "@/lib/utils"
 
 type Proveedor = {
   id: number
@@ -298,9 +299,9 @@ export function ProveedoresContent() {
 
   const filteredProveedores = (Array.isArray(proveedores) ? proveedores : []).filter(
     (p) =>
-      p.razon_social.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.ruc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (p.nombre_comercial && p.nombre_comercial.toLowerCase().includes(searchTerm.toLowerCase())),
+      normalizeText(p.razon_social).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.ruc).includes(normalizeText(searchTerm)) ||
+      (p.nombre_comercial && normalizeText(p.nombre_comercial).includes(normalizeText(searchTerm))),
   )
 
   const totalProveedores = Array.isArray(proveedores) ? proveedores.length : 0

@@ -14,3 +14,14 @@ export function formatCurrency(value: number | string): string {
   if (isNaN(num)) return '0'
   return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
+
+/**
+ * Normaliza un texto eliminando tildes y acentos para búsquedas
+ * Ejemplo: "Pantalón" -> "pantalon", "Cámara" -> "camara"
+ */
+export function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
