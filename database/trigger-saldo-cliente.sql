@@ -29,8 +29,8 @@ BEGIN
   UPDATE cuentas_por_cobrar
   SET saldo_pendiente = saldo_pendiente - NEW.monto,
       estado = CASE 
-        WHEN (saldo_pendiente - NEW.monto) <= 0 THEN 'pagada'
-        ELSE estado
+        WHEN (saldo_pendiente - NEW.monto) = 0 THEN 'pagada'
+        ELSE 'pendiente'
       END
   WHERE id = NEW.cuenta_por_cobrar_id;
   
@@ -52,7 +52,8 @@ SHOW TRIGGERS LIKE 'abonos';
 -- 1. Este trigger se ejecuta automáticamente después de cada INSERT en la tabla abonos
 -- 2. Actualiza el saldo_pendiente en cuentas_por_cobrar
 -- 3. Actualiza el saldo_pendiente y saldo_actual en clientes
--- 4. Marca la cuenta como 'pagada' si el saldo llega a cero o menos
--- 5. La API ya implementa esta lógica, por lo que el trigger es redundante pero puede ser útil
+-- 4. Marca la cuenta como 'pagada' SOLO si el saldo es exactamente cero
+-- 5. Marca la cuenta como 'pendiente' si el saldo es mayor a cero
+-- 6. La API ya implementa esta lógica, por lo que el trigger es redundante pero puede ser útil
 --    para abonos que se registren manualmente en la base de datos
 -- =========================================

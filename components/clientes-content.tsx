@@ -83,6 +83,8 @@ export function ClientesContent() {
   const [clientes, setClientes] = useState<ClienteConDeuda[]>([])
   const [selectedCliente, setSelectedCliente] = useState<ClienteConDeuda | null>(null)
   const [clienteSearchTerm, setClienteSearchTerm] = useState("")
+  const [historialSearchTerm, setHistorialSearchTerm] = useState("")
+  const [abonoSearchTerm, setAbonoSearchTerm] = useState("")
   
   // Estados generales
   const [searchTerm, setSearchTerm] = useState("")
@@ -92,10 +94,13 @@ export function ClientesContent() {
   const [abonoIndividualDialogOpen, setAbonoIndividualDialogOpen] = useState(false)
   const [abonoClienteDialogOpen, setAbonoClienteDialogOpen] = useState(false)
   const [historialDialogOpen, setHistorialDialogOpen] = useState(false)
+  const [historialClienteDialogOpen, setHistorialClienteDialogOpen] = useState(false)
+  const [buscarHistorialDialogOpen, setBuscarHistorialDialogOpen] = useState(false)
   
   // Estados de datos
   const [abonos, setAbonos] = useState<Abono[]>([])
   const [distribucionDetalle, setDistribucionDetalle] = useState<AbonoDistribucion[]>([])
+  const [historialResumen, setHistorialResumen] = useState<any>(null)
 
   const [abonoIndividualData, setAbonoIndividualData] = useState({
     monto: "",
@@ -178,6 +183,26 @@ export function ClientesContent() {
     }
   }
 
+  // Cargar historial general de abonos de un cliente (todas sus facturas)
+  const loadHistorialCliente = async (clienteId: number) => {
+    try {
+      const response = await fetch(`/api/clientes/${clienteId}/abonos`)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al cargar historial del cliente')
+      }
+
+      setAbonos(data.data.abonos || [])
+      setHistorialResumen(data.data.resumen || null)
+    } catch (error: any) {
+      console.error('Error al cargar historial del cliente:', error)
+      toast.error('Error al cargar historial del cliente', {
+        description: error.message
+      })
+    }
+  }
+
   // Abono INDIVIDUAL a una factura específica
   const handleAbonoIndividualSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -189,10 +214,11 @@ export function ClientesContent() {
     }
 
     const monto = Number.parseFloat(abonoIndividualData.monto)
+    const saldoPendiente = selectedCuenta.saldo_pendiente
 
-    if (monto <= 0 || monto > selectedCuenta.saldo_pendiente) {
+    if (monto <= 0 || monto > saldoPendiente) {
       toast.error("Monto inválido", {
-        description: `El monto debe ser mayor a 0 y no puede exceder el saldo pendiente de $${formatCurrency(selectedCuenta.saldo_pendiente)}`
+        description: `El monto debe ser mayor a 0 y no puede exceder el saldo pendiente de $${formatCurrency(saldoPendiente)}`
       })
       return
     }
@@ -208,7 +234,7 @@ export function ClientesContent() {
         metodo_pago: abonoIndividualData.metodoPago,
         referencia_transferencia: abonoIndividualData.referencia?.trim() || null,
         notas: abonoIndividualData.notas?.trim() || null,
-        usuario_id: user?.id || 1
+        usuario_id: user?.id || null
       }
 
       const response = await fetch(`/api/cuentas-por-cobrar/${selectedCuenta.id}/abonos`, {
@@ -250,10 +276,11 @@ export function ClientesContent() {
     }
 
     const monto = Number.parseFloat(abonoClienteData.monto)
+    const saldoCliente = selectedCliente.saldo_pendiente
 
-    if (monto <= 0 || monto > selectedCliente.saldo_pendiente) {
+    if (monto <= 0 || monto > saldoCliente) {
       toast.error("Monto inválido", {
-        description: `El monto debe ser mayor a 0 y no puede exceder el saldo pendiente de $${formatCurrency(selectedCliente.saldo_pendiente)}`
+        description: `El monto debe ser mayor a 0 y no puede exceder el saldo pendiente de $${formatCurrency(saldoCliente)}`
       })
       return
     }
@@ -269,7 +296,7 @@ export function ClientesContent() {
         metodo_pago: abonoClienteData.metodoPago,
         referencia_transferencia: abonoClienteData.referencia?.trim() || null,
         notas: abonoClienteData.notas?.trim() || null,
-        usuario_id: user?.id || 1
+        usuario_id: user?.id || null
       }
 
       const response = await fetch(`/api/clientes/${selectedCliente.id}/abonos`, {
@@ -322,6 +349,12 @@ export function ClientesContent() {
     setHistorialDialogOpen(true)
   }
 
+  const handleOpenHistorialCliente = async (cliente: ClienteConDeuda) => {
+    setSelectedCliente(cliente)
+    await loadHistorialCliente(cliente.id)
+    setHistorialClienteDialogOpen(true)
+  }
+
   const handleCloseAbonoIndividualDialog = () => {
     setAbonoIndividualDialogOpen(false)
     setSelectedCuenta(null)
@@ -360,11 +393,11 @@ export function ClientesContent() {
   )
 
   const totalCuentas = cuentas.length
-  const cuentasPendientes = cuentas.filter((c) => c.estado === 'pendiente').length
-  const totalPorCobrar = cuentas.reduce((sum, c) => sum + (c.saldo_pendiente || 0), 0)
+  const cuentasPendientes = cuentas.filter((c) => c.saldo_pendiente > 0).length
+  const totalPorCobrar = cuentas.reduce((sum, c) => sum + (c.saldo_pendiente > 0 ? c.saldo_pendiente : 0), 0)
   
   const cuentasVencidas = cuentas.filter((c) => {
-    if (c.estado !== 'pendiente') return false
+    if (c.saldo_pendiente <= 0) return false
     const diasVencimiento = Math.ceil(
       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
     )
@@ -381,10 +414,16 @@ export function ClientesContent() {
             <p className="text-sm text-muted-foreground md:text-base">Gestión de ventas a crédito y abonos</p>
           </div>
         </div>
-        <Button onClick={handleOpenAbonoCliente} size="lg">
-          <Users className="h-4 w-4 mr-2" />
-          Abonar a Cliente
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleOpenAbonoCliente} size="lg">
+            <Users className="h-4 w-4 mr-2" />
+            Abonar a Cliente
+          </Button>
+          <Button onClick={() => setBuscarHistorialDialogOpen(true)} variant="outline" size="lg">
+            <History className="h-4 w-4 mr-2" />
+            Ver Historial
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -472,11 +511,18 @@ export function ClientesContent() {
                 </TableRow>
               ) : (
                 filteredCuentas.map((cuenta) => {
+                  // Calcular el estado real basándose en el saldo pendiente
+                  // Si saldo > 0: pendiente (cliente debe)
+                  // Si saldo <= 0: pagada (o pagada con saldo a favor)
+                  const saldoPendiente = cuenta.saldo_pendiente
+                  const estadoReal = saldoPendiente > 0 ? 'pendiente' : 'pagada'
+                  const tieneSaldoAFavor = saldoPendiente < 0
+                  
                   const diasVencimiento = Math.ceil(
                     (new Date(cuenta.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
                   )
-                  const estaVencida = diasVencimiento < 0 && cuenta.estado === 'pendiente'
-                  const proximaVencer = diasVencimiento >= 0 && diasVencimiento <= 7 && cuenta.estado === 'pendiente'
+                  const estaVencida = diasVencimiento < 0 && estadoReal === 'pendiente'
+                  const proximaVencer = diasVencimiento >= 0 && diasVencimiento <= 7 && estadoReal === 'pendiente'
 
                   return (
                     <TableRow key={cuenta.id}>
@@ -499,9 +545,15 @@ export function ClientesContent() {
                         ${formatCurrency(cuenta.total_abonado)}
                       </TableCell>
                       <TableCell className="text-right">
-                        <span className={cuenta.saldo_pendiente > 0 ? "font-semibold text-[#D4AF37]" : "text-muted-foreground"}>
-                          ${formatCurrency(cuenta.saldo_pendiente)}
-                        </span>
+                        {tieneSaldoAFavor ? (
+                          <span className="text-blue-600 font-medium" title="Saldo a favor del cliente">
+                            -${formatCurrency(Math.abs(saldoPendiente))}
+                          </span>
+                        ) : (
+                          <span className={saldoPendiente > 0 ? "font-semibold text-[#D4AF37]" : "text-muted-foreground"}>
+                            ${formatCurrency(saldoPendiente)}
+                          </span>
+                        )}
                       </TableCell>
                       <TableCell className="hidden xl:table-cell text-sm">
                         {estaVencida ? (
@@ -512,7 +564,7 @@ export function ClientesContent() {
                           <span className="text-[#D4AF37] font-medium">
                             {diasVencimiento} días
                           </span>
-                        ) : cuenta.estado === 'pagada' ? (
+                        ) : estadoReal === 'pagada' ? (
                           <span className="text-muted-foreground">-</span>
                         ) : (
                           <span className="text-muted-foreground">{diasVencimiento} días</span>
@@ -520,14 +572,14 @@ export function ClientesContent() {
                       </TableCell>
                       <TableCell>
                         <Badge 
-                          variant={cuenta.estado === 'pagada' ? 'default' : estaVencida ? 'destructive' : 'secondary'}
+                          variant={estadoReal === 'pagada' ? 'default' : estaVencida ? 'destructive' : 'secondary'}
                         >
-                          {cuenta.estado === 'pagada' ? 'Pagada' : estaVencida ? 'Vencida' : 'Pendiente'}
+                          {estadoReal === 'pagada' ? 'Pagada' : estaVencida ? 'Vencida' : 'Pendiente'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          {cuenta.estado === 'pendiente' && (
+                          {estadoReal === 'pendiente' && (
                             <Button 
                               variant="default" 
                               size="sm" 
@@ -597,7 +649,19 @@ export function ClientesContent() {
                   value={abonoIndividualData.monto ? formatCurrency(abonoIndividualData.monto) : ''}
                   onChange={(e) => {
                     const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
-                    setAbonoIndividualData({ ...abonoIndividualData, monto: value })
+                    const montoNumerico = Number.parseFloat(value) || 0
+                    const saldoMaximo = selectedCuenta?.saldo_pendiente || 0
+                    
+                    // Solo actualizar si el monto no excede el saldo pendiente
+                    if (montoNumerico <= saldoMaximo) {
+                      setAbonoIndividualData({ ...abonoIndividualData, monto: value })
+                    } else {
+                      // Si excede, establecer el saldo máximo
+                      setAbonoIndividualData({ ...abonoIndividualData, monto: saldoMaximo.toString() })
+                      toast.error("Monto excedido", {
+                        description: `El monto no puede ser mayor al saldo pendiente de $${formatCurrency(saldoMaximo)}`
+                      })
+                    }
                   }}
                   onFocus={(e) => {
                     if (abonoIndividualData.monto) {
@@ -609,11 +673,12 @@ export function ClientesContent() {
                       e.target.value = formatCurrency(abonoIndividualData.monto)
                     }
                   }}
+                  placeholder={`Máximo: $${formatCurrency(selectedCuenta?.saldo_pendiente || 0)}`}
                   required
                 />
                 {abonoIndividualData.monto && Number.parseFloat(abonoIndividualData.monto) > 0 && selectedCuenta && (
                   <p className="text-sm text-muted-foreground">
-                    Nuevo saldo: ${formatCurrency(Math.max(0, (selectedCuenta.saldo_pendiente || 0) - Number.parseFloat(abonoIndividualData.monto)))}
+                    Nuevo saldo: ${formatCurrency(Math.max(0, selectedCuenta.saldo_pendiente - Number.parseFloat(abonoIndividualData.monto)))}
                   </p>
                 )}
               </div>
@@ -669,9 +734,75 @@ export function ClientesContent() {
         </DialogContent>
       </Dialog>
 
+      {/* Diálogo: Buscar Cliente para Ver Historial */}
+      <Dialog open={buscarHistorialDialogOpen} onOpenChange={setBuscarHistorialDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Buscar Historial de Abonos</DialogTitle>
+            <DialogDescription>
+              Busca un cliente para ver su historial completo de abonos
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="buscarHistorial">Buscar Cliente</Label>
+              <Input
+                id="buscarHistorial"
+                placeholder="Buscar por nombre o identificación..."
+                value={historialSearchTerm}
+                onChange={(e) => setHistorialSearchTerm(e.target.value)}
+                autoFocus
+              />
+            </div>
+            {historialSearchTerm && (
+              <ScrollArea className="h-[400px] border rounded-md">
+                {clientes
+                  .filter((c) =>
+                    c.nombre.toLowerCase().includes(historialSearchTerm.toLowerCase()) ||
+                    c.identificacion.toLowerCase().includes(historialSearchTerm.toLowerCase())
+                  )
+                  .map((cliente) => (
+                    <div
+                      key={cliente.id}
+                      className="p-4 border-b hover:bg-accent cursor-pointer transition-colors"
+                      onClick={async () => {
+                        setBuscarHistorialDialogOpen(false)
+                        setHistorialSearchTerm("")
+                        await handleOpenHistorialCliente(cliente)
+                      }}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <p className="font-semibold text-base">{cliente.nombre}</p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            <span className="font-medium">ID:</span> {cliente.identificacion}
+                            {cliente.telefono && (
+                              <>
+                                {" "} | <span className="font-medium">Tel:</span> {cliente.telefono}
+                              </>
+                            )}
+                          </p>
+                        </div>
+                        <div className="text-right ml-4">
+                          <p className="text-sm font-semibold text-[#D4AF37]">
+                            ${formatCurrency(cliente.saldo_pendiente)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {cliente.cuentas_pendientes} {cliente.cuentas_pendientes === 1 ? "factura" : "facturas"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </ScrollArea>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Diálogo: Abonar a Cliente (con distribución automática) */}
       <Dialog open={abonoClienteDialogOpen} onOpenChange={setAbonoClienteDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh]">
+        <DialogContent className="max-w-3xl max-h-[150vh]">
           <DialogHeader>
             <DialogTitle>Abonar a Cliente con Distribución Automática</DialogTitle>
             <DialogDescription>
@@ -708,10 +839,34 @@ export function ClientesContent() {
                               setClienteSearchTerm(cliente.nombre)
                             }}
                           >
-                            <p className="font-medium">{cliente.nombre}</p>
-                            <p className="text-xs text-muted-foreground">
-                              ID: {cliente.identificacion} | Deuda: ${formatCurrency(cliente.saldo_pendiente)} | {cliente.cuentas_pendientes} facturas pendientes
-                            </p>
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="font-semibold text-base">{cliente.nombre}</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  <span className="font-medium">ID:</span> {cliente.identificacion}
+                                  {cliente.telefono && <> | <span className="font-medium">Tel:</span> {cliente.telefono}</>}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleOpenHistorialCliente(cliente)
+                                  }}
+                                  title="Ver historial de abonos"
+                                >
+                                  <History className="h-4 w-4" />
+                                </Button>
+                                <div className="text-right">
+                                  <p className="text-sm font-semibold text-[#D4AF37]">${formatCurrency(cliente.saldo_pendiente)}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {cliente.cuentas_pendientes} {cliente.cuentas_pendientes === 1 ? 'factura' : 'facturas'}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         ))
                       )}
@@ -749,7 +904,19 @@ export function ClientesContent() {
                         value={abonoClienteData.monto ? formatCurrency(abonoClienteData.monto) : ''}
                         onChange={(e) => {
                           const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
-                          setAbonoClienteData({ ...abonoClienteData, monto: value })
+                          const montoNumerico = Number.parseFloat(value) || 0
+                          const saldoMaximo = selectedCliente?.saldo_pendiente || 0
+                          
+                          // Solo actualizar si el monto no excede el saldo pendiente total del cliente
+                          if (montoNumerico <= saldoMaximo) {
+                            setAbonoClienteData({ ...abonoClienteData, monto: value })
+                          } else {
+                            // Si excede, establecer el saldo máximo
+                            setAbonoClienteData({ ...abonoClienteData, monto: saldoMaximo.toString() })
+                            toast.error("Monto excedido", {
+                              description: `El monto no puede ser mayor al saldo total del cliente de $${formatCurrency(saldoMaximo)}`
+                            })
+                          }
                         }}
                         onFocus={(e) => {
                           if (abonoClienteData.monto) {
@@ -761,6 +928,7 @@ export function ClientesContent() {
                             e.target.value = formatCurrency(abonoClienteData.monto)
                           }
                         }}
+                        placeholder={`Máximo: $${formatCurrency(selectedCliente?.saldo_pendiente || 0)}`}
                         required
                       />
                       {abonoClienteData.monto && Number.parseFloat(abonoClienteData.monto) > 0 && (
@@ -824,41 +992,112 @@ export function ClientesContent() {
         </DialogContent>
       </Dialog>
 
-      {/* Diálogo: Historial de Abonos */}
-      <Dialog open={historialDialogOpen} onOpenChange={setHistorialDialogOpen}>
-        <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Historial de Abonos</DialogTitle>
-            <DialogDescription className="text-xs sm:text-sm">
-              Factura: #{selectedCuenta?.numero_venta}
-              <br className="sm:hidden" />
-              <span className="hidden sm:inline"> | </span>
-              Cliente: {selectedCuenta?.cliente_nombre}
+      {/* Diálogo: Historial de Abonos de Factura Individual */}
+      <Dialog open={historialDialogOpen} onOpenChange={(open) => {
+        setHistorialDialogOpen(open)
+        if (!open) setAbonoSearchTerm("")
+      }}>
+        <DialogContent className="w-[99vw] h-[95vh] flex flex-col p-0" style={{ maxWidth: '99vw' }}>
+          <DialogHeader className="px-6 pt-6 pb-4 border-b">
+            <DialogTitle className="text-xl md:text-2xl">Historial de Abonos de Factura</DialogTitle>
+            <DialogDescription className="text-sm md:text-base">
+              <span className="font-semibold text-foreground">
+                Factura #{selectedCuenta?.numero_venta}
+              </span>
+              <br />
+              <span className="text-xs md:text-sm">
+                Cliente: <span className="font-medium">{selectedCuenta?.cliente_nombre}</span>
+              </span>
             </DialogDescription>
           </DialogHeader>
-          <ScrollArea className="max-h-[70vh]">
-            <div className="py-4">
-              {abonos.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">No hay abonos registrados</div>
-              ) : (
-                <>
-                  {/* Vista Desktop */}
-                  <div className="hidden md:block overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Fecha</TableHead>
-                          <TableHead>Factura</TableHead>
-                          <TableHead className="text-right">Monto</TableHead>
-                          <TableHead>Método</TableHead>
-                          <TableHead className="hidden lg:table-cell">Referencia</TableHead>
-                          <TableHead className="hidden xl:table-cell">Usuario</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {abonos.map((abono) => (
-                          <TableRow key={abono.id}>
-                            <TableCell className="text-sm whitespace-nowrap">
+          <div className="flex-1 overflow-auto">
+            <div className="px-6 py-4">
+              {/* Card de Información de la Factura */}
+              <Card className="mb-6 bg-gradient-to-r from-muted to-muted/50 border-2">
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="text-center sm:text-left">
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Monto Total</p>
+                      <p className="text-3xl font-bold text-primary">
+                        ${formatCurrency(selectedCuenta?.monto_total || 0)}
+                      </p>
+                    </div>
+                    <div className="text-center sm:text-left">
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Total Abonado</p>
+                      <p className="text-3xl font-bold text-green-600">
+                        ${formatCurrency(selectedCuenta?.total_abonado || 0)}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {selectedCuenta?.cantidad_abonos || 0} {selectedCuenta?.cantidad_abonos === 1 ? 'abono' : 'abonos'}
+                      </p>
+                    </div>
+                    <div className="text-center sm:text-left">
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Saldo Pendiente</p>
+                      <p className="text-3xl font-bold text-[#D4AF37]">
+                        ${formatCurrency(selectedCuenta?.saldo_pendiente || 0)}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Buscador */}
+              {abonos.length > 0 && (
+                <div className="mb-4">
+                  <Input
+                    placeholder="Buscar por fecha, monto, método, referencia, notas o usuario..."
+                    value={abonoSearchTerm}
+                    onChange={(e) => setAbonoSearchTerm(e.target.value)}
+                    className="max-w-2xl"
+                  />
+                </div>
+              )}
+
+              {(() => {
+                const filteredAbonos = abonos.filter(abono => {
+                  if (!abonoSearchTerm) return true
+                  const searchLower = abonoSearchTerm.toLowerCase()
+                  return (
+                    new Date(abono.fecha).toLocaleString('es-EC').toLowerCase().includes(searchLower) ||
+                    abono.monto.toString().includes(searchLower) ||
+                    abono.metodoPago.toLowerCase().includes(searchLower) ||
+                    (abono.referencia?.toLowerCase() || '').includes(searchLower) ||
+                    (abono.notas?.toLowerCase() || '').includes(searchLower) ||
+                    abono.usuario.toLowerCase().includes(searchLower)
+                  )
+                })
+                
+                return filteredAbonos.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <History className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p className="text-lg font-medium">
+                      {abonos.length === 0 ? 'No hay abonos registrados' : 'No se encontraron abonos'}
+                    </p>
+                    <p className="text-sm">
+                      {abonos.length === 0 ? 'Esta factura no tiene historial de pagos' : 'Intenta con otro término de búsqueda'}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Vista Desktop */}
+                    <div className="hidden md:block border rounded-lg">
+                      <div className="overflow-x-auto">
+                        <div className="max-h-[400px] overflow-y-auto">
+                          <Table className="w-full">
+                            <TableHeader className="sticky top-0 bg-background z-10">
+                              <TableRow className="bg-muted/50">
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[160px]">Fecha</TableHead>
+                                <TableHead className="font-semibold text-right whitespace-nowrap min-w-[120px]">Monto</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[120px]">Método</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[120px]">Referencia</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[120px]">Notas</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[90px]">Usuario</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {filteredAbonos.map((abono) => (
+                          <TableRow key={abono.id} className="hover:bg-muted/30">
+                            <TableCell className="text-sm whitespace-nowrap font-medium">
                               {new Date(abono.fecha).toLocaleString('es-EC', {
                                 year: 'numeric',
                                 month: '2-digit',
@@ -867,84 +1106,359 @@ export function ClientesContent() {
                                 minute: '2-digit'
                               })}
                             </TableCell>
-                            <TableCell className="text-sm">
-                              {abono.numero_venta ? (
-                                <Badge variant="outline">#{abono.numero_venta}</Badge>
-                              ) : (
-                                '-'
-                              )}
-                            </TableCell>
-                            <TableCell className="font-bold text-green-600 text-right whitespace-nowrap">
+                            <TableCell className="text-base font-bold text-green-600 text-right whitespace-nowrap">
                               ${formatCurrency(abono.monto)}
                             </TableCell>
                             <TableCell>
-                              <Badge variant="secondary">{abono.metodoPago}</Badge>
-                            </TableCell>
-                            <TableCell className="text-sm text-muted-foreground hidden lg:table-cell">
-                              {abono.referencia || "-"}
-                            </TableCell>
-                            <TableCell className="text-sm hidden xl:table-cell">{abono.usuario}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-
-                  {/* Vista Mobile */}
-                  <div className="md:hidden space-y-3">
-                    {abonos.map((abono) => (
-                      <Card key={abono.id} className="overflow-hidden">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start mb-3">
-                            <div className="flex-1">
-                              <p className="text-xs text-muted-foreground mb-1">
-                                {new Date(abono.fecha).toLocaleString('es-EC', {
-                                  year: 'numeric',
-                                  month: '2-digit',
-                                  day: '2-digit',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                              {abono.numero_venta && (
-                                <Badge variant="outline" className="text-xs">
-                                  #{abono.numero_venta}
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="text-right">
-                              <p className="text-lg font-bold text-green-600">
-                                ${formatCurrency(abono.monto)}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div>
-                              <p className="text-xs text-muted-foreground">Método</p>
-                              <Badge variant="secondary" className="text-xs mt-1">
+                              <Badge variant="secondary" className="capitalize">
                                 {abono.metodoPago}
                               </Badge>
+                            </TableCell>
+                            <TableCell className="text-sm">
+                              {abono.referencia ? (
+                                <span className="font-mono text-xs bg-muted px-2 py-1 rounded break-words">
+                                  {abono.referencia}
+                                </span>
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-sm">
+                              {abono.notas ? (
+                                <div className="break-words" title={abono.notas}>
+                                  {abono.notas}
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-sm font-medium">
+                              {abono.usuario}
+                            </TableCell>
+                          </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Vista Mobile */}
+                    <div className="md:hidden space-y-4">
+                      {filteredAbonos.map((abono) => (
+                      <Card key={abono.id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
+                        <CardContent className="p-0">
+                          {/* Header del Card */}
+                          <div className="bg-muted/50 p-3 border-b">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="text-xs text-muted-foreground font-medium mb-1">
+                                  {new Date(abono.fecha).toLocaleString('es-EC', {
+                                    year: 'numeric',
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-xl font-bold text-green-600">
+                                  ${formatCurrency(abono.monto)}
+                                </p>
+                              </div>
                             </div>
+                          </div>
+
+                          {/* Cuerpo del Card */}
+                          <div className="p-4 space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Método de Pago</p>
+                                <Badge variant="secondary" className="text-xs capitalize">
+                                  {abono.metodoPago}
+                                </Badge>
+                              </div>
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Usuario</p>
+                                <p className="text-sm font-medium">{abono.usuario}</p>
+                              </div>
+                            </div>
+
                             {abono.referencia && (
                               <div>
-                                <p className="text-xs text-muted-foreground">Referencia</p>
-                                <p className="text-xs mt-1 truncate">{abono.referencia}</p>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Referencia</p>
+                                <p className="text-sm font-mono bg-muted px-2 py-1 rounded break-all">
+                                  {abono.referencia}
+                                </p>
                               </div>
                             )}
-                            <div className="col-span-2">
-                              <p className="text-xs text-muted-foreground">Usuario</p>
-                              <p className="text-xs mt-1">{abono.usuario}</p>
+
+                            {abono.notas && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Notas</p>
+                                <p className="text-sm bg-muted/50 px-3 py-2 rounded">
+                                  {abono.notas}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                    </div>
+                  </>
+                )
+              })()}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Diálogo: Historial General de Abonos del Cliente */}
+      <Dialog open={historialClienteDialogOpen} onOpenChange={(open) => {
+        setHistorialClienteDialogOpen(open)
+        if (!open) setAbonoSearchTerm("")
+      }}>
+        <DialogContent className="w-[99vw] h-[95vh] flex flex-col p-0" style={{ maxWidth: '60vw' }}>
+          <DialogHeader className="px-6 pt-6 pb-4 border-b">
+            <DialogTitle className="text-xl md:text-2xl">Historial General de Abonos</DialogTitle>
+            <DialogDescription className="text-sm md:text-base">
+              <span className="font-semibold text-foreground">
+                Cliente: {selectedCliente?.nombre}
+              </span>
+              <br />
+              <span className="text-xs md:text-sm">
+                ID: {selectedCliente?.identificacion}
+                {historialResumen && (
+                  <>
+                    {" "} | Total Abonado: <span className="font-semibold text-green-600">${formatCurrency(historialResumen.total_abonado)}</span>
+                    {" "} | Saldo Pendiente: <span className="font-semibold text-[#D4AF37]">${formatCurrency(historialResumen.saldo_pendiente)}</span>
+                  </>
+                )}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto">
+            <div className="px-6 py-4">
+              {/* Buscador */}
+              {abonos.length > 0 && (
+                <div className="mb-4">
+                  <Input
+                    placeholder="Buscar por fecha, factura, monto, método, referencia, notas o usuario..."
+                    value={abonoSearchTerm}
+                    onChange={(e) => setAbonoSearchTerm(e.target.value)}
+                    className="max-w-2xl"
+                  />
+                </div>
+              )}
+
+              {(() => {
+                const filteredAbonos = abonos.filter(abono => {
+                  if (!abonoSearchTerm) return true
+                  const searchLower = abonoSearchTerm.toLowerCase()
+                  return (
+                    new Date(abono.fecha).toLocaleString('es-EC').toLowerCase().includes(searchLower) ||
+                    (abono.numero_venta?.toString() || '').includes(searchLower) ||
+                    abono.monto.toString().includes(searchLower) ||
+                    abono.metodoPago.toLowerCase().includes(searchLower) ||
+                    (abono.referencia?.toLowerCase() || '').includes(searchLower) ||
+                    (abono.notas?.toLowerCase() || '').includes(searchLower) ||
+                    abono.usuario.toLowerCase().includes(searchLower)
+                  )
+                })
+                
+                return filteredAbonos.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <History className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p className="text-lg font-medium">
+                      {abonos.length === 0 ? 'No hay abonos registrados' : 'No se encontraron abonos'}
+                    </p>
+                    <p className="text-sm">
+                      {abonos.length === 0 ? 'Este cliente no tiene historial de pagos' : 'Intenta con otro término de búsqueda'}
+                    </p>
+                  </div>
+                ) : (
+                <>
+                  {/* Resumen Superior */}
+                  {historialResumen && (
+                    <Card className="mb-6 bg-gradient-to-r from-muted to-muted/50 border-2">
+                      <CardContent className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                          <div className="text-center sm:text-left">
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Total Abonado</p>
+                            <p className="text-3xl font-bold text-green-600">
+                              ${formatCurrency(historialResumen.total_abonado)}
+                            </p>
+                          </div>
+                          <div className="text-center sm:text-left">
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Cantidad de Abonos</p>
+                            <p className="text-3xl font-bold text-primary">
+                              {historialResumen.cantidad_abonos}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              pagos registrados
+                            </p>
+                          </div>
+                          <div className="text-center sm:text-left">
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Saldo Pendiente</p>
+                            <p className="text-3xl font-bold text-[#D4AF37]">
+                              ${formatCurrency(historialResumen.saldo_pendiente)}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                    {/* Vista Desktop */}
+                    <div className="hidden md:block border rounded-lg">
+                      <div className="overflow-x-auto">
+                        <div className="max-h-[400px] overflow-y-auto">
+                          <Table className="w-full">
+                            <TableHeader className="sticky top-0 bg-background z-10">
+                              <TableRow className="bg-muted/50">
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[160px]">Fecha</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[100px]">Factura</TableHead>
+                                <TableHead className="font-semibold text-right whitespace-nowrap min-w-[120px]">Monto</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[120px]">Método</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[120px]">Referencia</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[120px]">Notas</TableHead>
+                                <TableHead className="font-semibold whitespace-nowrap min-w-[90px]">Usuario</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {filteredAbonos.map((abono) => (
+                          <TableRow key={abono.id} className="hover:bg-muted/30">
+                            <TableCell className="text-sm whitespace-nowrap font-medium">
+                              {new Date(abono.fecha).toLocaleString('es-EC', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </TableCell>
+                            <TableCell>
+                              {abono.numero_venta ? (
+                                <Badge variant="outline" className="font-mono">
+                                  #{abono.numero_venta}
+                                </Badge>
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-base font-bold text-green-600 text-right whitespace-nowrap">
+                              ${formatCurrency(abono.monto)}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="secondary" className="capitalize">
+                                {abono.metodoPago}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-sm">
+                              {abono.referencia ? (
+                                <span className="font-mono text-xs bg-muted px-2 py-1 rounded break-words">
+                                  {abono.referencia}
+                                </span>
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-sm">
+                              {abono.notas ? (
+                                <div className="break-words" title={abono.notas}>
+                                  {abono.notas}
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-sm font-medium">
+                              {abono.usuario}
+                            </TableCell>
+                          </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Vista Mobile */}
+                    <div className="md:hidden space-y-4">
+                      {filteredAbonos.map((abono) => (
+                      <Card key={abono.id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
+                        <CardContent className="p-0">
+                          {/* Header del Card */}
+                          <div className="bg-muted/50 p-3 border-b">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="text-xs text-muted-foreground font-medium mb-1">
+                                  {new Date(abono.fecha).toLocaleString('es-EC', {
+                                    year: 'numeric',
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </p>
+                                {abono.numero_venta && (
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    #{abono.numero_venta}
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="text-right">
+                                <p className="text-xl font-bold text-green-600">
+                                  ${formatCurrency(abono.monto)}
+                                </p>
+                              </div>
                             </div>
+                          </div>
+
+                          {/* Cuerpo del Card */}
+                          <div className="p-4 space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Método de Pago</p>
+                                <Badge variant="secondary" className="text-xs capitalize">
+                                  {abono.metodoPago}
+                                </Badge>
+                              </div>
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Usuario</p>
+                                <p className="text-sm font-medium">{abono.usuario}</p>
+                              </div>
+                            </div>
+
+                            {abono.referencia && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Referencia</p>
+                                <p className="text-sm font-mono bg-muted px-2 py-1 rounded break-all">
+                                  {abono.referencia}
+                                </p>
+                              </div>
+                            )}
+
+                            {abono.notas && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Notas</p>
+                                <p className="text-sm bg-muted/50 px-3 py-2 rounded">
+                                  {abono.notas}
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </CardContent>
                       </Card>
                     ))}
                   </div>
                 </>
-              )}
+                )
+              })()}
             </div>
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

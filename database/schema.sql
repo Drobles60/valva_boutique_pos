@@ -691,7 +691,7 @@ UPDATE cuentas_por_cobrar cpc
 INNER JOIN clientes c ON c.id = cpc.cliente_id
 SET
   cpc.saldo_pendiente = cpc.saldo_pendiente - NEW.monto,
-  cpc.estado = IF((cpc.saldo_pendiente - NEW.monto) <= 0, 'pagada', cpc.estado),
+  cpc.estado = IF((cpc.saldo_pendiente - NEW.monto) = 0, 'pagada', 'pendiente'),
   c.saldo_pendiente = c.saldo_pendiente - NEW.monto,
   c.saldo_actual = c.saldo_pendiente - NEW.monto
 WHERE cpc.id = NEW.cuenta_por_cobrar_id;

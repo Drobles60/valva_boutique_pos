@@ -697,6 +697,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2f$check$2d$perm
 async function GET(request) {
     try {
         await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2f$check$2d$permission$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["requirePermission"])('clientes.ver');
+        // Parámetro de depuración
+        const { searchParams } = new URL(request.url);
+        const debug = searchParams.get('debug') === 'true';
         // Obtener clientes con sus deudas agrupadas
         const clientes = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT 
         c.id,
@@ -704,21 +707,50 @@ async function GET(request) {
         c.identificacion,
         c.telefono,
         c.saldo_pendiente,
-        COUNT(cpc.id) as total_cuentas,
-        COUNT(CASE WHEN cpc.estado = 'pendiente' THEN 1 END) as cuentas_pendientes,
-        COUNT(CASE WHEN cpc.estado = 'vencida' THEN 1 END) as cuentas_vencidas,
+        COUNT(DISTINCT cpc.id) as total_cuentas,
+        COUNT(DISTINCT CASE WHEN cpc.saldo_pendiente > 0 THEN cpc.id END) as cuentas_pendientes,
+        COUNT(DISTINCT CASE WHEN cpc.estado = 'vencida' AND cpc.saldo_pendiente > 0 THEN cpc.id END) as cuentas_vencidas,
         MIN(cpc.fecha_vencimiento) as fecha_vencimiento_proxima,
         SUM(cpc.monto_total) as monto_total_creditos,
-        SUM(CASE WHEN cpc.estado = 'pendiente' THEN (
+        SUM(CASE WHEN cpc.saldo_pendiente > 0 THEN (
           SELECT COALESCE(SUM(a.monto), 0) 
           FROM abonos a 
           WHERE a.cuenta_por_cobrar_id = cpc.id
         ) ELSE 0 END) as total_abonado
       FROM clientes c
       INNER JOIN cuentas_por_cobrar cpc ON c.id = cpc.cliente_id
-      WHERE c.estado = 'activo' AND cpc.saldo_pendiente > 0
+      WHERE c.estado = 'activo' 
+        AND cpc.saldo_pendiente > 0
       GROUP BY c.id, c.nombre, c.identificacion, c.telefono, c.saldo_pendiente
       ORDER BY c.saldo_pendiente DESC, c.nombre ASC`, []);
+        // Si está en modo debug, incluir el detalle de facturas
+        if (debug) {
+            const clientesConDetalle = await Promise.all(clientes.map(async (cliente)=>{
+                const facturas = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT 
+              cpc.id,
+              v.numero_venta,
+              cpc.monto_total,
+              cpc.saldo_pendiente,
+              cpc.estado,
+              cpc.fecha_vencimiento
+            FROM cuentas_por_cobrar cpc
+            LEFT JOIN ventas v ON cpc.venta_id = v.id
+            WHERE cpc.cliente_id = ?
+              AND cpc.saldo_pendiente > 0
+            ORDER BY cpc.fecha_vencimiento ASC`, [
+                    cliente.id
+                ]);
+                return {
+                    ...cliente,
+                    facturas_detalle: facturas
+                };
+            }));
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                success: true,
+                debug: true,
+                data: clientesConDetalle
+            });
+        }
         // Calcular días de vencimiento para cada cliente
         const clientesConDias = clientes.map((cliente)=>{
             const fechaVencimiento = new Date(cliente.fecha_vencimiento_proxima);
