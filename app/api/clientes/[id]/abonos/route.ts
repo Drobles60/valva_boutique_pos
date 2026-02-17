@@ -13,9 +13,11 @@ export async function GET(
 
     const { id: clienteId } = await params;
 
-    // Verificar que el cliente existe
+    // Verificar que el cliente existe y obtener saldo
     const cliente = await queryOne<any>(
-      `SELECT id, nombre FROM clientes WHERE id = ? AND estado = 'activo'`,
+      `SELECT id, nombre, identificacion, telefono, email, saldo_pendiente 
+       FROM clientes 
+       WHERE id = ? AND estado = 'activo'`,
       [clienteId]
     );
 
@@ -40,6 +42,7 @@ export async function GET(
         u.apellido as usuario_apellido,
         cpc.id as cuenta_id,
         cpc.monto_total as cuenta_monto_total,
+        cpc.saldo_pendiente as saldo_actual_factura,
         v.numero_venta
       FROM abonos a
       INNER JOIN cuentas_por_cobrar cpc ON a.cuenta_por_cobrar_id = cpc.id
@@ -60,17 +63,32 @@ export async function GET(
       notas: a.notas,
       usuario: `${a.usuario_nombre || 'Sistema'} ${a.usuario_apellido || ''}`.trim(),
       cuenta_id: a.cuenta_id,
-      numero_venta: a.numero_venta
+      numero_venta: a.numero_venta,
+      monto_factura: Number(a.cuenta_monto_total),
+      saldo_actual_factura: Number(a.saldo_actual_factura)
     }));
+
+    // Calcular resumen
+    const totalAbonado = abonosFormateados.reduce((sum, abono) => sum + abono.monto, 0);
+    const cantidadAbonos = abonosFormateados.length;
 
     return NextResponse.json({
       success: true,
       data: {
         cliente: {
           id: cliente.id,
-          nombre: cliente.nombre
+          nombre: cliente.nombre,
+          identificacion: cliente.identificacion,
+          telefono: cliente.telefono,
+          email: cliente.email,
+          saldo_pendiente: Number(cliente.saldo_pendiente)
         },
-        abonos: abonosFormateados
+        abonos: abonosFormateados,
+        resumen: {
+          total_abonado: totalAbonado,
+          cantidad_abonos: cantidadAbonos,
+          saldo_pendiente: Number(cliente.saldo_pendiente)
+        }
       }
     });
 
@@ -136,10 +154,11 @@ export async function POST(
       );
     }
 
-    // Validar que el monto no exceda el saldo pendiente total del cliente
-    if (monto > cliente.saldo_pendiente) {
+    // Validar que el monto no exceda el saldo pendiente total del cliente (usar valor absoluto por si hay saldos negativos)
+    const saldoClienteAbsoluto = Math.abs(cliente.saldo_pendiente)
+    if (monto > saldoClienteAbsoluto) {
       return NextResponse.json(
-        { error: `El monto ($${monto.toFixed(2)}) no puede exceder el saldo pendiente total ($${cliente.saldo_pendiente.toFixed(2)})` },
+        { error: `El monto ($${monto.toFixed(2)}) no puede exceder el saldo pendiente total ($${saldoClienteAbsoluto.toFixed(2)})` },
         { status: 400 }
       );
     }
@@ -150,7 +169,7 @@ export async function POST(
               v.numero_venta, cpc.fecha_vencimiento, cpc.created_at
        FROM cuentas_por_cobrar cpc
        INNER JOIN ventas v ON cpc.venta_id = v.id
-       WHERE cpc.cliente_id = ? AND cpc.saldo_pendiente > 0 AND cpc.estado = 'pendiente'
+       WHERE cpc.cliente_id = ? AND ABS(cpc.saldo_pendiente) > 0
        ORDER BY cpc.created_at ASC`,
       [clienteId]
     );
@@ -169,8 +188,9 @@ export async function POST(
     for (const cuenta of cuentasPendientes) {
       if (montoRestante <= 0) break;
 
-      // Calcular cuánto abonar a esta cuenta
-      const montoAbono = Math.min(montoRestante, cuenta.saldo_pendiente);
+      // Calcular cuánto abonar a esta cuenta (usar valor absoluto por si hay saldos negativos)
+      const saldoCuentaAbsoluto = Math.abs(cuenta.saldo_pendiente)
+      const montoAbono = Math.min(montoRestante, saldoCuentaAbsoluto);
       const saldoAnterior = cuenta.saldo_pendiente;
 
       // Registrar el abono

@@ -39,8 +39,8 @@ BEGIN
   UPDATE cuentas_por_cobrar
   SET saldo_pendiente = saldo_pendiente - NEW.monto,
       estado = CASE 
-        WHEN (saldo_pendiente - NEW.monto) <= 0 THEN 'pagada'
-        ELSE estado
+        WHEN (saldo_pendiente - NEW.monto) = 0 THEN 'pagada'
+        ELSE 'pendiente'
       END
   WHERE id = NEW.cuenta_por_cobrar_id;
   

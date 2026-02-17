@@ -1,127 +1,15 @@
-[00:00:01.359] Server  LOG      ✓ Ready in 965ms
-[00:00:06.215] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:06.572] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:00:06.572] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
-[00:00:06.573] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771049108176}
-[00:10:30.450] Server  LOG      ✓ Compiled in 163ms
-[00:10:40.541] Server  LOG      ✓ Compiled in 144ms
-[00:10:40.634] Browser ERROR   uncaughtError: ReferenceError: cuentas is not defined
-[00:10:57.250] Server  LOG      ✓ Compiled in 148ms
-[00:10:57.352] Browser ERROR   ./components/clientes-content.tsx:700:2
+[00:00:01.161] Server  LOG      ✓ Ready in 785ms
+[00:00:04.080] Server  ERROR    ⨯ ./components/clientes-content.tsx:1211:18
 Parsing ecmascript source code failed
-  698 |     </div>
-  699 |   )
-> 700 | }
-      |  ^
-  701 |
-  702 |
+  1209 |                     </div>
+  1210 |                   </>
+> 1211 |                 )\n              })()}
+       |                  ^
+  1212 |             </div>
+  1213 |           </div>
+  1214 |         </DialogContent>
 
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:11:23.514] Browser ERROR   ./components/clientes-content.tsx:693:2
-Parsing ecmascript source code failed
-  691 |     </div>
-  692 |   )
-> 693 | }
-      |  ^
-  694 |
-  695 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:12:13.307] Browser ERROR   ./components/clientes-content.tsx:691:2
-Parsing ecmascript source code failed
-  689 |     </div>
-  690 |   )
-> 691 | }
-      |  ^
-  692 |
-  693 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:12:37.616] Browser ERROR   ./components/clientes-content.tsx:681:2
-Parsing ecmascript source code failed
-  679 |     </div>
-  680 |   )
-> 681 | }
-      |  ^
-  682 |
-  683 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:13:08.698] Browser ERROR   ./components/clientes-content.tsx:685:2
-Parsing ecmascript source code failed
-  683 |     </div>
-  684 |   )
-> 685 | }
-      |  ^
-  686 |
-  687 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:13:17.259] Browser ERROR   ./components/clientes-content.tsx:685:2
-Parsing ecmascript source code failed
-  683 |     </div>
-  684 |   )
-> 685 | }
-      |  ^
-  686 |
-  687 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:13:32.466] Browser ERROR   ./components/clientes-content.tsx:754:2
-Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:15:12.616] Server  ERROR    ⨯ ./components/clientes-content.tsx:754:2
-Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
-
-Expected '}', got '<eof>'
+Expected unicode escape
 
 Import trace:
   Server Component:
@@ -129,61 +17,17 @@ Import trace:
     ./app/clientes/page.tsx
 
 
-[00:15:12.731] Browser ERROR   ./components/clientes-content.tsx:754:2
+[00:00:05.085] Browser ERROR   uncaughtError: Error: ./components/clientes-content.tsx:1211:18
 Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
+  1209 |                     </div>
+  1210 |                   </>
+> 1211 |                 )\n              })()}
+       |                  ^
+  1212 |             </div>
+  1213 |           </div>
+  1214 |         </DialogContent>
 
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:15:13.507] Browser ERROR   ./components/clientes-content.tsx:754:2
-Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:15:13.507] Browser ERROR   ./components/clientes-content.tsx:754:2
-Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
-
-Expected '}', got '<eof>'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:15:14.026] Browser ERROR   uncaughtError: Error: ./components/clientes-content.tsx:754:2
-Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
-
-Expected '}', got '<eof>'
+Expected unicode escape
 
 Import trace:
   Server Component:
@@ -191,214 +35,143 @@ Import trace:
     ./app/clientes/page.tsx
 
 
-[00:15:14.248] Browser ERROR   ./components/clientes-content.tsx:754:2
+[00:00:05.305] Browser ERROR   ./components/clientes-content.tsx:1211:18
 Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
+  1209 |                     </div>
+  1210 |                   </>
+> 1211 |                 )\n              })()}
+       |                  ^
+  1212 |             </div>
+  1213 |           </div>
+  1214 |         </DialogContent>
 
-Expected '}', got '<eof>'
+Expected unicode escape
 
 Import trace:
   Server Component:
     ./components/clientes-content.tsx
     ./app/clientes/page.tsx
-[00:15:14.248] Browser ERROR   ./components/clientes-content.tsx:754:2
+[00:00:05.305] Browser ERROR   ./components/clientes-content.tsx:1211:18
 Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
+  1209 |                     </div>
+  1210 |                   </>
+> 1211 |                 )\n              })()}
+       |                  ^
+  1212 |             </div>
+  1213 |           </div>
+  1214 |         </DialogContent>
 
-Expected '}', got '<eof>'
+Expected unicode escape
 
 Import trace:
   Server Component:
     ./components/clientes-content.tsx
     ./app/clientes/page.tsx
-[00:15:23.184] Browser ERROR   ./components/clientes-content.tsx:754:2
+[00:00:12.569] Browser ERROR   ./components/clientes-content.tsx:1211:18
 Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
+  1209 |                     </div>
+  1210 |                   </>
+> 1211 |                 )\n              })()}
+       |                  ^
+  1212 |             </div>
+  1213 |           </div>
+  1214 |         </DialogContent>
 
-Expected '}', got '<eof>'
+Expected unicode escape
 
 Import trace:
   Server Component:
     ./components/clientes-content.tsx
     ./app/clientes/page.tsx
-[00:15:51.134] Browser ERROR   ./components/clientes-content.tsx:754:2
+[00:00:31.664] Browser ERROR   ./components/clientes-content.tsx:1458:18
 Parsing ecmascript source code failed
-  752 |     </div>
-  753 |   )
-> 754 | }
-      |  ^
-  755 |
-  756 |
+  1456 |                   </div>
+  1457 |                 </>
+> 1458 |                 )\n              })()}
+       |                  ^
+  1459 |             </div>
+  1460 |           </div>
+  1461 |         </DialogContent>
 
-Expected '}', got '<eof>'
+Expected unicode escape
 
 Import trace:
   Server Component:
     ./components/clientes-content.tsx
     ./app/clientes/page.tsx
-[00:17:14.991] Server  LOG      ✓ Compiled in 101ms
-[00:17:16.232] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:17:16.546] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:17:16.546] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
-[00:17:16.546] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771050138160}
-[00:20:00.118] Server  LOG      ✓ Compiled in 129ms
-[00:20:00.209] Browser ERROR   uncaughtError: ReferenceError: abonoDialogOpen is not defined
-[00:20:33.878] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
-[00:20:33.888] Server  LOG      ✓ Compiled in 108ms
-[00:20:34.143] Server  ERROR   D:\Documents\NOD\valva_boutique_pos\.next\dev\server\chunks\ssr\_6699cede._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:20:34.144] Server  ERROR    ⨯ ReferenceError: totalClientes is not defined
-[00:20:34.157] Browser ERROR   uncaughtError: ReferenceError: totalClientes is not defined
-[00:20:34.988] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:20:35.179] Browser ERROR   uncaughtError: ReferenceError: totalClientes is not defined
-[00:21:18.170] Server  LOG      ✓ Compiled in 104ms
-[00:21:18.274] Browser ERROR   ./components/clientes-content.tsx:370:3
-Parsing ecmascript source code failed
-  368 |     const diasVencimiento = Math.ceil(
-  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
-> 370 |   }).length
-      |   ^
-  371 |
-  372 |
-  373 |   return (
-
-Expected ',', got '}'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:22:14.667] Server  LOG      ✓ Compiled in 157ms
-[00:22:14.771] Browser ERROR   ./components/clientes-content.tsx:370:3
-Parsing ecmascript source code failed
-  368 |     const diasVencimiento = Math.ceil(
-  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
-> 370 |   }).length
-      |   ^
-  371 |
-  372 |
-  373 |   return (
-
-Expected ',', got '}'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:22:42.323] Browser ERROR   ./components/clientes-content.tsx:370:3
-Parsing ecmascript source code failed
-  368 |     const diasVencimiento = Math.ceil(
-  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
-> 370 |   }).length
-      |   ^
-  371 |
-  372 |
-  373 |   return (
-
-Expected ',', got '}'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:23:29.861] Browser ERROR   ./components/clientes-content.tsx:370:3
-Parsing ecmascript source code failed
-  368 |     const diasVencimiento = Math.ceil(
-  369 |       (new Date(c.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
-> 370 |   }).length
-      |   ^
-  371 |
-  372 |
-  373 |   return (
-
-Expected ',', got '}'
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:27:24.982] Server  LOG      ✓ Compiled in 117ms
-[00:27:25.099] Browser ERROR   ./components/clientes-content.tsx:562:13
-Parsing ecmascript source code failed
-  560 |                 <TableHead className="text-right">Acciones</TableHead>
-  561 |               </TableRow>
-> 562 |             </TableHeader>
-      |             ^
-  563 |             <TableBody>
-  564 |               {loading && clientes.length === 0 ? (
-  565 |                 <TableRow>
-
-Expression expected
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:27:25.099] Browser ERROR   ./components/clientes-content.tsx:562:14
-Parsing ecmascript source code failed
-  560 |                 <TableHead className="text-right">Acciones</TableHead>
-  561 |               </TableRow>
-> 562 |             </TableHeader>
-      |              ^^^^^^^^^^^^^
-  563 |             <TableBody>
-  564 |               {loading && clientes.length === 0 ? (
-  565 |                 <TableRow>
-
-Unterminated regexp literal
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:28:14.729] Browser ERROR   ./components/clientes-content.tsx:562:13
-Parsing ecmascript source code failed
-  560 |                 <TableHead className="text-right">Acciones</TableHead>
-  561 |               </TableRow>
-> 562 |             </TableHeader>
-      |             ^
-  563 |             <TableBody>
-  564 |               {loading && clientes.length === 0 ? (
-  565 |                 <TableRow>
-
-Expression expected
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:28:14.729] Browser ERROR   ./components/clientes-content.tsx:562:14
-Parsing ecmascript source code failed
-  560 |                 <TableHead className="text-right">Acciones</TableHead>
-  561 |               </TableRow>
-> 562 |             </TableHeader>
-      |              ^^^^^^^^^^^^^
-  563 |             <TableBody>
-  564 |               {loading && clientes.length === 0 ? (
-  565 |                 <TableRow>
-
-Unterminated regexp literal
-
-Import trace:
-  Server Component:
-    ./components/clientes-content.tsx
-    ./app/clientes/page.tsx
-[00:28:21.615] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
-[00:28:21.865] Browser ERROR   unhandledRejection: Error: No link element found for chunk /_next/static/chunks/%5Broot-of-the-server%5D__51d697a8._.css
-[00:28:22.753] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:28:23.152] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
-[00:28:23.152] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
-[00:28:23.152] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771050804704}
+[00:00:44.729] Server  LOG      ✓ Compiled in 180ms
+[00:00:45.469] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:45.911] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:45.911] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
+[00:00:45.911] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771361054715}
+[00:02:46.976] Server  LOG      ✓ Compiled in 334ms
+[00:02:56.744] Server  LOG      ✓ Compiled in 122ms
+[00:03:10.443] Server  LOG      ✓ Compiled in 104ms
+[00:05:29.186] Server  LOG      ✓ Compiled in 124ms
+[00:05:35.167] Server  LOG      ✓ Compiled in 100ms
+[00:05:52.864] Server  LOG      ✓ Compiled in 107ms
+[00:05:56.119] Server  LOG      ✓ Compiled in 103ms
+[00:05:56.379] Server  LOG      ✓ Compiled in 101ms
+[00:05:57.451] Server  LOG      ✓ Compiled in 96ms
+[00:05:57.699] Server  LOG      ✓ Compiled in 113ms
+[00:06:00.557] Server  LOG      ✓ Compiled in 97ms
+[00:06:01.410] Server  LOG      ✓ Compiled in 95ms
+[00:06:01.643] Server  LOG      ✓ Compiled in 96ms
+[00:08:08.577] Server  LOG      ✓ Compiled in 220ms
+[00:08:08.714] Server  LOG      ✓ Compiled in 113ms
+[00:08:08.975] Server  LOG      ✓ Compiled in 100ms
+[00:08:09.174] Server  LOG      ✓ Compiled in 108ms
+[00:08:09.328] Server  LOG      ✓ Compiled in 96ms
+[00:08:15.654] Server  LOG      ✓ Compiled in 100ms
+[00:08:16.867] Server  LOG      ✓ Compiled in 124ms
+[00:08:30.314] Server  LOG      ✓ Compiled in 107ms
+[00:08:33.057] Server  LOG      ✓ Compiled in 131ms
+[00:08:33.581] Server  LOG      ✓ Compiled in 118ms
+[00:08:34.507] Server  LOG      ✓ Compiled in 155ms
+[00:08:34.653] Server  LOG      ✓ Compiled in 134ms
+[00:08:37.639] Server  LOG      ✓ Compiled in 119ms
+[00:08:37.825] Server  LOG      ✓ Compiled in 102ms
+[00:08:40.046] Server  LOG      ✓ Compiled in 115ms
+[00:08:40.295] Server  LOG      ✓ Compiled in 136ms
+[00:08:42.711] Server  LOG      ✓ Compiled in 116ms
+[00:08:43.174] Server  LOG      ✓ Compiled in 131ms
+[00:08:47.431] Server  LOG      ✓ Compiled in 118ms
+[00:08:47.852] Server  LOG      ✓ Compiled in 122ms
+[00:08:48.084] Server  LOG      ✓ Compiled in 129ms
+[00:08:48.346] Server  LOG      ✓ Compiled in 172ms
+[00:08:49.247] Server  LOG      ✓ Compiled in 101ms
+[00:09:00.866] Server  LOG      ✓ Compiled in 106ms
+[00:09:01.003] Server  LOG      ✓ Compiled in 103ms
+[00:09:01.993] Server  LOG      ✓ Compiled in 109ms
+[00:09:02.755] Server  LOG      ✓ Compiled in 265ms
+[00:09:03.032] Server  LOG      ✓ Compiled in 114ms
+[00:09:05.766] Server  LOG      ✓ Compiled in 96ms
+[00:09:05.939] Server  LOG      ✓ Compiled in 96ms
+[00:09:06.561] Server  LOG      ✓ Compiled in 96ms
+[00:09:18.319] Server  LOG      ✓ Compiled in 96ms
+[00:09:18.876] Server  LOG      ✓ Compiled in 121ms
+[00:09:19.157] Server  LOG      ✓ Compiled in 114ms
+[00:09:38.027] Server  LOG      ✓ Compiled in 107ms
+[00:09:38.198] Server  LOG      ✓ Compiled in 98ms
+[00:09:39.360] Server  LOG      ✓ Compiled in 121ms
+[00:09:39.761] Server  LOG      ✓ Compiled in 107ms
+[00:09:42.345] Server  LOG      ✓ Compiled in 121ms
+[00:09:42.501] Server  LOG      ✓ Compiled in 94ms
+[00:09:42.686] Server  LOG      ✓ Compiled in 100ms
+[00:09:44.370] Server  LOG      ✓ Compiled in 100ms
+[00:09:44.556] Server  LOG      ✓ Compiled in 104ms
+[00:09:44.680] Server  LOG      ✓ Compiled in 95ms
+[00:09:57.139] Server  LOG      ✓ Compiled in 127ms
+[00:09:59.401] Server  LOG      ✓ Compiled in 102ms
+[00:10:21.756] Server  LOG      ✓ Compiled in 137ms
+[00:10:23.605] Server  LOG      ✓ Compiled in 105ms
+[00:10:23.899] Server  LOG      ✓ Compiled in 112ms
+[00:10:26.961] Server  LOG      ✓ Compiled in 97ms
+[00:10:27.119] Server  LOG      ✓ Compiled in 94ms
+[00:10:28.183] Server  LOG      ✓ Compiled in 101ms
+[00:10:28.354] Server  LOG      ✓ Compiled in 108ms
+[00:10:38.432] Server  LOG      ✓ Compiled in 98ms
+[00:10:38.667] Server  LOG      ✓ Compiled in 94ms
+[00:10:39.207] Server  LOG      ✓ Compiled in 96ms
+[00:10:40.928] Server  LOG      ✓ Compiled in 168ms
+[00:10:43.484] Server  LOG      ✓ Compiled in 106ms

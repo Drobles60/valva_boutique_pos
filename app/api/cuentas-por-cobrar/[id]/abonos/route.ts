@@ -121,12 +121,13 @@ export async function POST(
       )
     }
 
-    // Validar que el monto no exceda el saldo pendiente
-    if (monto > cuenta.saldo_pendiente) {
+    // Validar que el monto no exceda el saldo pendiente (usar valor absoluto por si hay saldos negativos por error)
+    const saldoPendienteAbsoluto = Math.abs(cuenta.saldo_pendiente)
+    if (monto > saldoPendienteAbsoluto) {
       return NextResponse.json(
         { 
           success: false, 
-          error: `El monto no puede exceder el saldo pendiente de $${cuenta.saldo_pendiente.toFixed(2)}` 
+          error: `El monto no puede exceder el saldo pendiente de $${saldoPendienteAbsoluto.toFixed(2)}` 
         },
         { status: 400 }
       )
