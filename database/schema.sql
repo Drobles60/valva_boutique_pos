@@ -390,9 +390,14 @@ CREATE TABLE sesiones_caja (
   usuario_id INT UNSIGNED,
   fecha_apertura TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   fecha_cierre TIMESTAMP NULL,
-  estado VARCHAR(30),
+  estado VARCHAR(30) DEFAULT 'abierta',
+  monto_base DECIMAL(10,2) DEFAULT 0,
+  notas_apertura TEXT,
+  efectivo_contado DECIMAL(10,2) DEFAULT NULL,
+  notas_cierre TEXT,
   FOREIGN KEY (caja_id) REFERENCES cajas(id),
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  INDEX idx_estado (estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE movimientos_caja (

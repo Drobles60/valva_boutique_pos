@@ -293,7 +293,11 @@ const ROLE_PERMISSIONS = {
         'descuentos.ver',
         'descuentos.crear',
         'descuentos.editar',
-        'descuentos.eliminar'
+        'descuentos.eliminar',
+        'gastos.ver',
+        'gastos.crear',
+        'gastos.editar',
+        'gastos.eliminar'
     ],
     vendedor: [
         // Solo puede abrir caja y registrar ventas
@@ -495,6 +499,26 @@ const PERMISSION_INFO = {
     'descuentos.eliminar': {
         nombre: 'Eliminar Descuentos',
         modulo: 'Descuentos'
+    },
+    'gastos.ver': {
+        nombre: 'Ver Gastos',
+        modulo: 'Gastos'
+    },
+    'gastos.crear': {
+        nombre: 'Crear Gastos',
+        modulo: 'Gastos'
+    },
+    'gastos.editar': {
+        nombre: 'Editar Gastos',
+        modulo: 'Gastos'
+    },
+    'gastos.eliminar': {
+        nombre: 'Eliminar Gastos',
+        modulo: 'Gastos'
+    },
+    'clientes.abonar': {
+        nombre: 'Registrar Abonos',
+        modulo: 'Clientes'
     }
 };
 }),

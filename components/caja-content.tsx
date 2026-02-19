@@ -6,27 +6,114 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Lock, Unlock } from "lucide-react"
+import { Lock, Unlock, Loader2 } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 import { formatCurrency } from "@/lib/utils"
+import { toast } from "sonner"
 
 export function CajaContent() {
   const [cajaAbierta, setCajaAbierta] = React.useState(false)
+  const [sesion, setSesion] = React.useState<any>(null)
   const [baseInicial, setBaseInicial] = React.useState("")
   const [notas, setNotas] = React.useState("")
   const [efectivoContado, setEfectivoContado] = React.useState("")
+  const [notasCierre, setNotasCierre] = React.useState("")
+  const [cargando, setCargando] = React.useState(true)
+  const [procesando, setProcesando] = React.useState(false)
 
-  const handleAbrirCaja = () => {
-    if (baseInicial) {
-      setCajaAbierta(true)
+  // Cargar estado de caja al montar
+  React.useEffect(() => {
+    verificarEstadoCaja()
+  }, [])
+
+  const verificarEstadoCaja = async () => {
+    try {
+      setCargando(true)
+      const response = await fetch('/api/caja/estado')
+      if (response.ok) {
+        const result = await response.json()
+        setCajaAbierta(result.abierta)
+        setSesion(result.sesion)
+        if (result.sesion?.monto_base) {
+          setBaseInicial(String(result.sesion.monto_base))
+        }
+      }
+    } catch (error) {
+      console.error('Error verificando caja:', error)
+    } finally {
+      setCargando(false)
     }
   }
 
-  const handleCerrarCaja = () => {
-    setCajaAbierta(false)
-    setBaseInicial("")
-    setNotas("")
-    setEfectivoContado("")
+  const handleAbrirCaja = async () => {
+    if (!baseInicial) return
+    setProcesando(true)
+    try {
+      const response = await fetch('/api/caja/sesion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          monto_base: parseFloat(baseInicial),
+          notas: notas || null
+        })
+      })
+      const result = await response.json()
+      if (result.success) {
+        toast.success('Caja abierta correctamente')
+        await verificarEstadoCaja()
+        setNotas("")
+      } else {
+        toast.error(result.message || 'Error al abrir caja')
+      }
+    } catch (error) {
+      toast.error('Error al abrir caja')
+    } finally {
+      setProcesando(false)
+    }
+  }
+
+  const handleCerrarCaja = async () => {
+    setProcesando(true)
+    try {
+      const response = await fetch('/api/caja/sesion', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          efectivo_contado: efectivoContado ? parseFloat(efectivoContado) : null,
+          notas: notasCierre || null
+        })
+      })
+      const result = await response.json()
+      if (result.success) {
+        toast.success('Caja cerrada correctamente')
+        setCajaAbierta(false)
+        setSesion(null)
+        setBaseInicial("")
+        setNotas("")
+        setEfectivoContado("")
+        setNotasCierre("")
+      } else {
+        toast.error(result.message || 'Error al cerrar caja')
+      }
+    } catch (error) {
+      toast.error('Error al cerrar caja')
+    } finally {
+      setProcesando(false)
+    }
+  }
+
+  if (cargando) {
+    return (
+      <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+        <div className="flex items-center gap-3">
+          <SidebarToggle />
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Gestión de Caja</h1>
+        </div>
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -64,7 +151,7 @@ export function CajaContent() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="fecha">Fecha</Label>
-                <Input id="fecha" type="date" defaultValue={new Date().toISOString().split("T")[0]} />
+                <Input id="fecha" type="date" defaultValue={new Date().toISOString().split("T")[0]} disabled />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="hora">Hora</Label>
@@ -72,12 +159,9 @@ export function CajaContent() {
                   id="hora"
                   type="time"
                   defaultValue={new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" })}
+                  disabled
                 />
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="cajero">Cajero</Label>
-              <Input id="cajero" placeholder="Nombre del cajero" defaultValue="Usuario Actual" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="base">Base Inicial *</Label>
@@ -91,14 +175,10 @@ export function CajaContent() {
                   setBaseInicial(value)
                 }}
                 onFocus={(e) => {
-                  if (baseInicial) {
-                    e.target.value = baseInicial
-                  }
+                  if (baseInicial) e.target.value = baseInicial
                 }}
                 onBlur={(e) => {
-                  if (baseInicial) {
-                    e.target.value = formatCurrency(baseInicial)
-                  }
+                  if (baseInicial) e.target.value = formatCurrency(baseInicial)
                 }}
               />
             </div>
@@ -111,9 +191,9 @@ export function CajaContent() {
                 onChange={(e) => setNotas(e.target.value)}
               />
             </div>
-            <Button className="w-full" size="lg" onClick={handleAbrirCaja} disabled={!baseInicial}>
-              <Unlock className="mr-2 h-4 w-4" />
-              Abrir Caja
+            <Button className="w-full" size="lg" onClick={handleAbrirCaja} disabled={!baseInicial || procesando}>
+              {procesando ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Unlock className="mr-2 h-4 w-4" />}
+              {procesando ? 'Abriendo caja...' : 'Abrir Caja'}
             </Button>
           </CardContent>
         </Card>
@@ -122,23 +202,24 @@ export function CajaContent() {
           <Card>
             <CardHeader>
               <CardTitle>Resumen del Turno</CardTitle>
-              <CardDescription>Estado actual de la caja</CardDescription>
+              <CardDescription>
+                Abierta desde: {sesion?.fecha_apertura
+                  ? new Date(sesion.fecha_apertura).toLocaleString('es-CO')
+                  : '—'}
+                {sesion?.usuario_nombre && ` · Cajero: ${sesion.usuario_nombre}`}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2">
                 <div className="rounded-lg border bg-secondary p-4">
                   <p className="text-sm text-muted-foreground">Base Inicial</p>
-                  <p className="text-2xl font-bold">${formatCurrency(Number.parseInt(baseInicial))}</p>
-                </div>
-                <div className="rounded-lg border bg-secondary p-4">
-                  <p className="text-sm text-muted-foreground">Ventas del Turno</p>
-                  <p className="text-2xl font-bold text-primary">$2,450,000</p>
-                </div>
-                <div className="rounded-lg border bg-secondary p-4">
-                  <p className="text-sm text-muted-foreground">Total en Caja</p>
                   <p className="text-2xl font-bold">
-                    ${formatCurrency(Number.parseInt(baseInicial) + 2450000)}
+                    ${formatCurrency(Number(sesion?.monto_base || baseInicial || 0))}
                   </p>
+                </div>
+                <div className="rounded-lg border bg-secondary p-4">
+                  <p className="text-sm text-muted-foreground">Estado</p>
+                  <p className="text-2xl font-bold text-primary">Abierta</p>
                 </div>
               </div>
             </CardContent>
@@ -151,28 +232,6 @@ export function CajaContent() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
-                <div className="rounded-lg border bg-secondary p-4">
-                  <h3 className="mb-3 font-semibold">Desglose por Tipo de Pago</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Efectivo:</span>
-                      <span className="font-medium">$1,350,000</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Transferencia:</span>
-                      <span className="font-medium">$850,000</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Tarjeta:</span>
-                      <span className="font-medium">$250,000</span>
-                    </div>
-                    <div className="flex justify-between border-t pt-2">
-                      <span className="text-sm font-semibold">Crédito:</span>
-                      <span className="font-semibold text-primary">$450,000</span>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="efectivo-contado">Efectivo Contado en Caja</Label>
                   <Input
@@ -185,51 +244,29 @@ export function CajaContent() {
                       setEfectivoContado(value)
                     }}
                     onFocus={(e) => {
-                      if (efectivoContado) {
-                        e.target.value = efectivoContado
-                      }
+                      if (efectivoContado) e.target.value = efectivoContado
                     }}
                     onBlur={(e) => {
-                      if (efectivoContado) {
-                        e.target.value = formatCurrency(efectivoContado)
-                      }
+                      if (efectivoContado) e.target.value = formatCurrency(efectivoContado)
                     }}
                   />
                 </div>
 
-                {efectivoContado && (
-                  <div className="rounded-lg border bg-secondary p-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm">Esperado:</span>
-                        <span className="font-medium">
-                          ${formatCurrency(Number.parseInt(baseInicial) + 1350000)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Real:</span>
-                        <span className="font-medium">${formatCurrency(Number.parseInt(efectivoContado))}</span>
-                      </div>
-                      <div className="flex justify-between border-t pt-2">
-                        <span className="font-semibold">Diferencia:</span>
-                        <span
-                          className={`font-bold ${Number.parseInt(efectivoContado) - (Number.parseInt(baseInicial) + 1350000) === 0 ? "text-primary" : "text-destructive"}`}
-                        >
-                          ${formatCurrency(Number.parseInt(efectivoContado) - (Number.parseInt(baseInicial) + 1350000))}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <div className="space-y-2">
+                  <Label htmlFor="notas-cierre">Notas de Cierre (Opcional)</Label>
+                  <Textarea
+                    id="notas-cierre"
+                    placeholder="Observaciones del cierre..."
+                    value={notasCierre}
+                    onChange={(e) => setNotasCierre(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="flex gap-2">
-                <Button variant="outline" className="flex-1 bg-transparent">
-                  Imprimir Reporte
-                </Button>
-                <Button className="flex-1" onClick={handleCerrarCaja}>
-                  <Lock className="mr-2 h-4 w-4" />
-                  Cerrar Caja
+                <Button className="w-full" onClick={handleCerrarCaja} disabled={procesando}>
+                  {procesando ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lock className="mr-2 h-4 w-4" />}
+                  {procesando ? 'Cerrando caja...' : 'Cerrar Caja'}
                 </Button>
               </div>
             </CardContent>
