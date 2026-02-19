@@ -2216,3 +2216,550 @@ https://nextjs.org/docs/messages/module-not-found
 [01:23:43.797] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/gastos","route":"/gastos"}
 [01:23:43.797] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/gastos color: rgb(120, 120, 120) color: inherit {"dp":"/gastos","o":"http://localhost:3000/gastos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771370322978}
 [01:28:33.032] Server  LOG      ✓ Compiled in 124ms
+[02:29:09.960] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:29:10.065] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[02:29:10.204] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:29:10.204] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
+[02:29:10.204] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374249696}
+[02:29:10.212] Server  LOG     [API PRODUCTOS] Productos obtenidos: 7
+[02:29:10.214] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 12
+[02:29:10.215] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[02:29:10.216] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[02:29:10.218] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[02:29:10.219] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[02:29:10.221] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[02:29:10.222] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[02:29:10.269] Server  LOG     [DESCUENTOS] Producto: CONJUNTO, Tipo Prenda ID: 80
+[02:29:10.270] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[02:29:10.285] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:10.293] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:10.295] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[02:29:10.300] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[02:29:10.301] Server  LOG     [DESCUENTOS] Producto: SHORT, Tipo Prenda ID: 40
+[02:29:10.302] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[02:29:10.303] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:10.304] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:10.307] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[02:29:10.309] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:10.309] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:10.315] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:10.317] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:10.321] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:10.323] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:10.325] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:10.329] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:10.330] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:10.332] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:10.332] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:10.333] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:10.333] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:10.334] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:10.334] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:10.334] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:10.335] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:10.335] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/7
+[02:29:10.372] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
+[02:29:10.372] Browser LOG     Categorías cargadas: 7
+[02:29:25.814] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:29:25.959] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:29:25.959] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
+[02:29:25.959] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374265510}
+[02:29:29.596] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:29:29.715] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:29:29.715] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[02:29:29.715] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374269267}
+[02:29:34.127] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:29:34.213] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[02:29:34.235] Server  LOG     [API PRODUCTOS] Productos obtenidos: 7
+[02:29:34.236] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 12
+[02:29:34.237] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[02:29:34.237] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[02:29:34.238] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[02:29:34.238] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[02:29:34.239] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[02:29:34.239] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[02:29:34.243] Server  LOG     [DESCUENTOS] Producto: CONJUNTO, Tipo Prenda ID: 80
+[02:29:34.245] Server  LOG     [DESCUENTOS] Producto: SHORT, Tipo Prenda ID: 40
+[02:29:34.246] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[02:29:34.247] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[02:29:34.248] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[02:29:34.248] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[02:29:34.250] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:34.262] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:34.267] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:34.270] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:34.272] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:34.274] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:34.275] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[02:29:34.276] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:34.277] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:34.278] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:34.278] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:34.284] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:34.285] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:34.286] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:34.287] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:34.288] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:34.288] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:34.288] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:34.289] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:34.292] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:29:34.296] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:29:34.296] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:29:34.297] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/7
+[02:29:34.367] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <div data-slot="card-content" className="px-6 space...">
+      ...
+        <SelectCollectionProvider scope={undefined}>
+          <SelectCollectionProviderProvider scope={undefined} itemMap={Map} collectionRef={{current:null}}>
+            <SelectProvider scope={undefined} onNativeOptionAdd={function Select.useCallback} ...>
+              <SelectTrigger id="tipo-venta">
+                <SelectTrigger data-slot="select-tri..." data-size="default" className={"border-i..."} id="tipo-venta">
+                  <PopperAnchor asChild={true} __scopePopper={{Popper:[...]}}>
+                    <Primitive.div asChild={true} ref={function}>
+                      <Slot ref={function}>
+                        <SlotClone ref={function}>
+                          <Primitive.button type="button" role="combobox" aria-controls="radix-_R_h..." ...>
+                            <button
+                              type="button"
+                              role="combobox"
++                             aria-controls="radix-_R_hl55esndlb_"
+-                             aria-controls="radix-_R_26kl5esndlb_"
+                              aria-expanded={false}
+                              aria-required={undefined}
+                              aria-autocomplete="none"
+                              dir="ltr"
+                              data-state="closed"
+                              disabled={false}
+                              data-disabled={undefined}
+                              data-placeholder={undefined}
+                              data-slot="select-trigger"
+                              data-size="default"
+                              className={"border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='t..."}
+                              id="tipo-venta"
+                              onClick={function handleEvent}
+                              onPointerDown={function handleEvent}
+                              onKeyDown={function handleEvent}
+                              ref={function}
+                            >
+              ...
+        ...
+      ...
+        <SelectCollectionProvider scope={undefined}>
+          <SelectCollectionProviderProvider scope={undefined} itemMap={Map} collectionRef={{current:null}}>
+            <SelectProvider scope={undefined} onNativeOptionAdd={function Select.useCallback} ...>
+              <SelectTrigger id="metodo-pago">
+                <SelectTrigger data-slot="select-tri..." data-size="default" className={"border-i..."} id="metodo-pago">
+                  <PopperAnchor asChild={true} __scopePopper={{Popper:[...]}}>
+                    <Primitive.div asChild={true} ref={function}>
+                      <Slot ref={function}>
+                        <SlotClone ref={function}>
+                          <Primitive.button type="button" role="combobox" aria-controls="radix-_R_i..." ...>
+                            <button
+                              type="button"
+                              role="combobox"
++                             aria-controls="radix-_R_il55esndlb_"
+-                             aria-controls="radix-_R_2akl5esndlb_"
+                              aria-expanded={false}
+                              aria-required={undefined}
+                              aria-autocomplete="none"
+                              dir="ltr"
+                              data-state="closed"
+                              disabled={false}
+                              data-disabled={undefined}
+                              data-placeholder={undefined}
+                              data-slot="select-trigger"
+                              data-size="default"
+                              className={"border-input data-[placeholder]:text-muted-foreground [&_svg:not([class*='t..."}
+                              id="metodo-pago"
+                              onClick={function handleEvent}
+                              onPointerDown={function handleEvent}
+                              onKeyDown={function handleEvent}
+                              ref={function}
+                            >
+              ...
+        ...
+      ...
+
+[02:29:34.367] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:29:34.367] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
+[02:29:34.367] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374273906}
+[02:29:57.855] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[02:29:57.855] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[02:30:12.241] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:30:12.588] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:30:12.588] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/clientes","route":"/clientes"}
+[02:30:12.588] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/clientes color: rgb(120, 120, 120) color: inherit {"dp":"/clientes","o":"http://localhost:3000/clientes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374311965}
+[02:30:38.775] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:30:38.945] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:30:38.945] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/gastos","route":"/gastos"}
+[02:30:38.945] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/gastos color: rgb(120, 120, 120) color: inherit {"dp":"/gastos","o":"http://localhost:3000/gastos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374338490}
+[02:30:52.595] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:30:52.758] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:30:52.758] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/proveedores","route":"/proveedores"}
+[02:30:52.758] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/proveedores color: rgb(120, 120, 120) color: inherit {"dp":"/proveedores","o":"http://localhost:3000/proveedores","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374352298}
+[02:30:54.949] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:30:55.126] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:30:55.126] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/pedidos","route":"/pedidos"}
+[02:30:55.126] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/pedidos color: rgb(120, 120, 120) color: inherit {"dp":"/pedidos","o":"http://localhost:3000/pedidos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374354674}
+[02:31:05.831] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:31:06.009] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:31:06.009] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/reportes","route":"/reportes"}
+[02:31:06.009] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/reportes color: rgb(120, 120, 120) color: inherit {"dp":"/reportes","o":"http://localhost:3000/reportes","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374365557}
+[02:31:08.029] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:31:08.149] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:31:08.149] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/usuarios","route":"/usuarios"}
+[02:31:08.149] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/usuarios color: rgb(120, 120, 120) color: inherit {"dp":"/usuarios","o":"http://localhost:3000/usuarios","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374367703}
+[02:31:12.508] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:31:12.628] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:31:12.628] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[02:31:12.628] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374372180}
+[02:31:23.227] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:31:23.279] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:31:23.279] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/descuentos","route":"/inventario/descuentos"}
+[02:31:23.279] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/descuentos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/descuentos","o":"http://localhost:3000/inventario/descuentos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374382820}
+[02:32:46.054] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:32:46.115] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[02:32:46.143] Server  LOG     [API PRODUCTOS] Productos obtenidos: 7
+[02:32:46.144] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 12
+[02:32:46.144] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[02:32:46.145] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[02:32:46.145] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[02:32:46.145] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[02:32:46.146] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[02:32:46.146] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[02:32:46.160] Server  LOG     [DESCUENTOS] Producto: CONJUNTO, Tipo Prenda ID: 80
+[02:32:46.161] Server  LOG     [DESCUENTOS] Producto: SHORT, Tipo Prenda ID: 40
+[02:32:46.162] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[02:32:46.163] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[02:32:46.179] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:32:46.180] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:32:46.181] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:32:46.181] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:32:46.183] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:32:46.183] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:32:46.184] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:32:46.184] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:32:46.185] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:32:46.186] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:32:46.186] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:32:46.187] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:32:46.187] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[02:32:46.188] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[02:32:46.189] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[02:32:46.192] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:32:46.192] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:32:46.195] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[02:32:46.197] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:32:46.197] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:32:46.198] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:32:46.198] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:32:46.198] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[02:32:46.199] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[02:32:46.199] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/7
+[02:32:46.249] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:32:46.249] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
+[02:32:46.249] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374465765}
+[02:32:46.249] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
+[02:32:46.249] Browser LOG     Categorías cargadas: 7
+[02:33:28.230] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:33:28.361] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:33:28.361] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/login","route":"/login"}
+[02:33:28.361] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/login color: rgb(120, 120, 120) color: inherit {"dp":"/login","o":"http://localhost:3000/login","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374507912}
+[02:33:35.517] Server  LOG     [Auth] Buscando usuario: "vendedor"
+[02:33:35.523] Server  LOG     [Auth] Usuario encontrado, verificando contraseña...
+[02:33:35.664] Server  LOG     [Auth] Contraseña incorrecta
+[02:33:56.088] Server  LOG     [Auth] Buscando usuario: "admin"
+[02:33:56.090] Server  LOG     [Auth] Usuario encontrado, verificando contraseña...
+[02:33:56.210] Server  LOG     [Auth] Autenticación exitosa
+[02:33:56.492] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374536037}
+[02:34:41.672] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:34:41.806] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:34:41.806] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/login","route":"/login"}
+[02:34:41.806] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/login color: rgb(120, 120, 120) color: inherit {"dp":"/login","o":"http://localhost:3000/login","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374581353}
+[02:34:55.867] Server  LOG     [Auth] Buscando usuario: "vendedor"
+[02:34:55.869] Server  LOG     [Auth] Usuario encontrado, verificando contraseña...
+[02:34:55.989] Server  LOG     [Auth] Contraseña incorrecta
+[02:35:01.916] Server  LOG     [Auth] Buscando usuario: "admin"
+[02:35:01.918] Server  LOG     [Auth] Usuario encontrado, verificando contraseña...
+[02:35:02.035] Server  LOG     [Auth] Autenticación exitosa
+[02:35:02.326] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374601870}
+[02:35:05.305] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:35:05.429] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:35:05.429] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/usuarios","route":"/usuarios"}
+[02:35:05.429] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/usuarios color: rgb(120, 120, 120) color: inherit {"dp":"/usuarios","o":"http://localhost:3000/usuarios","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374604983}
+[02:35:37.837] Server  LOG     === BODY RECIBIDO ===
+[02:35:37.837] Server  LOG     {
+  "username": "vendedor",
+  "email": "oscarju@gmail.com",
+  "nombre": "oscar",
+  "apellido": "llain",
+  "telefono": "3125464878",
+  "rol": "vendedor",
+  "estado": "activo",
+  "password": "1234"
+}
+[02:35:37.838] Server  LOG     ID: "6" "type:" "string"
+[02:35:37.838] Server  LOG     ====================
+[02:35:37.981] Server  LOG     === DEBUG UPDATE USUARIO ===
+[02:35:37.981] Server  LOG     Query: "\n      UPDATE usuarios \n      SET username = ?, email = ?, nombre = ?, apellido = ?, \n          telefono = ?, rol = ?, estado = ?, updated_at = CURRENT_TIMESTAMP\n    , password_hash = ? WHERE id = ?"
+[02:35:37.982] Server  LOG     Params: "[\n  \"vendedor\",\n  \"oscarju@gmail.com\",\n  \"oscar\",\n  \"llain\",\n  \"3125464878\",\n  \"vendedor\",\n  \"activo\",\n  \"$2b$10$LlVgvnWKdKzbipkIYey/9.V583o2OlaO9vzptGb/6jPE44aIqIqWa\",\n  \"6\"\n]"
+[02:35:37.985] Server  LOG     Params types: ["[0]: string = vendedor","[1]: string = oscarju@gmail.com","[2]: string = oscar","[3]: string = llain","[4]: string = 3125464878","[5]: string = vendedor","[6]: string = activo","[7]: string = $2b$10$LlVgvnWKdKzbipkIYey/9.V583o2OlaO9vzptGb/6jPE44aIqIqWa","[8]: string = 6"]
+[02:35:37.985] Server  LOG     Has undefined? false
+[02:35:37.986] Server  LOG     ===========================
+[02:35:40.121] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:35:40.246] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:35:40.246] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/login","route":"/login"}
+[02:35:40.246] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/login color: rgb(120, 120, 120) color: inherit {"dp":"/login","o":"http://localhost:3000/login","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374639801}
+[02:35:44.844] Server  LOG     [Auth] Buscando usuario: "vendedor"
+[02:35:44.846] Server  LOG     [Auth] Usuario encontrado, verificando contraseña...
+[02:35:44.972] Server  LOG     [Auth] Autenticación exitosa
+[02:35:45.251] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771374644794}
+[04:25:38.105] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[04:25:38.812] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[04:25:38.812] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/login","route":"/login"}
+[04:25:38.812] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/login color: rgb(120, 120, 120) color: inherit {"dp":"/login","o":"http://localhost:3000/login","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771381238367}
+[04:25:43.509] Server  LOG     [Auth] Buscando usuario: "admin"
+[04:25:43.516] Server  LOG     [Auth] Usuario encontrado, verificando contraseña...
+[04:25:43.628] Server  LOG     [Auth] Autenticación exitosa
+[04:25:44.200] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771381243650}
+[04:31:04.369] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[04:31:04.497] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[04:31:04.497] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/login","route":"/login"}
+[04:31:04.497] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/login color: rgb(120, 120, 120) color: inherit {"dp":"/login","o":"http://localhost:3000/login","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771381564051}
+[04:31:09.838] Server  LOG     [Auth] Buscando usuario: "admin"
+[04:31:09.840] Server  LOG     [Auth] Usuario encontrado, verificando contraseña...
+[04:31:09.959] Server  LOG     [Auth] Autenticación exitosa
+[04:31:10.209] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771381569760}
+[06:25:35.045] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[06:25:35.503] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[06:25:35.503] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/gastos","route":"/gastos"}
+[06:25:35.503] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/gastos color: rgb(120, 120, 120) color: inherit {"dp":"/gastos","o":"http://localhost:3000/gastos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771388435058}
+[06:30:38.603] Server  LOG      ✓ Compiled in 215ms
+[06:38:28.441] Server  LOG      ✓ Compiled in 216ms
+[06:53:38.294] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[06:53:38.726] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[06:53:38.726] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
+[06:53:38.726] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390118235}
+[06:53:38.806] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\557b4_mysql2_381024e7._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.808] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__e7dda7c0._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.810] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__5f008e0f._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.843] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.857] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\1dff6_next_72478266._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.869] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.879] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.883] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.885] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.887] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.890] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:53:38.894] Server  ERROR   Error al verificar estado de caja: Error: Unknown column 'sc.monto_base' in 'field list'
+[06:54:24.162] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[06:54:24.322] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[06:54:24.426] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[06:54:24.426] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
+[06:54:24.426] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390163971}
+[06:54:24.435] Server  LOG     [API PRODUCTOS] Productos obtenidos: 7
+[06:54:24.438] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 12
+[06:54:24.438] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[06:54:24.440] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[06:54:24.441] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[06:54:24.443] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[06:54:24.444] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[06:54:24.446] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[06:54:24.472] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\557b4_mysql2_381024e7._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.473] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__e7dda7c0._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.474] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__5f008e0f._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.476] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.477] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\1dff6_next_72478266._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.477] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.478] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.480] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.481] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.481] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.482] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:54:24.484] Server  ERROR   Error al verificar estado de caja: Error: Unknown column 'sc.monto_base' in 'field list'
+[06:54:24.504] Server  LOG     [DESCUENTOS] Producto: CONJUNTO, Tipo Prenda ID: 80
+[06:54:24.520] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[06:54:24.523] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[06:54:24.524] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[06:54:24.526] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[06:54:24.528] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[06:54:24.530] Server  LOG     [DESCUENTOS] Producto: SHORT, Tipo Prenda ID: 40
+[06:54:24.532] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[06:54:24.534] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[06:54:24.535] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[06:54:24.537] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[06:54:24.539] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[06:54:24.540] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[06:54:24.541] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[06:54:24.543] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[06:54:24.544] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[06:54:24.547] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[06:54:24.548] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[06:54:24.549] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[06:54:24.549] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[06:54:24.550] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[06:54:24.551] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[06:54:24.551] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[06:54:24.552] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[06:54:24.553] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[06:54:24.554] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[06:54:24.555] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[06:54:24.555] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[06:54:24.556] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/7
+[06:54:27.428] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[06:54:27.429] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[06:54:35.386] Browser ERROR   Error al procesar venta: {}
+[06:55:51.054] Server  LOG      ✓ Compiled in 123ms
+[06:56:00.139] Server  LOG      ✓ Compiled in 121ms
+[06:56:32.455] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[06:56:32.541] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\557b4_mysql2_381024e7._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.542] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__e7dda7c0._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.543] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__5f008e0f._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.545] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.545] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\1dff6_next_72478266._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.546] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.547] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.548] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.549] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.550] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.551] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:32.552] Server  ERROR   Error al verificar estado de caja: Error: Unknown column 'sc.monto_base' in 'field list'
+[06:56:32.640] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[06:56:32.640] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
+[06:56:32.640] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390292173}
+[06:56:38.812] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\557b4_mysql2_381024e7._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.813] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__e7dda7c0._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.814] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__68dd80bf._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.816] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.835] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\1dff6_next_8de35f1e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.836] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.837] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.838] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.838] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.839] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.840] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:38.842] Server  ERROR   Error al abrir caja: Error: Unknown column 'monto_base' in 'field list'
+[06:56:45.310] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\557b4_mysql2_381024e7._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.311] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__e7dda7c0._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.311] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\[root-of-the-server]__68dd80bf._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.312] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.313] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\.next\dev\server\chunks\1dff6_next_8de35f1e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.314] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.315] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.316] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.317] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.318] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.319] Server  ERROR   D:\Documents\proyectos\valva_boutique_pos\node_modules\.pnpm\next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[06:56:45.320] Server  ERROR   Error al abrir caja: Error: Unknown column 'monto_base' in 'field list'
+[06:59:30.655] Server  LOG      ✓ Compiled in 98ms
+[07:00:50.992] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[07:00:51.125] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[07:00:51.151] Server  LOG     [API PRODUCTOS] Productos obtenidos: 7
+[07:00:51.152] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 12
+[07:00:51.152] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[07:00:51.153] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[07:00:51.153] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[07:00:51.154] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[07:00:51.154] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[07:00:51.155] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[07:00:51.164] Server  LOG     [DESCUENTOS] Producto: CONJUNTO, Tipo Prenda ID: 80
+[07:00:51.165] Server  LOG     [DESCUENTOS] Producto: SHORT, Tipo Prenda ID: 40
+[07:00:51.166] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[07:00:51.167] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[07:00:51.168] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[07:00:51.170] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[07:00:51.171] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[07:00:51.195] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:00:51.196] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:00:51.197] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:00:51.199] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:00:51.200] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:00:51.202] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:00:51.203] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:00:51.204] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:00:51.205] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:00:51.206] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:00:51.207] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:00:51.208] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:00:51.208] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:00:51.209] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:00:51.210] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:00:51.211] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:00:51.211] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:00:51.212] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:00:51.213] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:00:51.213] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:00:51.214] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:00:51.214] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/7
+[07:00:51.387] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[07:00:51.387] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
+[07:00:51.387] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390550943}
+[07:02:31.635] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[07:02:31.790] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[07:02:31.790] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/caja","route":"/caja"}
+[07:02:31.790] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/caja color: rgb(120, 120, 120) color: inherit {"dp":"/caja","o":"http://localhost:3000/caja","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390651345}
+[07:02:47.453] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[07:02:47.555] Server  LOG     [API PRODUCTOS] Iniciando obtención de productos con descuentos
+[07:02:47.800] Server  LOG     [API PRODUCTOS] Productos obtenidos: 7
+[07:02:47.801] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 12
+[07:02:47.802] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 11
+[07:02:47.802] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 10
+[07:02:47.803] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 9
+[07:02:47.803] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 3
+[07:02:47.804] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 2
+[07:02:47.804] Server  LOG     [DESCUENTOS] Buscando descuentos para producto ID: 1
+[07:02:47.809] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[07:02:47.809] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
+[07:02:47.809] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390667208}
+[07:02:47.823] Server  LOG     [DESCUENTOS] Producto: CONJUNTO, Tipo Prenda ID: 80
+[07:02:47.826] Server  LOG     [DESCUENTOS] Producto: SHORT, Tipo Prenda ID: 40
+[07:02:47.827] Server  LOG     [DESCUENTOS] Producto: blusa satanica, Tipo Prenda ID: 17
+[07:02:47.830] Server  LOG     [DESCUENTOS] Producto: jean oscuro, Tipo Prenda ID: 11
+[07:02:47.832] Server  LOG     [DESCUENTOS] Producto: jean claro, Tipo Prenda ID: 11
+[07:02:47.834] Server  LOG     [DESCUENTOS] Producto: blusa manga larga azul, Tipo Prenda ID: 17
+[07:02:47.835] Server  LOG     [DESCUENTOS] Producto: prueba, Tipo Prenda ID: 27
+[07:02:47.840] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:02:47.842] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:02:47.843] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:02:47.844] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:02:47.846] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:02:47.847] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:02:47.849] Server  LOG     [DESCUENTOS] Descuentos directos encontrados: 0
+[07:02:47.875] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:02:47.876] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:02:47.877] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:02:47.878] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:02:47.879] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:02:47.880] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:02:47.881] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:02:47.881] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:02:47.882] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:02:47.883] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:02:47.884] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:02:47.884] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:02:47.885] Server  LOG     [DESCUENTOS] Descuentos por tipo de prenda encontrados: 0
+[07:02:47.885] Server  LOG     [DESCUENTOS] Total descuentos aplicables: 0
+[07:02:47.886] Server  LOG     [API PRODUCTOS] Total productos con descuento: 0/7
+[07:02:47.948] Browser LOG     Respuesta de categorías padre: {"data":[{"descripcion":"Cualquier tipo de blusa","id":2,"nombre":"Blusa"},{"descripcion":"Bolsos de diversos tipos","id":7,"nombre":"Bolsos"},{"descripcion":"Prendas que se venden como una sola","id":3,"nombre":"Conjunto"},{"descripcion":"Faldas de diversos estilos","id":4,"nombre":"Faldas"},{"descripcion":"cualquier tipo de pantalon","id":1,"nombre":"Pantalon"},{"descripcion":"Toda prenda ","id":5,"nombre":"Shorts"},{"descripcion":"Todas clase de vestidos","id":6,"nombre":"Vestidos"}],"success":true}
+[07:02:47.948] Browser LOG     Categorías cargadas: 7
+[07:02:50.611] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[07:02:50.801] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[07:02:50.801] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/descuentos","route":"/inventario/descuentos"}
+[07:02:50.801] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/inventario/descuentos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/descuentos","o":"http://localhost:3000/inventario/descuentos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390670344}
+[07:02:56.945] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[07:02:57.093] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[07:02:57.093] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[07:02:57.093] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"http://localhost:3000/","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771390676626}

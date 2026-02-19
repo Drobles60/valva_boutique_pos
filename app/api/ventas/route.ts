@@ -83,6 +83,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Verificar que la caja esté abierta
+    const sesionCaja = await queryOne<any>(
+      `SELECT id FROM sesiones_caja WHERE estado = 'abierta' LIMIT 1`
+    );
+    if (!sesionCaja) {
+      return NextResponse.json(
+        { error: 'La caja está cerrada. Debe abrir la caja antes de registrar ventas.' },
+        { status: 400 }
+      );
+    }
+
     // Obtener usuario_id del session
     const usuario_id = (session.user as any).id;
 
