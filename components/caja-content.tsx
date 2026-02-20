@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,17 +12,17 @@ import { formatCurrency } from "@/lib/utils"
 import { toast } from "sonner"
 
 export function CajaContent() {
-  const [cajaAbierta, setCajaAbierta] = React.useState(false)
-  const [sesion, setSesion] = React.useState<any>(null)
-  const [baseInicial, setBaseInicial] = React.useState("")
-  const [notas, setNotas] = React.useState("")
-  const [efectivoContado, setEfectivoContado] = React.useState("")
-  const [notasCierre, setNotasCierre] = React.useState("")
-  const [cargando, setCargando] = React.useState(true)
-  const [procesando, setProcesando] = React.useState(false)
+  const [cajaAbierta, setCajaAbierta] = useState(false)
+  const [sesion, setSesion] = useState<any>(null)
+  const [baseInicial, setBaseInicial] = useState("")
+  const [notas, setNotas] = useState("")
+  const [efectivoContado, setEfectivoContado] = useState("")
+  const [notasCierre, setNotasCierre] = useState("")
+  const [cargando, setCargando] = useState(true)
+  const [procesando, setProcesando] = useState(false)
 
   // Cargar estado de caja al montar
-  React.useEffect(() => {
+  useEffect(() => {
     verificarEstadoCaja()
   }, [])
 
