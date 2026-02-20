@@ -81,9 +81,13 @@ BEGIN
       saldo_actual = saldo_pendiente - NEW.monto
   WHERE id = cliente_id_var;
   
-  IF saldo_nuevo <= 0 THEN
+  IF saldo_nuevo = 0 THEN
     UPDATE cuentas_por_cobrar
     SET estado = 'pagada'
+    WHERE id = NEW.cuenta_por_cobrar_id;
+  ELSE
+    UPDATE cuentas_por_cobrar
+    SET estado = 'pendiente'
     WHERE id = NEW.cuenta_por_cobrar_id;
   END IF;
 END$$

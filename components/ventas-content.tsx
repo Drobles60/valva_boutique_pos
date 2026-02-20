@@ -16,7 +16,7 @@ import { CambioDialog } from "./cambio-dialog"
 import { CreditoDialog } from "./credito-dialog"
 import { ResumenPreciosDialog } from "./resumen-precios-dialog"
 import { toast } from "sonner"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, normalizeText } from "@/lib/utils"
 import { useSession } from "next-auth/react"
 
 type CartItem = {
@@ -42,11 +42,26 @@ export function VentasContent() {
   const [creditoDialogOpen, setCreditoDialogOpen] = React.useState(false)
   const [resumenDialogOpen, setResumenDialogOpen] = React.useState(false)
   const [carritoParaProcesar, setCarritoParaProcesar] = React.useState<CartItem[]>([])
+  const [cajaAbierta, setCajaAbierta] = React.useState<boolean | null>(null)
 
   React.useEffect(() => {
     loadProductos()
     loadClientes()
+    verificarCaja()
   }, [])
+
+  const verificarCaja = async () => {
+    try {
+      const response = await fetch('/api/caja/estado')
+      if (response.ok) {
+        const result = await response.json()
+        setCajaAbierta(result.abierta)
+      }
+    } catch (error) {
+      console.error('Error verificando caja:', error)
+      setCajaAbierta(false)
+    }
+  }
 
   const loadClientes = async () => {
     try {
@@ -194,6 +209,14 @@ export function VentasContent() {
       return
     }
 
+    // Verificar que la caja esté abierta antes de continuar
+    if (!cajaAbierta) {
+      toast.error('Caja cerrada', {
+        description: 'Debes abrir la caja antes de registrar ventas.'
+      })
+      return
+    }
+
     // Abrir diálogo de resumen de precios primero
     setResumenDialogOpen(true)
   }
@@ -288,9 +311,11 @@ export function VentasContent() {
       }
     } catch (error: any) {
       console.error('Error al procesar venta:', error)
-      toast.error('Error al procesar venta', {
+      const esCajaCerrada = error.message?.toLowerCase().includes('caja')
+      toast.error(esCajaCerrada ? 'Caja cerrada' : 'Error al procesar venta', {
         description: error.message || 'Ocurrió un error inesperado'
       })
+      if (esCajaCerrada) setCajaAbierta(false)
     } finally {
       setProcesando(false)
     }
@@ -394,9 +419,11 @@ export function VentasContent() {
       }
     } catch (error: any) {
       console.error('Error al procesar venta a crédito:', error)
-      toast.error('Error al procesar venta', {
+      const esCajaCerrada = error.message?.toLowerCase().includes('caja')
+      toast.error(esCajaCerrada ? 'Caja cerrada' : 'Error al procesar venta', {
         description: error.message || 'Ocurrió un error inesperado'
       })
+      if (esCajaCerrada) setCajaAbierta(false)
     } finally {
       setProcesando(false)
     }
@@ -405,9 +432,9 @@ export function VentasContent() {
   const productosFiltrados = productos.filter(
     (p) =>
       p.cantidad > 0 && // Solo mostrar productos con stock disponible
-      (p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.codigo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.referencia.toLowerCase().includes(searchTerm.toLowerCase())),
+      (normalizeText(p.nombre).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.codigo).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.referencia).includes(normalizeText(searchTerm))),
   )
 
   return (
@@ -420,7 +447,7 @@ export function VentasContent() {
             <p className="text-muted-foreground">Sistema POS con múltiples precios</p>
           </div>
         </div>
-        <Button size="lg" disabled={carrito.length === 0 || procesando} onClick={procesarVenta}>
+        <Button size="lg" disabled={carrito.length === 0 || procesando || !cajaAbierta} onClick={procesarVenta}>
           {procesando ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -434,6 +461,22 @@ export function VentasContent() {
           )}
         </Button>
       </div>
+
+      {cajaAbierta === false && (
+        <div className="flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+          </svg>
+          <div>
+            <p className="font-semibold text-destructive">Caja cerrada</p>
+            <p className="text-sm text-muted-foreground">
+              No se pueden registrar ventas. Dirígete a{' '}
+              <a href="/caja" className="font-medium underline text-destructive hover:opacity-80">Gestión de Caja</a>
+              {' '}para abrir la caja primero.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">

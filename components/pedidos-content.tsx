@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Search, Plus, Eye, ShoppingBag, Package, CheckCircle, Clock, X, DollarSign, Wallet } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
-import { formatCurrency } from "@/lib/utils"
+import { formatCurrency, normalizeText } from "@/lib/utils"
 
 type Proveedor = {
   id: number
@@ -442,8 +442,8 @@ export function PedidosContent() {
 
   const filteredPedidos = pedidos.filter(
     (p) =>
-      p.numero_pedido.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.proveedor_nombre.toLowerCase().includes(searchTerm.toLowerCase())
+      normalizeText(p.numero_pedido).includes(normalizeText(searchTerm)) ||
+      normalizeText(p.proveedor_nombre).includes(normalizeText(searchTerm))
   )
 
   const totalPedidos = pedidos.length

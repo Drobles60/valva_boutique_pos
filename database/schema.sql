@@ -390,9 +390,14 @@ CREATE TABLE sesiones_caja (
   usuario_id INT UNSIGNED,
   fecha_apertura TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   fecha_cierre TIMESTAMP NULL,
-  estado VARCHAR(30),
+  estado VARCHAR(30) DEFAULT 'abierta',
+  monto_base DECIMAL(10,2) DEFAULT 0,
+  notas_apertura TEXT,
+  efectivo_contado DECIMAL(10,2) DEFAULT NULL,
+  notas_cierre TEXT,
   FOREIGN KEY (caja_id) REFERENCES cajas(id),
-  FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  INDEX idx_estado (estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE movimientos_caja (
@@ -691,7 +696,7 @@ UPDATE cuentas_por_cobrar cpc
 INNER JOIN clientes c ON c.id = cpc.cliente_id
 SET
   cpc.saldo_pendiente = cpc.saldo_pendiente - NEW.monto,
-  cpc.estado = IF((cpc.saldo_pendiente - NEW.monto) <= 0, 'pagada', cpc.estado),
+  cpc.estado = IF((cpc.saldo_pendiente - NEW.monto) = 0, 'pagada', 'pendiente'),
   c.saldo_pendiente = c.saldo_pendiente - NEW.monto,
   c.saldo_actual = c.saldo_pendiente - NEW.monto
 WHERE cpc.id = NEW.cuenta_por_cobrar_id;
@@ -874,6 +879,38 @@ INSERT IGNORE INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) 
 (71, 5),  -- Riñonera → Talla Única
 (72, 5),  -- Bolso Satchel → Talla Única
 (73, 5);  -- Bolso Bucket → Talla Única
+
+-- =========================================
+-- GASTOS
+-- =========================================
+CREATE TABLE gastos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  categoria ENUM(
+    'servicios',
+    'arriendo',
+    'transporte',
+    'compras_suministros',
+    'nomina',
+    'publicidad',
+    'mantenimiento',
+    'impuestos',
+    'servicios_profesionales',
+    'otros'
+  ) NOT NULL COMMENT 'Categoría del gasto',
+  descripcion VARCHAR(255) NOT NULL COMMENT 'Descripción breve del gasto',
+  monto DECIMAL(10,2) NOT NULL COMMENT 'Valor del gasto',
+  fecha_gasto DATE NOT NULL COMMENT 'Fecha en que se realizó el gasto',
+  metodo_pago ENUM('efectivo', 'transferencia', 'tarjeta') DEFAULT 'efectivo',
+  referencia VARCHAR(100) COMMENT 'Número de factura, comprobante o referencia',
+  notas TEXT COMMENT 'Observaciones adicionales',
+  usuario_id INT UNSIGNED COMMENT 'Usuario que registró el gasto',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  INDEX idx_fecha_gasto (fecha_gasto),
+  INDEX idx_categoria (categoria),
+  INDEX idx_usuario (usuario_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================================
 -- MANTENIMIENTO DE DESCUENTOS

@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/reportes/layout,_N_T_/reportes/financieros/layout,_N_T_/reportes/financieros/estado-resultados/layout,_N_T_/reportes/financieros/estado-resultados/page,_N_T_/reportes/financieros/estado-resultados"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/reportes/financieros/estado-resultados/__PAGE__",
+    "/reportes/financieros/estado-resultados",
+    "/reportes/financieros",
+    "/reportes",
+    "/_index",
+    "/_head"
+  ]
+}

@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { getServerSession } from 'next-auth'
 
 // Helper function to convert date to MySQL DATE format (YYYY-MM-DD)
 function formatDateForMySQL(dateString: string | null | undefined): string | null {
