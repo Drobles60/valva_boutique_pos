@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { FileText, Download, TrendingUp, DollarSign, ShoppingCart, Percent } from "lucide-react"
+import { FileText, Download, TrendingUp, DollarSign, ShoppingCart, Percent, BarChart3, PieChart, LineChart, Calculator, Users, Package } from "lucide-react"
 import type { Venta } from "@/lib/types"
 import { getVentas, getProducts, getCurrentUser } from "@/lib/storage"
 import { SidebarToggle } from "./app-sidebar"
@@ -172,6 +172,93 @@ export function ReportesContent() {
             <span className="hidden sm:inline">Exportar</span> Excel
           </Button>
         </div>
+      </div>
+
+      {/* Quick Access Cards */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card className="border-2 border-primary/20 hover:border-primary/40 transition-all cursor-pointer">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                  <BarChart3 className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-base">Reportes Generales</CardTitle>
+                  <CardDescription className="text-xs">Ventas y productos</CardDescription>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-3">
+              Análisis de ventas, productos más vendidos, rentabilidad y estadísticas generales del negocio.
+            </p>
+            <ul className="text-xs space-y-1 text-muted-foreground">
+              <li>• Ventas por período</li>
+              <li>• Top productos</li>
+              <li>• Análisis de rentabilidad</li>
+              <li>• Ticket promedio</li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card className="border-2 border-blue-500/20 hover:border-blue-500/40 transition-all cursor-pointer" onClick={() => window.location.href = '/reportes/contables'}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
+                  <Calculator className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base">Reportes Contables</CardTitle>
+                  <CardDescription className="text-xs">Finanzas y contabilidad</CardDescription>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-3">
+              Reportes financieros avanzados: estado de resultados, flujo de caja, gastos, inventario y más.
+            </p>
+            <ul className="text-xs space-y-1 text-muted-foreground">
+              <li>• Estado de resultados</li>
+              <li>• Flujo de caja</li>
+              <li>• Análisis de gastos</li>
+              <li>• Cartera de créditos</li>
+            </ul>
+            <Button size="sm" className="w-full mt-3 bg-blue-600 hover:bg-blue-700">
+              Ver Reportes Contables →
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-2 border-green-500/20 hover:border-green-500/40 transition-all">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/10">
+                  <PieChart className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base">Estadísticas Avanzadas</CardTitle>
+                  <CardDescription className="text-xs">Análisis detallados</CardDescription>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-3">
+              Métricas adicionales, gráficas comparativas y análisis de tendencias de tu negocio.
+            </p>
+            <ul className="text-xs space-y-1 text-muted-foreground">
+              <li>• Tendencias de ventas</li>
+              <li>• Comparativas por período</li>
+              <li>• Análisis de clientes</li>
+              <li>• Rotación de inventario</li>
+            </ul>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Filters */}

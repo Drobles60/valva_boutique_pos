@@ -44,26 +44,64 @@ mysql -u tu_usuario -p < valva_backup.sql
 
 1. Abre **DBeaver**
 2. Conecta a tu base de datos
-3. Click derecho en la base de datos → **Tools** → **Dump Database**
-4. Configura las opciones:
-   - ✅ Tables
-   - ✅ Views
-   - ✅ Procedures
-   - ✅ Functions
-   - ✅ Triggers
-   - ✅ **Data** (importante para incluir datos)
-5. Selecciona la ruta y nombre del archivo
-6. Click en **Start**
-7. Guarda el archivo `.sql` generado
+3. Click derecho en la base de datos → **Tools** → **Dump Database** (o **Copia de seguridad**)
+4. En la ventana de configuración **Settings**, configura así:
+
+   **✅ LO QUE SÍ DEBES MARCAR:**
+   - ✅ **Add DROP statements** (para recrear tablas si ya existen)
+   - ✅ **Disable keys** (mejora el rendimiento)
+   - ✅ **Extended inserts** (inserciones más rápidas)
+   - ✅ **Dump events** (si tienes eventos programados)
+   
+   **❌ LO QUE NO DEBES MARCAR (debe estar sin marcar):**
+   - ❌ **No CREATE statements** (déjalo SIN marcar para incluir estructura)
+   - ❌ **Structure only** (SIN marcar para incluir datos)
+   - ❌ **No routines** (SIN marcar para incluir procedimientos y funciones)
+   
+   **Opcionales:**
+   - `Compressed` - Marca si quieres comprimir el archivo
+   - `Remove DEFINER` - Marca si cambiarás de usuario
+
+5. **IMPORTANTE:** En **Extra command args** (argumentos adicionales), agrega:
+   ```
+   --set-gtid-purged=OFF
+   ```
+   Esto evita errores de GTID al importar en otro servidor.
+
+6. En **Output folder** selecciona dónde guardar el archivo
+7. El nombre del archivo por defecto será algo como: `dump-valva_boutique-202602181545.sql`
+8. Click en **Start** y espera a que termine
+9. Verifica que el archivo `.sql` se haya generado correctamente
 
 ### Importar en Otro Equipo
 
 1. Instala MySQL en el nuevo equipo (misma versión o compatible)
 2. Abre **DBeaver** y crea una nueva conexión al servidor MySQL
-3. Click derecho en la conexión → **SQL Editor** → **Load SQL Script**
-4. Selecciona tu archivo `backup.sql`
-5. Ejecuta el script completo (presiona **F5** o click en **Execute SQL Script**)
-6. Espera a que termine la ejecución
+3. **IMPORTANTE - Crear la base de datos primero:**
+   - Click derecho en tu conexión MySQL (localhost) en el panel izquierdo
+   - **Create** → **Database**
+   - Nombre: `valva_boutique` (o el nombre que tengas en tu archivo SQL)
+   - Charset: `utf8mb4`
+   - Collation: `utf8mb4_unicode_ci`
+   - Click **OK**
+   
+
+4. **Si NO exportaste con `--set-gtid-purged=OFF`** (solo si tienes error de GTID):
+   - Click derecho en la conexión → **Editor SQL**
+   - Ejecuta este comando: `RESET MASTER;`
+   - Presiona **Ctrl + Enter**
+   - Esto evitará errores de GTID al importar
+
+5. Ahora importa el archivo:
+   - Click derecho en la base de datos que acabas de crear → **Tools** → **Execute SQL Script** (o **Restore**)
+   - Selecciona tu archivo `backup.sql`
+   - Click en **Start** y espera a que termine
+
+6. Verifica que las tablas y datos se hayan importado correctamente
+
+**Notas importantes:**
+- Si sale error **"Unknown database":** Asegúrate de haber creado la base de datos en el paso 3
+- Si sale error **"GTID_PURGED":** Ejecuta `RESET MASTER;` como se indica en el paso 4
 
 ---
 
@@ -201,11 +239,24 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
-### Error: "Unknown database"
+### Error: "Unknown database" o "ERROR 1049 (42000): Unknown database"
+
+**Causa:** La base de datos no existe en el servidor MySQL donde intentas importar.
+
+**Solución en DBeaver:**
+1. Click derecho en tu conexión MySQL (localhost) → **Create** → **Database**
+2. Nombre: `valva_boutique` o `valva_boutique_pos` (según tu backup)
+3. Charset: `utf8mb4`, Collation: `utf8mb4_unicode_ci`
+4. Click **OK**
+5. Ahora intenta importar de nuevo
+
+**Solución por línea de comandos:**
 ```sql
--- Crear la base de datos manualmente primero
+mysql -u root -p
 CREATE DATABASE valva_boutique_pos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+EXIT;
 ```
+Luego ejecuta la importación normalmente.
 
 ### Error: "Table already exists"
 ```powershell
@@ -215,6 +266,31 @@ mysql -u root -p -e "DROP DATABASE IF EXISTS valva_boutique_pos;"
 # Opción 2: Agregar --force al importar
 mysql -u root -p --force < valva_backup.sql
 ```
+
+### Error: "ERROR 3546: @@GLOBAL.GTID_PURGED cannot be changed"
+
+**Causa:** El archivo de backup contiene información de GTID (replicación) que está causando conflicto.
+
+**Solución 1 - Editar el archivo SQL:**
+1. Abre tu archivo `.sql` con un editor de texto
+2. Busca la línea que dice: `SET @@GLOBAL.GTID_PURGED='...'`
+3. Comenta esa línea agregando `--` al inicio:
+   ```sql
+   -- SET @@GLOBAL.GTID_PURGED='...';
+   ```
+4. Guarda el archivo y vuelve a importar
+
+**Solución 2 - Exportar de nuevo correctamente:**
+- Al exportar en DBeaver, en **"Extra command args"** agrega: `--set-gtid-purged=OFF`
+- Esto evitará que se incluya información de GTID en el backup
+
+**Solución 3 - Resetear GTID antes de importar:**
+```sql
+mysql -u root -p
+RESET MASTER;
+EXIT;
+```
+Luego intenta importar de nuevo.
 
 ---
 

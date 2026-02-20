@@ -88,12 +88,6 @@ const menuItems = [
     permissions: ['compras.ver'] as Permission[]
   },
   { 
-    title: "Reportes", 
-    icon: FileText, 
-    href: "/reportes",
-    permissions: ['reportes.ventas', 'reportes.inventario', 'reportes.financieros', 'reportes.clientes'] as Permission[]
-  },
-  { 
     title: "Usuarios y Roles", 
     icon: Shield, 
     href: "/usuarios",
@@ -117,6 +111,19 @@ const inventorySubmenu = [
     title: "Descuentos", 
     href: "/inventario/descuentos",
     permissions: ['descuentos.ver'] as Permission[]
+  },
+]
+
+const reportesSubmenu = [
+  { 
+    title: "Reportes Generales", 
+    href: "/reportes",
+    permissions: ['reportes.ventas', 'reportes.inventario'] as Permission[]
+  },
+  { 
+    title: "Reportes Contables", 
+    href: "/reportes/contables",
+    permissions: ['reportes.financieros', 'reportes.ventas'] as Permission[]
   },
 ]
 
@@ -171,8 +178,16 @@ export function AppSidebar() {
     return inventorySubmenu.filter(item => hasAccess(item.permissions))
   }, [hasAccess])
 
+  // Filtrar submenu de reportes
+  const visibleReportesSubmenu = React.useMemo(() => {
+    return reportesSubmenu.filter(item => hasAccess(item.permissions))
+  }, [hasAccess])
+
   // Determinar si mostrar la sección de inventario
   const showInventorySection = visibleInventorySubmenu.length > 0
+
+  // Determinar si mostrar la sección de reportes
+  const showReportesSection = visibleReportesSubmenu.length > 0
 
   return (
     <Sidebar>
@@ -229,6 +244,36 @@ export function AppSidebar() {
                       <CollapsibleContent>
                         <SidebarMenuSub>
                           {visibleInventorySubmenu.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={pathname === subItem.href}
+                              >
+                                <a href={subItem.href}>
+                                  <span>{subItem.title}</span>
+                                </a>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                )}
+
+                {showReportesSection && (
+                  <Collapsible className="group/collapsible" defaultOpen={pathname.startsWith("/reportes")}>
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton>
+                          <FileText className="h-4 w-4" />
+                          <span>Reportes</span>
+                          <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {visibleReportesSubmenu.map((subItem) => (
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton
                                 asChild
