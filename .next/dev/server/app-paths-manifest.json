@@ -1,5 +1,22 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/reportes/contables/page": "app/reportes/contables/page.js"
+  "/api/caja/estado/route": "app/api/caja/estado/route.js",
+  "/api/caja/sesion/route": "app/api/caja/sesion/route.js",
+  "/api/categorias-padre/route": "app/api/categorias-padre/route.js",
+  "/api/clientes/route": "app/api/clientes/route.js",
+  "/api/gastos/route": "app/api/gastos/route.js",
+  "/api/productos/generar-codigos/route": "app/api/productos/generar-codigos/route.js",
+  "/api/productos/route": "app/api/productos/route.js",
+  "/api/proveedores/route": "app/api/proveedores/route.js",
+  "/api/tallas/route": "app/api/tallas/route.js",
+  "/api/tipos-prenda/route": "app/api/tipos-prenda/route.js",
+  "/api/ventas/route": "app/api/ventas/route.js",
+  "/caja/page": "app/caja/page.js",
+  "/gastos/page": "app/gastos/page.js",
+  "/inventario/productos/page": "app/inventario/productos/page.js",
+  "/page": "app/page.js",
+  "/proveedores/page": "app/proveedores/page.js",
+  "/reportes/contables/page": "app/reportes/contables/page.js",
+  "/reportes/page": "app/reportes/page.js",
+  "/ventas/page": "app/ventas/page.js"
 }

@@ -613,17 +613,17 @@ export function ProductosContent() {
     for (let i = 0; i < cantidad; i++) {
       labelsHTML += `
         <div class="label-item">
-          <div class="store-logo">VALVA BOUTIQUE</div>
+          <div class="header-row">
+            <div class="store-logo">VALVA BOUTIQUE</div>
+            <div class="precio">$${formatCurrency(labelData.precio_venta)}</div>
+          </div>
           <div class="barcode-container">
             <svg id="barcode-${i}"></svg>
           </div>
-          <div class="codigo-text">${labelData.codigo_barras}</div>
           <div class="footer-info">
-            <div>
-              <div class="ref-label">REF</div>
-              <div class="ref-value">${labelData.sku}</div>
-            </div>
-            <div class="precio">$${formatCurrency(labelData.precio_venta)}</div>
+            <span class="codigo-text">${labelData.codigo_barras}</span>
+            <span class="ref-label">REF</span>
+            <span class="ref-value">${labelData.sku}</span>
           </div>
         </div>
       `
@@ -642,107 +642,112 @@ export function ProductosContent() {
             padding: 0;
             box-sizing: border-box;
           }
-          
+
           @page {
-            size: letter;
+            size: 100mm auto;
             margin: 2mm;
           }
-          
+
           body {
             font-family: Arial, sans-serif;
             background: white;
-            padding: 0;
-            margin: 0;
+            width: 96mm;
           }
-          
+
           .labels-grid {
             display: grid;
-            grid-template-columns: repeat(3, 66mm);
-            gap: 5mm 3mm;
-            justify-content: start;
-            padding: 0;
-            margin: 0;
+            grid-template-columns: repeat(3, 30mm);
+            gap: 1.5mm 3mm;
           }
-          
+
           .label-item {
-            width: 66mm;
-            height: 40mm;
-            border: 1px solid #000;
-            padding: 2mm;
+            width: 30mm;
+            height: 25mm;
+            border: 0.5px solid #000;
+            padding: 0.8mm 1mm;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             background: white;
             page-break-inside: avoid;
+            overflow: hidden;
           }
-          
-          .store-logo {
-            font-size: 8pt;
-            font-weight: 900;
-            text-align: center;
-            letter-spacing: 0.3px;
-            color: #000;
-            border-bottom: 0.5px solid #000;
-            padding-bottom: 1mm;
-            margin-bottom: 1mm;
-            line-height: 1.2;
-          }
-          
-          .barcode-container {
-            text-align: center;
+
+          /* Fila 1: tienda + precio */
+          .header-row {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1mm;
-            min-height: 50px;
-            max-height: 50px;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 0.4px solid #000;
+            padding-bottom: 0.5mm;
           }
-          
+
+          .store-logo {
+            font-size: 5pt;
+            font-weight: 900;
+            color: #000;
+            line-height: 1.1;
+            letter-spacing: -0.2px;
+          }
+
+          .precio {
+            font-size: 7pt;
+            font-weight: 900;
+            color: #000;
+            white-space: nowrap;
+            line-height: 1.1;
+          }
+
+          /* Fila 2: código de barras */
+          .barcode-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+          }
+
           .barcode-container svg {
             max-width: 100%;
             height: auto;
-            max-height: 50px;
+            max-height: 22px;
+            display: block;
           }
-          
-          .codigo-text {
-            font-weight: 700;
-            font-size: 7pt;
-            color: #000;
-            text-align: center;
-            margin-bottom: 1mm;
-            letter-spacing: 0.3px;
-            font-family: 'Consolas', monospace;
-            line-height: 1;
-          }
-          
+
+          /* Fila 3: código + SKU */
           .footer-info {
-            border-top: 0.5px solid #000;
-            padding-top: 0.5mm;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-top: auto;
+            gap: 1mm;
+            border-top: 0.4px solid #ccc;
+            padding-top: 0.4mm;
           }
-          
+
+          .codigo-text {
+            font-size: 4.5pt;
+            font-weight: 700;
+            color: #000;
+            font-family: 'Consolas', monospace;
+            white-space: nowrap;
+          }
+
           .ref-label {
-            font-size: 6pt;
-            color: #666;
+            font-size: 4pt;
+            color: #777;
             font-weight: 600;
-            margin-bottom: 0.5mm;
           }
-          
+
           .ref-value {
-            font-size: 7pt;
+            font-size: 4.5pt;
             color: #000;
             font-weight: 700;
             font-family: 'Consolas', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 16mm;
           }
-          
-          .precio {
-            font-size: 11pt;
-            font-weight: 700;
-            color: #000;
-          }
-          
+
           @media print {
             body {
               -webkit-print-color-adjust: exact;
@@ -767,10 +772,10 @@ export function ProductosContent() {
               try {
                 JsBarcode('#barcode-' + i, '${labelData.codigo_barras}', {
                   format: 'CODE128',
-                  width: 1.5,
-                  height: 50,
+                  width: 1,
+                  height: 20,
                   displayValue: false,
-                  margin: 1,
+                  margin: 0,
                   background: '#ffffff',
                   lineColor: '#000000'
                 });
