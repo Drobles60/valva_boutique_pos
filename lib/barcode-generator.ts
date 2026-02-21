@@ -54,33 +54,18 @@ function calculateEAN13CheckDigit(code: string): number {
 }
 
 /**
- * Genera un código de barras EAN-13 interno
- * Formato: 2XXYYYYYYYYY-C
- * - 2: Prefijo para códigos internos
- * - XX: Código de categoría (01-99)
- * - YYYYYYYYY: Número secuencial (9 dígitos)
- * - C: Dígito verificador
+ * Genera un código de barras corto interno (6 dígitos)
+ * Formato: contador secuencial simple a partir de 100001
+ * Compatible con CODE128 en impresión de etiquetas
  */
 export function generateBarcode(
-  categoriaId: number,
+  _categoriaId: number,
   secuencia: number
 ): string {
-  // Prefijo 2 para códigos internos
-  const prefix = '2'
-  
-  // Código de categoría (2 dígitos)
-  const categoryCode = categoriaId.toString().padStart(2, '0')
-  
-  // Número secuencial (9 dígitos)
-  const sequenceCode = secuencia.toString().padStart(9, '0')
-  
-  // Combinar primeros 12 dígitos
-  const code12 = prefix + categoryCode + sequenceCode
-  
-  // Calcular dígito verificador
-  const checkDigit = calculateEAN13CheckDigit(code12)
-  
-  return code12 + checkDigit
+  // Base de 100000 para asegurar siempre 6 dígitos
+  const base = 100000
+  const codigo = base + secuencia
+  return codigo.toString()
 }
 
 /**

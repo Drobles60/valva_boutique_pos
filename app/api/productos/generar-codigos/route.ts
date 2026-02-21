@@ -42,21 +42,21 @@ export async function POST(request: NextRequest) {
 
     const secuencia = (Array.isArray(secuenciaResult) && secuenciaResult[0]?.max_secuencia ? secuenciaResult[0].max_secuencia : 0) + 1
 
-    // Obtener el último código de barras usado globalmente
+    // Obtener el último código de barras corto usado (6 dígitos máximo)
     const ultimoCodigoResult: any = await query(
       `SELECT CAST(codigo_barras AS UNSIGNED) as codigo_numero
        FROM productos 
-       WHERE codigo_barras REGEXP '^[0-9]+$'
+       WHERE codigo_barras REGEXP '^[0-9]{1,6}$'
        ORDER BY CAST(codigo_barras AS UNSIGNED) DESC
        LIMIT 1`
     )
 
-    let nuevoCodigo
+    let nuevoCodigo: number
     if (Array.isArray(ultimoCodigoResult) && ultimoCodigoResult.length > 0 && ultimoCodigoResult[0]?.codigo_numero) {
-      nuevoCodigo = BigInt(ultimoCodigoResult[0].codigo_numero) + BigInt(1)
+      nuevoCodigo = Number(ultimoCodigoResult[0].codigo_numero) + 1
     } else {
-      // Si no hay productos, empezar desde el número base
-      nuevoCodigo = BigInt(2010000000001)
+      // Si no hay productos con código corto, empezar desde 100001
+      nuevoCodigo = 100001
     }
 
     // Generar códigos
