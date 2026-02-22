@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateSKU, generateBarcode } from '@/lib/barcode-generator'
+import { generateSKU, generateSKUPrefix } from '@/lib/barcode-generator'
 import { query } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
@@ -32,15 +32,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Obtener la secuencia para el SKU (último número + 1)
-    const secuenciaResult: any = await query(
-      `SELECT MAX(CAST(SUBSTRING_INDEX(sku, '-', -1) AS UNSIGNED)) as max_secuencia 
-       FROM productos 
-       WHERE categoria_padre_id = ? AND tipo_prenda_id = ? AND talla_id = ?`,
-      [categoria_padre_id, tipo_prenda_id, talla_id]
+    const skuPrefix = generateSKUPrefix(
+      categoriaResult[0].nombre,
+      tipoPrendaResult[0].nombre,
+      tallaResult[0].valor
     )
 
-    const secuencia = (Array.isArray(secuenciaResult) && secuenciaResult[0]?.max_secuencia ? secuenciaResult[0].max_secuencia : 0) + 1
+    // Obtener la secuencia para el SKU (último número + 1) usando el prefijo exacto
+    const secuenciaResult: any = await query(
+      `SELECT MAX(CAST(SUBSTRING_INDEX(sku, '-', -1) AS UNSIGNED)) as max_secuencia
+       FROM productos
+       WHERE sku LIKE CONCAT(?, '-%')
+         AND SUBSTRING_INDEX(sku, '-', -1) REGEXP '^[0-9]+$'`,
+      [skuPrefix]
+    )
+
+    const secuencia =
+      (Array.isArray(secuenciaResult) && secuenciaResult[0]?.max_secuencia
+        ? secuenciaResult[0].max_secuencia
+        : 0) + 1
 
     // Obtener el último código de barras corto usado (6 dígitos máximo)
     const ultimoCodigoResult: any = await query(
