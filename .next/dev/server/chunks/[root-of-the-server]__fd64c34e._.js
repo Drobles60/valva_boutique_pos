@@ -62,12 +62,20 @@ module.exports = mod;
     ()=>generateLabelDescription,
     "generateSKU",
     ()=>generateSKU,
+    "generateSKUPrefix",
+    ()=>generateSKUPrefix,
     "getNextSequence",
     ()=>getNextSequence,
     "validateEAN13",
     ()=>validateEAN13
 ]);
 function generateSKU(categoriaNombre, tipoPrendaNombre, tallaNombre, secuencia) {
+    const skuPrefix = generateSKUPrefix(categoriaNombre, tipoPrendaNombre, tallaNombre);
+    // Secuencia con 4 dígitos
+    const secCode = secuencia.toString().padStart(4, '0');
+    return `${skuPrefix}-${secCode}`;
+}
+function generateSKUPrefix(categoriaNombre, tipoPrendaNombre, tallaNombre) {
     // Extraer 3 primeras letras de categoría
     const catCode = categoriaNombre.substring(0, 3).toUpperCase();
     // Extraer código del tipo de prenda (primeras 3 letras o abreviatura inteligente)
@@ -81,9 +89,7 @@ function generateSKU(categoriaNombre, tipoPrendaNombre, tallaNombre, secuencia) 
     }
     // Talla (ya viene limpia)
     const tallaCode = tallaNombre.toUpperCase().replace(/\s/g, '');
-    // Secuencia con 4 dígitos
-    const secCode = secuencia.toString().padStart(4, '0');
-    return `${catCode}-${tipoCode}-${tallaCode}-${secCode}`;
+    return `${catCode}-${tipoCode}-${tallaCode}`;
 }
 /**
  * Calcula el dígito verificador para EAN-13
@@ -328,13 +334,13 @@ async function POST(request) {
                 status: 404
             });
         }
-        // Obtener la secuencia para el SKU (último número + 1)
-        const secuenciaResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT MAX(CAST(SUBSTRING_INDEX(sku, '-', -1) AS UNSIGNED)) as max_secuencia 
-       FROM productos 
-       WHERE categoria_padre_id = ? AND tipo_prenda_id = ? AND talla_id = ?`, [
-            categoria_padre_id,
-            tipo_prenda_id,
-            talla_id
+        const skuPrefix = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$barcode$2d$generator$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateSKUPrefix"])(categoriaResult[0].nombre, tipoPrendaResult[0].nombre, tallaResult[0].valor);
+        // Obtener la secuencia para el SKU (último número + 1) usando el prefijo exacto
+        const secuenciaResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT MAX(CAST(SUBSTRING_INDEX(sku, '-', -1) AS UNSIGNED)) as max_secuencia
+       FROM productos
+       WHERE sku LIKE CONCAT(?, '-%')
+         AND SUBSTRING_INDEX(sku, '-', -1) REGEXP '^[0-9]+$'`, [
+            skuPrefix
         ]);
         const secuencia = (Array.isArray(secuenciaResult) && secuenciaResult[0]?.max_secuencia ? secuenciaResult[0].max_secuencia : 0) + 1;
         // Obtener el último código de barras corto usado (6 dígitos máximo)

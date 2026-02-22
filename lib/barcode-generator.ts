@@ -16,6 +16,22 @@ export function generateSKU(
   tallaNombre: string,
   secuencia: number
 ): string {
+  const skuPrefix = generateSKUPrefix(categoriaNombre, tipoPrendaNombre, tallaNombre)
+  
+  // Secuencia con 4 dígitos
+  const secCode = secuencia.toString().padStart(4, '0')
+  
+  return `${skuPrefix}-${secCode}`
+}
+
+/**
+ * Genera el prefijo del SKU (sin la secuencia)
+ */
+export function generateSKUPrefix(
+  categoriaNombre: string,
+  tipoPrendaNombre: string,
+  tallaNombre: string
+): string {
   // Extraer 3 primeras letras de categoría
   const catCode = categoriaNombre.substring(0, 3).toUpperCase()
   
@@ -32,10 +48,7 @@ export function generateSKU(
   // Talla (ya viene limpia)
   const tallaCode = tallaNombre.toUpperCase().replace(/\s/g, '')
   
-  // Secuencia con 4 dígitos
-  const secCode = secuencia.toString().padStart(4, '0')
-  
-  return `${catCode}-${tipoCode}-${tallaCode}-${secCode}`
+  return `${catCode}-${tipoCode}-${tallaCode}`
 }
 
 /**
