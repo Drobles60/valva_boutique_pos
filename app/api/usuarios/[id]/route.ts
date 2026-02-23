@@ -48,12 +48,6 @@ export async function PUT(
     const { id } = await context.params;
     const body = await request.json();
     
-    // DEBUG: Ver qué llega en el body
-    console.log('=== BODY RECIBIDO ===');
-    console.log(JSON.stringify(body, null, 2));
-    console.log('ID:', id, 'type:', typeof id);
-    console.log('====================');
-    
     // Extraer y sanitizar TODOS los campos
     const username = body.username?.trim() || null;
     const email = body.email?.trim() || null;
@@ -124,14 +118,6 @@ export async function PUT(
 
     updateQuery += ' WHERE id = ?';
     params_query.push(id);
-
-    // DEBUG: Ver exactamente qué se está enviando
-    console.log('=== DEBUG UPDATE USUARIO ===');
-    console.log('Query:', updateQuery);
-    console.log('Params:', JSON.stringify(params_query, null, 2));
-    console.log('Params types:', params_query.map((p, i) => `[${i}]: ${typeof p} = ${p}`));
-    console.log('Has undefined?', params_query.some(p => p === undefined));
-    console.log('===========================');
 
     // Ejecutar actualización
     await query(updateQuery, params_query);

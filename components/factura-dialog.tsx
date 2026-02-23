@@ -88,8 +88,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
         const logoHeight = 20
         pdf.addImage(img, 'JPEG', centerX - (logoWidth / 2), yPos, logoWidth, logoHeight)
         yPos += logoHeight + 4
-      } catch (error) {
-        console.log('Continuando sin logo')
+      } catch {
       }
 
       // Nombre empresa (centrado)

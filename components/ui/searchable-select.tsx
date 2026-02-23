@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, X } from "lucide-react"
 import { cn, normalizeText } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -70,13 +70,25 @@ export function SearchableSelect({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">
-        <div className="p-2">
+        <div className="p-2 relative">
           <Input
             placeholder={searchPlaceholder}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="h-9"
+            className="h-9 pr-9"
           />
+          {searchTerm && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+              onClick={() => setSearchTerm("")}
+              aria-label="Limpiar búsqueda"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         <ScrollArea className="max-h-[300px]">
           <div className="p-1">

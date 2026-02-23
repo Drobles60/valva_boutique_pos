@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+﻿const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
 
@@ -6,21 +6,17 @@ async function fixTallas() {
   const connection = await mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '', // Cambia esto si tienes contraseña
+    password: '', // Cambia esto si tienes contraseÃ±a
     database: 'valva_boutique_pos',
     multipleStatements: true
   });
 
   try {
-    console.log('📁 Leyendo script SQL...');
-    const sqlPath = path.join(__dirname, '../database/fix-tallas-relaciones.sql');
+const sqlPath = path.join(__dirname, '../database/fix-tallas-relaciones.sql');
     const sql = fs.readFileSync(sqlPath, 'utf8');
 
-    console.log('🔄 Ejecutando script...');
-    await connection.query(sql);
+await connection.query(sql);
 
-    console.log('✅ Script ejecutado exitosamente');
-    console.log('\n📊 Verificando relaciones...');
     
     const [rows] = await connection.query(`
       SELECT 
@@ -38,11 +34,10 @@ async function fixTallas() {
       LIMIT 20
     `);
 
-    console.log('\nPrimeras 20 relaciones:');
-    console.table(rows);
+console.table(rows);
 
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('âŒ Error:', error.message);
     throw error;
   } finally {
     await connection.end();
@@ -51,10 +46,11 @@ async function fixTallas() {
 
 fixTallas()
   .then(() => {
-    console.log('\n✅ Proceso completado');
-    process.exit(0);
+process.exit(0);
   })
   .catch((error) => {
-    console.error('\n❌ Error fatal:', error);
+    console.error('\nâŒ Error fatal:', error);
     process.exit(1);
   });
+
+

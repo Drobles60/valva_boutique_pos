@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { generateSKU, generateSKUPrefix } from '@/lib/barcode-generator'
 import { query } from '@/lib/db'
 
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       tallaResult[0].valor
     )
 
-    // Obtener la secuencia para el SKU (último número + 1) usando el prefijo exacto
+    // Obtener la secuencia para el SKU (Ãºltimo nÃºmero + 1) usando el prefijo exacto
     const secuenciaResult: any = await query(
       `SELECT MAX(CAST(SUBSTRING_INDEX(sku, '-', -1) AS UNSIGNED)) as max_secuencia
        FROM productos
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         ? secuenciaResult[0].max_secuencia
         : 0) + 1
 
-    // Obtener el último código de barras corto usado (6 dígitos máximo)
+    // Obtener el Ãºltimo cÃ³digo de barras corto usado (6 dÃ­gitos mÃ¡ximo)
     const ultimoCodigoResult: any = await query(
       `SELECT CAST(codigo_barras AS UNSIGNED) as codigo_numero
        FROM productos 
@@ -65,11 +65,11 @@ export async function POST(request: NextRequest) {
     if (Array.isArray(ultimoCodigoResult) && ultimoCodigoResult.length > 0 && ultimoCodigoResult[0]?.codigo_numero) {
       nuevoCodigo = Number(ultimoCodigoResult[0].codigo_numero) + 1
     } else {
-      // Si no hay productos con código corto, empezar desde 100001
+      // Si no hay productos con cÃ³digo corto, empezar desde 100001
       nuevoCodigo = 100001
     }
 
-    // Generar códigos
+    // Generar cÃ³digos
     const sku = generateSKU(
       categoriaResult[0].nombre,
       tipoPrendaResult[0].nombre,
@@ -79,9 +79,7 @@ export async function POST(request: NextRequest) {
 
     const codigo_barras = nuevoCodigo.toString()
 
-    console.log('Códigos generados:', { sku, codigo_barras, secuencia })
-
-    return NextResponse.json({
+return NextResponse.json({
       success: true,
       sku,
       codigo_barras,
@@ -89,10 +87,11 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error generando códigos:', error)
+    console.error('Error generando cÃ³digos:', error)
     return NextResponse.json(
       { success: false, error: 'Error interno del servidor' },
       { status: 500 }
     )
   }
 }
+

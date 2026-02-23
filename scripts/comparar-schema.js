@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+﻿const mysql = require('mysql2/promise');
 
 const dbConfig = {
   host: 'localhost',
@@ -8,7 +8,7 @@ const dbConfig = {
   database: 'valva_boutique',
 };
 
-// Tablas esperadas según el schema.sql
+// Tablas esperadas segÃºn el schema.sql
 const tablasEsperadas = {
   'usuarios': [
     'id', 'username', 'email', 'password_hash', 'nombre', 'apellido', 
@@ -116,14 +116,10 @@ async function compararSchema() {
   let connection;
   
   try {
-    console.log('🔍 INICIANDO COMPARACIÓN DE SCHEMA\n');
-    console.log('='.repeat(80));
     
     // Conectar a la base de datos
     connection = await mysql.createConnection(dbConfig);
-    console.log('✅ Conectado a la base de datos\n');
-    
-    // Obtener todas las tablas de la base de datos
+// Obtener todas las tablas de la base de datos
     const [tablasReales] = await connection.query(`
       SELECT TABLE_NAME 
       FROM INFORMATION_SCHEMA.TABLES 
@@ -135,29 +131,17 @@ async function compararSchema() {
     const nombresReales = tablasReales.map(t => t.TABLE_NAME);
     const nombresEsperados = Object.keys(tablasEsperadas);
     
-    console.log('📊 COMPARACIÓN DE TABLAS\n');
-    console.log(`Tablas esperadas (schema.sql): ${nombresEsperados.length}`);
-    console.log(`Tablas en la base de datos: ${nombresReales.length}\n`);
-    
-    // Buscar tablas faltantes en la BD
+// Buscar tablas faltantes en la BD
     const tablasFaltantes = nombresEsperados.filter(t => !nombresReales.includes(t));
     if (tablasFaltantes.length > 0) {
-      console.log('❌ TABLAS FALTANTES EN LA BASE DE DATOS:');
-      tablasFaltantes.forEach(tabla => console.log(`   - ${tabla}`));
-      console.log();
-    }
+}
     
-    // Buscar tablas extras en la BD (no están en el schema)
+    // Buscar tablas extras en la BD (no estÃ¡n en el schema)
     const tablasExtras = nombresReales.filter(t => !nombresEsperados.includes(t));
     if (tablasExtras.length > 0) {
-      console.log('⚠️  TABLAS EXTRAS EN LA BASE DE DATOS (no están en schema.sql):');
-      tablasExtras.forEach(tabla => console.log(`   - ${tabla}`));
-      console.log();
-    }
+}
     
     // Comparar columnas de cada tabla
-    console.log('='.repeat(80));
-    console.log('🔎 COMPARACIÓN DETALLADA DE COLUMNAS\n');
     
     let totalDiferencias = 0;
     
@@ -194,27 +178,20 @@ async function compararSchema() {
       const columnasExtras = nombresColumnasReales.filter(c => !columnasEsperadas.includes(c));
       
       if (columnasFaltantes.length > 0 || columnasExtras.length > 0) {
-        console.log(`\n📋 TABLA: ${tabla}`);
-        console.log('-'.repeat(80));
         
         if (columnasFaltantes.length > 0) {
-          console.log('  ❌ Columnas FALTANTES en la BD:');
-          columnasFaltantes.forEach(col => console.log(`     - ${col}`));
           totalDiferencias += columnasFaltantes.length;
         }
         
         if (columnasExtras.length > 0) {
-          console.log('  ⚠️  Columnas EXTRAS en la BD (no están en schema.sql):');
-          columnasExtras.forEach(col => {
+columnasExtras.forEach(col => {
             const columnaInfo = columnasReales.find(c => c.COLUMN_NAME === col);
-            console.log(`     - ${col} (${columnaInfo.DATA_TYPE})`);
-          });
+});
           totalDiferencias += columnasExtras.length;
         }
         
         // Mostrar todas las columnas de la BD para referencia
-        console.log('\n  📝 Columnas actuales en la BD:');
-        columnasReales.forEach(col => {
+columnasReales.forEach(col => {
           let tipo = col.DATA_TYPE;
           if (col.CHARACTER_MAXIMUM_LENGTH) {
             tipo += `(${col.CHARACTER_MAXIMUM_LENGTH})`;
@@ -227,32 +204,20 @@ async function compararSchema() {
           const extra = col.EXTRA ? ` ${col.EXTRA}` : '';
           const def = col.COLUMN_DEFAULT !== null ? ` DEFAULT ${col.COLUMN_DEFAULT}` : '';
           
-          console.log(`     ${col.COLUMN_NAME}: ${tipo} ${nullable}${key}${extra}${def}`);
-        });
+});
         
-        console.log();
-      } else {
-        console.log(`\n✅ TABLA: ${tabla} - Todas las columnas coinciden`);
-      }
+} else {
+}
     }
     
     // Resumen final
-    console.log('\n' + '='.repeat(80));
-    console.log('📊 RESUMEN FINAL\n');
     
     if (tablasFaltantes.length === 0 && tablasExtras.length === 0 && totalDiferencias === 0) {
-      console.log('✅ ¡PERFECTO! La base de datos coincide exactamente con el schema.sql');
-    } else {
-      console.log(`⚠️  Se encontraron diferencias:`);
-      console.log(`   - Tablas faltantes: ${tablasFaltantes.length}`);
-      console.log(`   - Tablas extras: ${tablasExtras.length}`);
-      console.log(`   - Diferencias en columnas: ${totalDiferencias}`);
+} else {
     }
     
-    console.log('\n' + '='.repeat(80));
-    
-  } catch (error) {
-    console.error('❌ Error durante la comparación:', error.message);
+} catch (error) {
+    console.error('âŒ Error durante la comparaciÃ³n:', error.message);
     console.error(error);
   } finally {
     if (connection) {
@@ -261,5 +226,7 @@ async function compararSchema() {
   }
 }
 
-// Ejecutar la comparación
+// Ejecutar la comparaciÃ³n
 compararSchema();
+
+

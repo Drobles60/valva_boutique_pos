@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -20,15 +20,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Package, Plus, Search, Edit, Trash2, TrendingUp, DollarSign, Printer } from "lucide-react"
+import { Package, Plus, Search, Edit, Trash2, TrendingUp, DollarSign, Printer, X } from "lucide-react"
 import type { Product } from "@/lib/types"
 import { getProducts, saveProduct, deleteProduct, getCurrentUser } from "@/lib/storage"
 import { SidebarToggle } from "@/components/app-sidebar"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toast } from "sonner"
 import { formatCurrency, normalizeText } from "@/lib/utils"
+import {
+  isColorProductoValido,
+  isNombreProductoValido,
+  sanitizeColorProducto,
+  sanitizeNombreProducto,
+} from "@/lib/producto-validations"
 
 export function ProductosContent() {
+  const previousCategoriaPadreIdRef = useRef("")
+
   const [productos, setProductos] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -75,20 +83,28 @@ export function ProductosContent() {
 
   // Efecto para filtrar tipos de prenda cuando cambia la categoría padre
   useEffect(() => {
-    if (formData.categoria_padre_id) {
-      // Verificar si la categoría seleccionada es "Bolsos" (u otras con talla única)
-      const categoriaSeleccionada = categoriasPadre.find(
-        (cat) => cat.id === parseInt(formData.categoria_padre_id)
-      )
-      const esBolsos = categoriaSeleccionada?.nombre?.toLowerCase() === 'bolsos'
-      setEsCategoriaConTallaUnica(esBolsos)
+    if (!formData.categoria_padre_id) {
+      setTiposPrendaFiltrados([])
+      setTallasFiltradas([])
+      setEsCategoriaConTallaUnica(false)
+      previousCategoriaPadreIdRef.current = ""
+      return
+    }
 
-      const tiposFiltrados = tiposPrenda.filter(
-        (tipo) => tipo.categoria_padre_id === parseInt(formData.categoria_padre_id)
-      )
-      setTiposPrendaFiltrados(tiposFiltrados)
-      
-      // Si es categoría con talla única, buscar y setear automáticamente la talla U
+    const categoriaSeleccionada = categoriasPadre.find(
+      (cat) => cat.id === parseInt(formData.categoria_padre_id)
+    )
+    const esBolsos = categoriaSeleccionada?.nombre?.toLowerCase() === 'bolsos'
+    const categoriaCambio = previousCategoriaPadreIdRef.current !== formData.categoria_padre_id
+
+    setEsCategoriaConTallaUnica(esBolsos)
+
+    const tiposFiltrados = tiposPrenda.filter(
+      (tipo) => tipo.categoria_padre_id === parseInt(formData.categoria_padre_id)
+    )
+    setTiposPrendaFiltrados(tiposFiltrados)
+
+    if (categoriaCambio) {
       if (esBolsos) {
         const tallaUnica = tallas.find((t) => t.valor?.toUpperCase() === 'U')
         if (tallaUnica) {
@@ -97,20 +113,22 @@ export function ProductosContent() {
           setFormData(prev => ({ ...prev, tipo_prenda_id: "", talla_id: "" }))
         }
       } else {
-        // Limpiar tipo de prenda y talla si cambia la categoría padre
         setFormData(prev => ({ ...prev, tipo_prenda_id: "", talla_id: "" }))
       }
       setTallasFiltradas([])
-    } else {
-      setTiposPrendaFiltrados([])
-      setEsCategoriaConTallaUnica(false)
+    } else if (esBolsos && !formData.talla_id) {
+      const tallaUnica = tallas.find((t) => t.valor?.toUpperCase() === 'U')
+      if (tallaUnica) {
+        setFormData(prev => ({ ...prev, talla_id: tallaUnica.id.toString() }))
+      }
     }
+
+    previousCategoriaPadreIdRef.current = formData.categoria_padre_id
   }, [formData.categoria_padre_id, tiposPrenda, categoriasPadre, tallas])
 
   // Efecto para filtrar tallas cuando cambia el tipo de prenda
   useEffect(() => {
     if (formData.tipo_prenda_id && !esCategoriaConTallaUnica) {
-      console.log('Cargando tallas para tipo_prenda_id:', formData.tipo_prenda_id)
       fetchTallasPorTipoPrenda(parseInt(formData.tipo_prenda_id))
     } else if (!esCategoriaConTallaUnica) {
       setTallasFiltradas([])
@@ -122,10 +140,8 @@ export function ProductosContent() {
       const response = await fetch('/api/categorias-padre')
       if (response.ok) {
         const result = await response.json()
-        console.log('Respuesta de categorías padre:', result)
         if (result.success && Array.isArray(result.data)) {
           setCategoriasPadre(result.data)
-          console.log('Categorías cargadas:', result.data.length)
         } else {
           console.error('Formato de respuesta inválido:', result)
           setCategoriasPadre([])
@@ -181,20 +197,10 @@ export function ProductosContent() {
   const fetchTallasPorTipoPrenda = async (tipoPrendaId: number) => {
     try {
       const url = `/api/tallas?tipo_prenda_id=${tipoPrendaId}`
-      console.log('=== FETCH TALLAS ====')
-      console.log('URL:', url)
-      console.log('Tipo Prenda ID:', tipoPrendaId)
       const response = await fetch(url)
-      console.log('Response status:', response.status)
       if (response.ok) {
         const result = await response.json()
-        console.log('Respuesta completa:', JSON.stringify(result, null, 2))
-        console.log('result.success:', result.success)
-        console.log('Array.isArray(result.data):', Array.isArray(result.data))
-        console.log('result.data.length:', result.data?.length)
         if (result.success && Array.isArray(result.data)) {
-          console.log('Estableciendo', result.data.length, 'tallas filtradas')
-          console.log('Tallas:', result.data)
           setTallasFiltradas(result.data)
         } else {
           console.error('Formato de respuesta inválido:', result)
@@ -204,7 +210,6 @@ export function ProductosContent() {
         console.error('Response no OK:', response.status)
         setTallasFiltradas([])
       }
-      console.log('===================\n')
     } catch (error) {
       console.error('Error al cargar tallas filtradas:', error)
       setTallasFiltradas([])
@@ -279,6 +284,56 @@ export function ProductosContent() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (!formData.nombre.trim()) {
+      toast.error('Debe ingresar el nombre del producto')
+      return
+    }
+
+    if (!isNombreProductoValido(formData.nombre)) {
+      toast.error('El nombre del producto solo puede contener letras y espacios')
+      return
+    }
+
+    if (!isColorProductoValido(formData.color)) {
+      toast.error('El color solo puede contener letras y espacios')
+      return
+    }
+
+    if (!formData.categoria_padre_id) {
+      toast.error('Debe seleccionar la categoría principal')
+      return
+    }
+
+    if (!formData.tipo_prenda_id) {
+      toast.error('Debe seleccionar el tipo específico de prenda')
+      return
+    }
+
+    if (!esCategoriaConTallaUnica && !formData.talla_id) {
+      toast.error('Debe seleccionar una talla')
+      return
+    }
+
+    if (!formData.proveedor_id) {
+      toast.error('Debe seleccionar un proveedor')
+      return
+    }
+
+    if (!formData.precio_compra) {
+      toast.error('Debe ingresar el precio de compra')
+      return
+    }
+
+    if (!formData.precio_venta) {
+      toast.error('Debe ingresar el precio de venta')
+      return
+    }
+
+    if (!formData.stock_actual) {
+      toast.error('Debe ingresar la cantidad en stock')
+      return
+    }
+
     // Si estamos editando, verificar si cambió categoría, tipo o talla para regenerar SKU
     if (editingProduct) {
       // Obtener IDs originales del producto
@@ -291,24 +346,10 @@ export function ProductosContent() {
       const cambioTipo = tipoOriginal !== formData.tipo_prenda_id
       const cambioTalla = tallaOriginal !== formData.talla_id
       
-      console.log('Verificando cambios para SKU:', {
-        categoriaOriginal,
-        categoriaActual: formData.categoria_padre_id,
-        cambioCategoria,
-        tipoOriginal,
-        tipoActual: formData.tipo_prenda_id,
-        cambioTipo,
-        tallaOriginal,
-        tallaActual: formData.talla_id,
-        cambioTalla
-      })
-      
       if (cambioCategoria || cambioTipo || cambioTalla) {
-        console.log('Se detectaron cambios en clasificación - regenerando SKU')
         // Regenerar SKU pero mantener código de barras
         regenerateSKUAndSubmit()
       } else {
-        console.log('No hay cambios en clasificación - actualizando sin regenerar códigos')
         // Actualizar sin regenerar códigos
         submitProduct()
       }
@@ -320,6 +361,24 @@ export function ProductosContent() {
 
   const regenerateSKUAndSubmit = async () => {
     try {
+      let tallaId = formData.talla_id
+
+      if (esCategoriaConTallaUnica && !tallaId) {
+        const tallaUnica = tallas.find((t) => t.valor?.toUpperCase() === 'U')
+        if (tallaUnica) {
+          tallaId = tallaUnica.id.toString()
+          setFormData(prev => ({ ...prev, talla_id: tallaId }))
+        } else {
+          toast.error('No se encontró la talla única en el sistema')
+          return
+        }
+      }
+
+      if (!tallaId) {
+        toast.error('Debe seleccionar una talla')
+        return
+      }
+
       // Generar solo el nuevo SKU
       const response = await fetch('/api/productos/generar-codigos', {
         method: 'POST',
@@ -327,19 +386,24 @@ export function ProductosContent() {
         body: JSON.stringify({
           categoria_padre_id: parseInt(formData.categoria_padre_id),
           tipo_prenda_id: parseInt(formData.tipo_prenda_id),
-          talla_id: parseInt(formData.talla_id)
+          talla_id: parseInt(tallaId)
         })
       })
 
       if (!response.ok) {
-        toast.error('Error al generar nuevo SKU')
+        let errorMessage = 'Error al generar nuevo SKU'
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorMessage
+        } catch {
+          // Ignorar error de parseo y usar mensaje por defecto
+        }
+        toast.error(errorMessage)
         return
       }
 
       const data = await response.json()
       const { sku } = data
-
-      console.log('Nuevo SKU generado:', sku, '- Manteniendo código de barras:', formData.codigo_barras)
       
       setFormData(prev => ({ ...prev, sku }))
       await submitProduct(sku, formData.codigo_barras) // Mantener código de barras original
@@ -390,8 +454,6 @@ export function ProductosContent() {
       const data = await response.json()
       const { sku, codigo_barras } = data
 
-      console.log('Códigos generados:', { sku, codigo_barras })
-
       setFormData(prev => ({ ...prev, sku, codigo_barras }))
       await submitProduct(sku, codigo_barras)
     } catch (error) {
@@ -421,8 +483,6 @@ export function ProductosContent() {
         estado: 'activo'
       }
 
-      console.log('Guardando producto:', productData)
-
       // Guardar en base de datos
       const method = editingProduct ? 'PUT' : 'POST'
       const response = await fetch('/api/productos', {
@@ -431,13 +491,9 @@ export function ProductosContent() {
         body: JSON.stringify(productData)
       })
 
-      console.log('Response status:', response.status)
-      console.log('Response ok:', response.ok)
-
       let result
       try {
         result = await response.json()
-        console.log('Response body:', result)
       } catch (parseError) {
         console.error('Error parseando JSON:', parseError)
         const text = await response.text()
@@ -919,8 +975,20 @@ export function ProductosContent() {
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
+            className="pl-9 pr-9"
           />
+          {searchTerm && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+              onClick={() => setSearchTerm("")}
+              aria-label="Limpiar búsqueda"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         {mounted && canEditPrices && (
           <Button onClick={handleOpenNewProduct} className="w-full md:w-auto">
@@ -1061,7 +1129,7 @@ export function ProductosContent() {
                 <Input
                   id="nombre"
                   value={formData.nombre}
-                  onChange={(e) => setFormData({ ...formData, nombre: e.target.value.toUpperCase() })}
+                  onChange={(e) => setFormData({ ...formData, nombre: sanitizeNombreProducto(e.target.value).toUpperCase() })}
                   required
                   placeholder="Ej: Blusa Manga Larga Estampada"
                   className="uppercase"
@@ -1150,7 +1218,7 @@ export function ProductosContent() {
                   <Input
                     id="color"
                     value={formData.color}
-                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, color: sanitizeColorProducto(e.target.value) })}
                     placeholder="Ej: Rojo, Azul marino"
                   />
                 </div>

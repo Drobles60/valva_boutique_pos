@@ -1,13 +1,17 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 import { getDescuentosForProduct, calcularPrecioConDescuento } from '@/lib/descuentos'
+import {
+  isColorProductoValido,
+  isNombreProductoValido,
+  sanitizeColorProducto,
+  sanitizeNombreProducto,
+} from '@/lib/producto-validations'
 
 // GET: Obtener todos los productos con descuentos aplicados
 export async function GET() {
   try {
-    console.log('[API PRODUCTOS] Iniciando obtención de productos con descuentos')
-    
-    const productos = await query<any[]>(`
+const productos = await query<any[]>(`
       SELECT 
         p.id,
         p.codigo_barras,
@@ -36,9 +40,7 @@ export async function GET() {
       ORDER BY p.created_at DESC
     `)
 
-    console.log(`[API PRODUCTOS] Productos obtenidos: ${productos.length}`)
-
-    // Para cada producto, aplicar descuentos activos
+// Para cada producto, aplicar descuentos activos
     const productosConDescuentos = await Promise.all(
       productos.map(async (producto) => {
         const descuentos = await getDescuentosForProduct(producto.id)
@@ -59,17 +61,14 @@ export async function GET() {
         }
 
         if (descuentoAplicado) {
-          console.log(`[API PRODUCTOS] ✓ Producto "${producto.nombre}" con descuento: $${producto.precio_venta} → $${precioFinal}`)
-        }
+}
 
         return productoConDescuento
       })
     )
 
     const productosConDescuentoCount = productosConDescuentos.filter(p => p.tiene_descuento).length
-    console.log(`[API PRODUCTOS] Total productos con descuento: ${productosConDescuentoCount}/${productos.length}`)
-
-    return NextResponse.json({ success: true, data: productosConDescuentos })
+return NextResponse.json({ success: true, data: productosConDescuentos })
   } catch (error: any) {
     console.error('[API PRODUCTOS] Error obteniendo productos:', error)
     console.error('[API PRODUCTOS] Stack:', error.stack)
@@ -88,9 +87,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    console.log('Creando producto:', body)
-    
-    const {
+const {
       codigo_barras,
       sku,
       nombre,
@@ -107,16 +104,82 @@ export async function POST(request: Request) {
       estado
     } = body
 
-    // Validaciones
-    if (!nombre || !sku || !categoria_padre_id || !tipo_prenda_id || !proveedor_id) {
+    // Validaciones de requeridos
+    if (!nombre || !nombre.trim()) {
       return NextResponse.json(
-        { success: false, error: 'Faltan campos requeridos' },
+        { success: false, error: 'El nombre del producto es requerido' },
         { status: 400 }
       )
     }
 
-    // Convertir nombre a mayúsculas
-    const nombreMayusculas = nombre.toUpperCase()
+    if (!sku) {
+      return NextResponse.json(
+        { success: false, error: 'El SKU del producto es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (!categoria_padre_id) {
+      return NextResponse.json(
+        { success: false, error: 'La categorÃ­a principal es requerida' },
+        { status: 400 }
+      )
+    }
+
+    if (!tipo_prenda_id) {
+      return NextResponse.json(
+        { success: false, error: 'El tipo especÃ­fico de prenda es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (!proveedor_id) {
+      return NextResponse.json(
+        { success: false, error: 'El proveedor es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (precio_compra === undefined || precio_compra === null || precio_compra === '') {
+      return NextResponse.json(
+        { success: false, error: 'El precio de compra es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (precio_venta === undefined || precio_venta === null || precio_venta === '') {
+      return NextResponse.json(
+        { success: false, error: 'El precio de venta es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (stock_actual === undefined || stock_actual === null || stock_actual === '') {
+      return NextResponse.json(
+        { success: false, error: 'La cantidad en stock es requerida' },
+        { status: 400 }
+      )
+    }
+
+    const nombreLimpio = sanitizeNombreProducto(nombre).trim()
+    const colorLimpio = sanitizeColorProducto(color || '').trim()
+
+    if (!isNombreProductoValido(nombreLimpio)) {
+      return NextResponse.json(
+        { success: false, error: 'El nombre del producto solo puede contener letras y espacios' },
+        { status: 400 }
+      )
+    }
+
+    if (!isColorProductoValido(colorLimpio)) {
+      return NextResponse.json(
+        { success: false, error: 'El color del producto solo puede contener letras y espacios' },
+        { status: 400 }
+      )
+    }
+
+    // Convertir nombre a mayÃºsculas
+    const nombreMayusculas = nombreLimpio.toUpperCase()
 
     const result = await query<any>(`
       INSERT INTO productos (
@@ -144,7 +207,7 @@ export async function POST(request: Request) {
       tipo_prenda_id,
       talla_id || null,
       proveedor_id,
-      color || null,
+      colorLimpio || null,
       precio_compra || 0,
       precio_venta || 0,
       precio_minimo || precio_venta || 0,
@@ -152,9 +215,7 @@ export async function POST(request: Request) {
       estado || 'activo'
     ])
 
-    console.log('Producto creado con ID:', result.insertId)
-
-    return NextResponse.json({
+return NextResponse.json({
       success: true,
       data: { id: result.insertId, ...body }
     })
@@ -178,9 +239,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
-    console.log('Actualizando producto:', body)
-    
-    const {
+const {
       id,
       codigo_barras,
       sku,
@@ -205,8 +264,81 @@ export async function PUT(request: Request) {
       )
     }
 
-    // Convertir nombre a mayúsculas
-    const nombreMayusculas = nombre.toUpperCase()
+    if (!nombre || !nombre.trim()) {
+      return NextResponse.json(
+        { success: false, error: 'El nombre del producto es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (!sku) {
+      return NextResponse.json(
+        { success: false, error: 'El SKU del producto es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (!categoria_padre_id) {
+      return NextResponse.json(
+        { success: false, error: 'La categorÃ­a principal es requerida' },
+        { status: 400 }
+      )
+    }
+
+    if (!tipo_prenda_id) {
+      return NextResponse.json(
+        { success: false, error: 'El tipo especÃ­fico de prenda es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (!proveedor_id) {
+      return NextResponse.json(
+        { success: false, error: 'El proveedor es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (precio_compra === undefined || precio_compra === null || precio_compra === '') {
+      return NextResponse.json(
+        { success: false, error: 'El precio de compra es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (precio_venta === undefined || precio_venta === null || precio_venta === '') {
+      return NextResponse.json(
+        { success: false, error: 'El precio de venta es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (stock_actual === undefined || stock_actual === null || stock_actual === '') {
+      return NextResponse.json(
+        { success: false, error: 'La cantidad en stock es requerida' },
+        { status: 400 }
+      )
+    }
+
+    const nombreLimpio = sanitizeNombreProducto(nombre).trim()
+    const colorLimpio = sanitizeColorProducto(color || '').trim()
+
+    if (!isNombreProductoValido(nombreLimpio)) {
+      return NextResponse.json(
+        { success: false, error: 'El nombre del producto solo puede contener letras y espacios' },
+        { status: 400 }
+      )
+    }
+
+    if (!isColorProductoValido(colorLimpio)) {
+      return NextResponse.json(
+        { success: false, error: 'El color del producto solo puede contener letras y espacios' },
+        { status: 400 }
+      )
+    }
+
+    // Convertir nombre a mayÃºsculas
+    const nombreMayusculas = nombreLimpio.toUpperCase()
 
     await query(`
       UPDATE productos SET
@@ -234,7 +366,7 @@ export async function PUT(request: Request) {
       tipo_prenda_id,
       talla_id || null,
       proveedor_id,
-      color || null,
+      colorLimpio || null,
       precio_compra || 0,
       precio_venta || 0,
       precio_minimo || precio_venta || 0,
@@ -259,3 +391,4 @@ export async function PUT(request: Request) {
     )
   }
 }
+

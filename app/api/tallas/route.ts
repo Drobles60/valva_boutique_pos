@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
@@ -19,8 +19,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Si se especifica tipo de prenda, filtrar por las tallas compatibles
-    console.log('Buscando tallas para tipo_prenda_id:', tipo_prenda_id)
-    const result: any = await query(
+const result: any = await query(
       `SELECT t.id, t.valor, t.sistema_talla_id 
        FROM tallas t
        INNER JOIN tipo_prenda_sistema_talla tpst ON t.sistema_talla_id = tpst.sistema_talla_id
@@ -28,8 +27,6 @@ export async function GET(request: NextRequest) {
        ORDER BY t.sistema_talla_id, t.orden`,
       [parseInt(tipo_prenda_id)]
     )
-    console.log('Tallas encontradas:', result?.length || 0)
-    console.log('Resultado:', result)
 
     return NextResponse.json({
       success: true,
@@ -43,3 +40,4 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+

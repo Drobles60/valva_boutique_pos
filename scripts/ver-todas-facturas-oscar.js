@@ -1,4 +1,4 @@
-// Ver TODAS las facturas de oscar sin filtros
+﻿// Ver TODAS las facturas de oscar sin filtros
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -14,9 +14,7 @@ async function verTodasFacturas() {
   });
   
   try {
-    console.log('\n📋 TODAS LAS FACTURAS DE CLIENTES "OSCAR":\n');
-    
-    const [facturas] = await connection.execute(
+const [facturas] = await connection.execute(
       `SELECT 
         c.id as cliente_id,
         c.nombre,
@@ -46,22 +44,12 @@ async function verTodasFacturas() {
     facturas.forEach(f => {
       if (currentCliente !== f.identificacion) {
         if (currentCliente !== null) {
-          console.log(`  → Facturas con saldo > 0: ${facturasConSaldo}\n`);
-        }
+}
         currentCliente = f.identificacion;
         facturasConSaldo = 0;
-        console.log('='.repeat(100));
-        console.log(`Cliente: ${f.nombre} | ID: ${f.identificacion}`);
-        console.log('='.repeat(100));
-      }
+}
       
       if (f.numero_venta) {
-        console.log(`\nFactura: #${f.numero_venta} (Cuenta ID: ${f.cuenta_id})`);
-        console.log(`  Monto Total:       $${Number(f.monto_total).toLocaleString('es-CO')}`);
-        console.log(`  Total Abonado:     $${Number(f.total_abonado).toLocaleString('es-CO')}`);
-        console.log(`  Saldo Pendiente:   $${Number(f.saldo_pendiente).toLocaleString('es-CO')}`);
-        console.log(`  Estado:            ${f.estado}`);
-        console.log(`  Vencimiento:       ${new Date(f.fecha_vencimiento).toLocaleDateString('es-CO')}`);
         
         if (Number(f.saldo_pendiente) > 0) {
           facturasConSaldo++;
@@ -70,15 +58,10 @@ async function verTodasFacturas() {
     });
     
     if (currentCliente !== null) {
-      console.log(`  → Facturas con saldo > 0: ${facturasConSaldo}\n`);
-    }
+}
     
     // Resumen por cliente
-    console.log('\n' + '='.repeat(100));
-    console.log('📊 RESUMEN POR CLIENTE:');
-    console.log('='.repeat(100));
-    
-    const [resumen] = await connection.execute(
+const [resumen] = await connection.execute(
       `SELECT 
         c.id,
         c.nombre,
@@ -95,18 +78,13 @@ async function verTodasFacturas() {
     );
     
     resumen.forEach(r => {
-      console.log(`\n${r.nombre} (${r.identificacion})`);
-      console.log(`  Total facturas:        ${r.total_facturas}`);
-      console.log(`  Facturas con saldo:    ${r.facturas_con_saldo}`);
-      console.log(`  Suma saldos facturas:  $${Number(r.suma_saldos).toLocaleString('es-CO')}`);
-      console.log(`  Saldo en tabla:        $${Number(r.saldo_pendiente).toLocaleString('es-CO')}`);
-    });
+});
     
-    console.log('\n');
-    
-  } finally {
+} finally {
     await connection.end();
   }
 }
 
 verTodasFacturas();
+
+

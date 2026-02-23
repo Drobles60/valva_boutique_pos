@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, DollarSign, Plus, Edit, Trash2, Receipt, Calendar, TrendingDown } from "lucide-react"
+import { Search, DollarSign, Plus, Edit, Trash2, Receipt, Calendar, TrendingDown, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -307,11 +307,23 @@ export function GastosContent() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  className="pl-9"
+                  className="pl-9 pr-9"
                   placeholder="Buscar por descripción, categoría, referencia..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                {searchTerm && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+                    onClick={() => setSearchTerm("")}
+                    aria-label="Limpiar búsqueda"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               <Button
                 type="button"

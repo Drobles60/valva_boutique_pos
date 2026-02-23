@@ -294,7 +294,6 @@ async function GET() {
 async function POST(request) {
     try {
         const body = await request.json();
-        console.log('Datos recibidos:', body);
         const { nombre, descripcion, tipo, valor, fecha_inicio, fecha_fin, estado, aplicable_a, productos_seleccionados, tipos_prenda_seleccionados } = body;
         // Validaciones
         if (!nombre || !tipo || !valor || !aplicable_a) {
@@ -305,7 +304,7 @@ async function POST(request) {
                 status: 400
             });
         }
-        // Convertir a mayúsculas
+        // Convertir a mayÃºsculas
         const nombreMayusculas = nombre.toUpperCase();
         const descripcionMayusculas = descripcion ? descripcion.toUpperCase() : null;
         // Validar porcentaje
@@ -317,7 +316,6 @@ async function POST(request) {
                 status: 400
             });
         }
-        console.log('Insertando descuento...');
         // Insertar descuento
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`
       INSERT INTO descuentos (
@@ -341,10 +339,8 @@ async function POST(request) {
             aplicable_a
         ]);
         const descuentoId = result.insertId;
-        console.log('Descuento creado con ID:', descuentoId);
-        // Insertar relaciones según el tipo
+        // Insertar relaciones segÃºn el tipo
         if (aplicable_a === 'productos' && productos_seleccionados && productos_seleccionados.length > 0) {
-            console.log('Insertando productos:', productos_seleccionados);
             for (const prodId of productos_seleccionados){
                 await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`
           INSERT INTO descuento_productos (descuento_id, producto_id)
@@ -355,7 +351,6 @@ async function POST(request) {
                 ]);
             }
         } else if (aplicable_a === 'tipos_prenda' && tipos_prenda_seleccionados && tipos_prenda_seleccionados.length > 0) {
-            console.log('Insertando tipos de prenda:', tipos_prenda_seleccionados);
             for (const tipoId of tipos_prenda_seleccionados){
                 await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`
           INSERT INTO descuento_tipos_prenda (descuento_id, tipo_prenda_id)
@@ -366,7 +361,6 @@ async function POST(request) {
                 ]);
             }
         }
-        console.log('Descuento creado exitosamente');
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
             data: {
@@ -402,7 +396,7 @@ async function PUT(request) {
                 status: 400
             });
         }
-        // Convertir a mayúsculas
+        // Convertir a mayÃºsculas
         const nombreMayusculas = nombre.toUpperCase();
         const descripcionMayusculas = descripcion ? descripcion.toUpperCase() : null;
         // Validar porcentaje
@@ -492,7 +486,6 @@ async function DELETE(request) {
                 status: 400
             });
         }
-        console.log('Eliminando descuento con ID:', id);
         // Primero eliminar las relaciones manualmente para mayor control
         await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`DELETE FROM descuento_productos WHERE descuento_id = ?`, [
             id
@@ -504,7 +497,6 @@ async function DELETE(request) {
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`DELETE FROM descuentos WHERE id = ?`, [
             id
         ]);
-        console.log('Resultado de eliminación:', result);
         if (result.affectedRows === 0) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 success: false,

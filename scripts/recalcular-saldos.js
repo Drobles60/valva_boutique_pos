@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+﻿const mysql = require('mysql2/promise');
 
 async function recalcularSaldos() {
   const connection = await mysql.createConnection({
@@ -9,9 +9,7 @@ async function recalcularSaldos() {
   });
 
   try {
-    console.log('🔧 Recalculando saldos de todos los pedidos...\n');
-
-    // Obtener todos los pedidos
+// Obtener todos los pedidos
     const [pedidos] = await connection.query('SELECT id, numero_pedido, costo_total FROM pedidos');
 
     for (const pedido of pedidos) {
@@ -30,14 +28,9 @@ async function recalcularSaldos() {
         [totalAbonado, saldoPendiente, pedido.id]
       );
 
-      console.log(`✅ ${pedido.numero_pedido}:`);
-      console.log(`   Costo Total: $${parseFloat(pedido.costo_total).toLocaleString()}`);
-      console.log(`   Total Abonado: $${totalAbonado.toLocaleString()}`);
-      console.log(`   Saldo Pendiente: $${saldoPendiente.toLocaleString()}\n`);
     }
 
-    console.log('📊 Estado final de pedidos:');
-    const [pedidosFinal] = await connection.query(`
+const [pedidosFinal] = await connection.query(`
       SELECT id, numero_pedido, costo_total, total_abonado, saldo_pendiente
       FROM pedidos
       ORDER BY id
@@ -45,10 +38,12 @@ async function recalcularSaldos() {
     console.table(pedidosFinal);
 
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('âŒ Error:', error.message);
   } finally {
     await connection.end();
   }
 }
 
 recalcularSaldos();
+
+
