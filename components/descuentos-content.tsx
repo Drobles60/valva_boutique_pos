@@ -43,6 +43,7 @@ export function DescuentosContent() {
   const [searchTerm, setSearchTerm] = useState("")
   const [searchProductoTerm, setSearchProductoTerm] = useState("")
   const [searchTipoPrendaTerm, setSearchTipoPrendaTerm] = useState("")
+  const [productosSeleccionadosInfo, setProductosSeleccionadosInfo] = useState<Record<string, any>>({})
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -205,6 +206,26 @@ export function DescuentosContent() {
     const tiposPrendaIds = Array.isArray(descuento.tipos_prenda)
       ? descuento.tipos_prenda.map((t: any) => typeof t === 'string' ? t : t.tipo_prenda_id?.toString())
       : []
+
+    const productosInfo = Array.isArray(descuento.productos)
+      ? descuento.productos.reduce((acc: Record<string, any>, p: any) => {
+          if (typeof p === 'string') {
+            acc[p] = { id: p }
+            return acc
+          }
+
+          const id = (p.producto_id ?? p.id)?.toString()
+          if (!id) return acc
+
+          acc[id] = {
+            id,
+            nombre: p.nombre || p.producto_nombre,
+            sku: p.sku,
+            codigo_barras: p.codigo_barras
+          }
+          return acc
+        }, {})
+      : {}
     
     setFormData({
       nombre: descuento.nombre || "",
@@ -218,6 +239,7 @@ export function DescuentosContent() {
       productos_seleccionados: productosIds,
       tipos_prenda_seleccionados: tiposPrendaIds
     })
+    setProductosSeleccionadosInfo(productosInfo)
     setDialogOpen(true)
   }
 
@@ -263,6 +285,7 @@ export function DescuentosContent() {
     setEditingDescuento(null)
     setSearchProductoTerm("")
     setSearchTipoPrendaTerm("")
+    setProductosSeleccionadosInfo({})
     setFormData({
       nombre: "",
       descripcion: "",
@@ -278,12 +301,41 @@ export function DescuentosContent() {
   }
 
   const toggleProducto = (productoId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      productos_seleccionados: prev.productos_seleccionados.includes(productoId)
-        ? prev.productos_seleccionados.filter(id => id !== productoId)
-        : [...prev.productos_seleccionados, productoId]
-    }))
+    const productoActual = productos.find((p: any) => p.id?.toString() === productoId)
+
+    setFormData(prev => {
+      const yaSeleccionado = prev.productos_seleccionados.includes(productoId)
+
+      if (yaSeleccionado) {
+        setProductosSeleccionadosInfo((prevInfo) => {
+          const nextInfo = { ...prevInfo }
+          delete nextInfo[productoId]
+          return nextInfo
+        })
+
+        return {
+          ...prev,
+          productos_seleccionados: prev.productos_seleccionados.filter(id => id !== productoId)
+        }
+      }
+
+      if (productoActual) {
+        setProductosSeleccionadosInfo((prevInfo) => ({
+          ...prevInfo,
+          [productoId]: {
+            id: productoId,
+            nombre: productoActual.nombre,
+            sku: productoActual.sku,
+            codigo_barras: productoActual.codigo_barras
+          }
+        }))
+      }
+
+      return {
+        ...prev,
+        productos_seleccionados: [...prev.productos_seleccionados, productoId]
+      }
+    })
   }
 
   const toggleTipoPrenda = (tipoId: string) => {
@@ -324,10 +376,22 @@ export function DescuentosContent() {
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Buscar descuentos por nombre..."
-              className="pl-9"
+              className="pl-9 pr-9"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            {searchTerm && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+                onClick={() => setSearchTerm("")}
+                aria-label="Limpiar búsqueda"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -471,17 +535,33 @@ export function DescuentosContent() {
                 </Label>
                 <Input
                   id="valor"
-                  type={formData.tipo === 'porcentaje' ? 'number' : 'text'}
+                  type="text"
+                  inputMode={formData.tipo === 'porcentaje' ? 'decimal' : 'numeric'}
                   placeholder={formData.tipo === 'porcentaje' ? '20' : '80.000'}
                   value={formData.tipo === 'porcentaje' ? formData.valor : (formData.valor ? formatCurrency(formData.valor) : '')}
                   onChange={(e) => {
                     if (formData.tipo === 'porcentaje') {
-                      const value = e.target.value
-                      if (parseFloat(value) > 100) {
-                        setFormData({ ...formData, valor: '100' })
-                      } else {
-                        setFormData({ ...formData, valor: value })
+                      const raw = e.target.value.replace(',', '.')
+                      let value = raw.replace(/[^0-9.]/g, '')
+
+                      const firstDot = value.indexOf('.')
+                      if (firstDot !== -1) {
+                        value = value.slice(0, firstDot + 1) + value.slice(firstDot + 1).replace(/\./g, '')
                       }
+
+                      if (value.includes('.')) {
+                        const [entero, decimal = ''] = value.split('.')
+                        value = `${entero}.${decimal.slice(0, 2)}`
+                      }
+
+                      if (value) {
+                        const numericValue = parseFloat(value)
+                        if (!Number.isNaN(numericValue) && numericValue > 100) {
+                          value = '100'
+                        }
+                      }
+
+                      setFormData({ ...formData, valor: value })
                     } else {
                       const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
                       setFormData({ ...formData, valor: value })
@@ -547,10 +627,22 @@ export function DescuentosContent() {
                   <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Buscar por nombre, referencia o código..."
-                    className="pl-9"
+                    className="pl-9 pr-9"
                     value={searchProductoTerm}
                     onChange={(e) => setSearchProductoTerm(e.target.value)}
                   />
+                  {searchProductoTerm && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+                      onClick={() => setSearchProductoTerm("")}
+                      aria-label="Limpiar búsqueda"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
                 <div className="border rounded-lg p-4 max-h-60 overflow-y-auto space-y-2">
                   {productos.length === 0 && searchProductoTerm.length === 0 ? (
@@ -610,6 +702,37 @@ export function DescuentosContent() {
                 <p className="text-sm text-muted-foreground">
                   {formData.productos_seleccionados.length} producto(s) seleccionado(s)
                 </p>
+
+                {formData.productos_seleccionados.length > 0 && (
+                  <div className="border rounded-lg p-3 max-h-40 overflow-y-auto space-y-2">
+                    <p className="text-sm font-medium">Productos seleccionados:</p>
+                    {formData.productos_seleccionados.map((productoId) => {
+                      const productoSeleccionado = productosSeleccionadosInfo[productoId] ||
+                        productos.find((p: any) => p.id?.toString() === productoId)
+
+                      const referencia = productoSeleccionado?.sku || productoSeleccionado?.codigo_barras || 'Sin SKU'
+                      const nombre = productoSeleccionado?.nombre || `Producto ID ${productoId}`
+
+                      return (
+                        <div key={`seleccionado-${productoId}`} className="flex items-center justify-between gap-2">
+                          <span className="text-sm text-muted-foreground">
+                            {nombre} - {referencia}
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 shrink-0"
+                            onClick={() => toggleProducto(productoId)}
+                            aria-label={`Quitar ${nombre}`}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
@@ -622,8 +745,20 @@ export function DescuentosContent() {
                     placeholder="Buscar tipo de prenda..."
                     value={searchTipoPrendaTerm}
                     onChange={(e) => setSearchTipoPrendaTerm(e.target.value)}
-                    className="pl-9"
+                    className="pl-9 pr-9"
                   />
+                  {searchTipoPrendaTerm && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+                      onClick={() => setSearchTipoPrendaTerm("")}
+                      aria-label="Limpiar búsqueda de tipos de prenda"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
                 <div className="border rounded-lg p-4 max-h-60 overflow-y-auto space-y-2">
                   {tiposPrenda

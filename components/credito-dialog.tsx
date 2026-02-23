@@ -15,6 +15,14 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { formatCurrency } from "@/lib/utils"
+import {
+  isIdentificacionClienteValida,
+  isNombreClienteValido,
+  isTelefonoClienteValido,
+  sanitizeIdentificacionCliente,
+  sanitizeNombreCliente,
+  sanitizeTelefonoCliente,
+} from "@/lib/cliente-validations"
 import { DollarSign, CreditCard, Repeat, UserPlus, Users } from "lucide-react"
 import { toast } from "sonner"
 import type { Cliente } from "@/lib/types"
@@ -134,8 +142,24 @@ export function CreditoDialog({
         toast.error('Debe ingresar el nombre del cliente')
         return
       }
+      if (!isNombreClienteValido(nombre)) {
+        toast.error('El nombre solo puede contener letras y espacios')
+        return
+      }
+      if (!identificacion.trim()) {
+        toast.error('Debe ingresar la cédula/RUC del cliente')
+        return
+      }
+      if (!isIdentificacionClienteValida(identificacion)) {
+        toast.error('La cédula/RUC solo puede contener números')
+        return
+      }
       if (!telefono.trim()) {
         toast.error('Debe ingresar el teléfono del cliente')
+        return
+      }
+      if (!isTelefonoClienteValido(telefono)) {
+        toast.error('El teléfono solo puede contener números')
         return
       }
     }
@@ -316,17 +340,18 @@ export function CreditoDialog({
                     id="nombre"
                     placeholder="Ej: Juan Pérez"
                     value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
+                    onChange={(e) => setNombre(sanitizeNombreCliente(e.target.value))}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="identificacion">Cédula/RUC</Label>
+                  <Label htmlFor="identificacion">Cédula/RUC *</Label>
                   <Input
                     id="identificacion"
                     placeholder="0000000000"
                     value={identificacion}
-                    onChange={(e) => setIdentificacion(e.target.value)}
+                    inputMode="numeric"
+                    onChange={(e) => setIdentificacion(sanitizeIdentificacionCliente(e.target.value))}
                   />
                 </div>
 
@@ -336,7 +361,8 @@ export function CreditoDialog({
                     id="telefono"
                     placeholder="0999999999"
                     value={telefono}
-                    onChange={(e) => setTelefono(e.target.value)}
+                    inputMode="numeric"
+                    onChange={(e) => setTelefono(sanitizeTelefonoCliente(e.target.value))}
                   />
                 </div>
 

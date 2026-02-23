@@ -1,4 +1,4 @@
-// Script para corregir saldos negativos en cuentas_por_cobrar
+﻿// Script para corregir saldos negativos en cuentas_por_cobrar
 // Los saldos negativos fueron registrados incorrectamente
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
@@ -10,20 +10,14 @@ async function corregirSaldosNegativos() {
   let connection;
   
   try {
-    console.log('🔧 Iniciando corrección de saldos negativos...\n');
-    
-    connection = await mysql.createConnection({
+connection = await mysql.createConnection({
       host: process.env.DB_HOST || 'localhost',
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
     });
     
-    console.log('✅ Conectado a la base de datos\n');
-    
-    // 1. Identificar facturas con saldo negativo
-    console.log('📊 FACTURAS CON SALDO NEGATIVO (ANTES DE CORREGIR):');
-    console.log('='.repeat(100));
+// 1. Identificar facturas con saldo negativo
     
     const [facturasNegativas] = await connection.execute(
       `SELECT 
@@ -43,45 +37,27 @@ async function corregirSaldosNegativos() {
     );
     
     if (facturasNegativas.length === 0) {
-      console.log('\n✅ No se encontraron facturas con saldo negativo.\n');
-      return;
+return;
     }
     
-    console.log(`\nFacturas encontradas: ${facturasNegativas.length}\n`);
-    
-    let totalCorregir = 0;
+let totalCorregir = 0;
     facturasNegativas.forEach((f, i) => {
-      console.log(`${i + 1}. Factura #${f.numero_venta} | Cliente: ${f.cliente} (${f.identificacion})`);
-      console.log(`   Monto Total: $${Number(f.monto_total).toLocaleString('es-CO')}`);
-      console.log(`   Total Abonado: $${Number(f.total_abonado).toLocaleString('es-CO')}`);
-      console.log(`   Saldo NEGATIVO: $${Number(f.saldo_pendiente).toLocaleString('es-CO')}`);
-      console.log(`   Corregir a: $${Number(Math.abs(f.saldo_pendiente)).toLocaleString('es-CO')}`);
-      console.log(`   Estado actual: ${f.estado}`);
-      console.log('');
-      totalCorregir += Math.abs(Number(f.saldo_pendiente));
+totalCorregir += Math.abs(Number(f.saldo_pendiente));
     });
     
-    console.log('='.repeat(100));
-    console.log(`\nTotal a corregir: $${totalCorregir.toLocaleString('es-CO', {minimumFractionDigits: 0})}`);
     
-    // 2. Pedir confirmación
-    console.log('\n⚠️  Se corregirán los saldos negativos convirtiéndolos a positivos.');
-    console.log('   Presiona Ctrl+C para cancelar o espera 5 segundos para continuar...\n');
+    // 2. Pedir confirmaciÃ³n
     
     await new Promise(resolve => setTimeout(resolve, 5000));
     
     // 3. Corregir saldos negativos
-    console.log('🔄 Corrigiendo saldos negativos...\n');
-    
-    const [resultSaldos] = await connection.execute(
+const [resultSaldos] = await connection.execute(
       `UPDATE cuentas_por_cobrar
        SET saldo_pendiente = ABS(saldo_pendiente)
        WHERE saldo_pendiente < 0`
     );
     
-    console.log(`✅ Saldos corregidos: ${resultSaldos.affectedRows} facturas\n`);
-    
-    // 4. Actualizar estado de facturas que ahora tienen saldo pendiente
+// 4. Actualizar estado de facturas que ahora tienen saldo pendiente
     const [resultEstado] = await connection.execute(
       `UPDATE cuentas_por_cobrar
        SET estado = 'pendiente'
@@ -89,13 +65,10 @@ async function corregirSaldosNegativos() {
     );
     
     if (resultEstado.affectedRows > 0) {
-      console.log(`✅ Estados actualizados: ${resultEstado.affectedRows} facturas cambiadas a 'pendiente'\n`);
-    }
+}
     
     // 5. Recalcular saldos de clientes
-    console.log('🔄 Recalculando saldos de clientes...\n');
-    
-    const [resultClientes] = await connection.execute(
+const [resultClientes] = await connection.execute(
       `UPDATE clientes c
        SET saldo_pendiente = (
            SELECT COALESCE(SUM(cpc.saldo_pendiente), 0)
@@ -105,14 +78,8 @@ async function corregirSaldosNegativos() {
        WHERE c.estado = 'activo'`
     );
     
-    console.log(`✅ Saldos de clientes actualizados: ${resultClientes.affectedRows} clientes\n`);
-    
-    // 6. Verificar el resultado
-    console.log('='.repeat(100));
-    console.log('📊 ESTADO DESPUÉS DE CORREGIR:');
-    console.log('='.repeat(100));
-    
-    const [facturasCorregidas] = await connection.execute(
+// 6. Verificar el resultado
+const [facturasCorregidas] = await connection.execute(
       `SELECT 
         cpc.id as cuenta_id,
         v.numero_venta,
@@ -130,23 +97,11 @@ async function corregirSaldosNegativos() {
       [facturasNegativas.map(f => f.cuenta_id)]
     );
     
-    console.log(`\nFacturas corregidas: ${facturasCorregidas.length}\n`);
-    
-    facturasCorregidas.forEach((f, i) => {
-      console.log(`${i + 1}. Factura #${f.numero_venta} | Cliente: ${f.cliente} (${f.identificacion})`);
-      console.log(`   Monto Total: $${Number(f.monto_total).toLocaleString('es-CO')}`);
-      console.log(`   Total Abonado: $${Number(f.total_abonado).toLocaleString('es-CO')}`);
-      console.log(`   Saldo Pendiente: $${Number(f.saldo_pendiente).toLocaleString('es-CO')} ✅`);
-      console.log(`   Estado: ${f.estado}`);
-      console.log('');
+facturasCorregidas.forEach((f, i) => {
     });
     
     // 7. Verificar clientes "oscar"
-    console.log('='.repeat(100));
-    console.log('📊 CLIENTES "OSCAR" DESPUÉS DE CORREGIR:');
-    console.log('='.repeat(100));
-    
-    const [clientesOscar] = await connection.execute(
+const [clientesOscar] = await connection.execute(
       `SELECT 
         c.id,
         c.nombre,
@@ -163,32 +118,23 @@ async function corregirSaldosNegativos() {
     );
     
     clientesOscar.forEach(r => {
-      console.log(`\n${r.nombre} (${r.identificacion})`);
-      console.log(`  Total facturas:        ${r.total_facturas}`);
-      console.log(`  Facturas pendientes:   ${r.facturas_pendientes}`);
-      console.log(`  Suma saldos facturas:  $${Number(r.suma_saldos).toLocaleString('es-CO')}`);
-      console.log(`  Saldo en tabla:        $${Number(r.saldo_pendiente).toLocaleString('es-CO')}`);
-      
-      const discrepancia = Math.abs(Number(r.suma_saldos) - Number(r.saldo_pendiente));
+const discrepancia = Math.abs(Number(r.suma_saldos) - Number(r.saldo_pendiente));
       if (discrepancia > 0.01) {
-        console.log(`  ⚠️  Discrepancia: $${discrepancia.toLocaleString('es-CO')}`);
-      } else {
-        console.log(`  ✅ Saldos coinciden`);
-      }
+} else {
+}
     });
     
-    console.log('\n' + '='.repeat(100));
-    console.log('\n✅ Corrección completada exitosamente\n');
     
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('âŒ Error:', error.message);
     console.error(error);
   } finally {
     if (connection) {
       await connection.end();
-      console.log('✅ Conexión cerrada\n');
-    }
+}
   }
 }
 
 corregirSaldosNegativos();
+
+

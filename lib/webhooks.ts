@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 export interface WebhookConfig {
   url: string
@@ -34,8 +34,7 @@ export const enviarWebhook = async (evento: string, data: any) => {
   const config = getWebhookConfig()
 
   if (!config.activo || !config.url || !config.eventos.includes(evento)) {
-    console.log("[v0] Webhook not configured or event not enabled:", evento)
-    return
+return
   }
 
   try {
@@ -54,9 +53,9 @@ export const enviarWebhook = async (evento: string, data: any) => {
     if (!response.ok) {
       console.error("[v0] Webhook failed:", response.statusText)
     } else {
-      console.log("[v0] Webhook sent successfully:", evento)
-    }
+}
   } catch (error) {
     console.error("[v0] Webhook error:", error)
   }
 }
+

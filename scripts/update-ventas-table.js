@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+﻿const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
 
@@ -12,20 +12,16 @@ async function updateDatabase() {
   });
 
   try {
-    console.log('🔄 Actualizando tabla ventas...');
-
-    // Verificar y agregar campo tipo_venta
+// Verificar y agregar campo tipo_venta
     try {
       await connection.execute(`
         ALTER TABLE ventas 
         ADD COLUMN tipo_venta ENUM('contado', 'credito') DEFAULT 'contado' 
         AFTER estado
       `);
-      console.log('✅ Campo tipo_venta agregado');
-    } catch (error) {
+} catch (error) {
       if (error.code === 'ER_DUP_FIELDNAME') {
-        console.log('ℹ️  Campo tipo_venta ya existe');
-      } else {
+} else {
         throw error;
       }
     }
@@ -37,11 +33,9 @@ async function updateDatabase() {
         ADD COLUMN metodo_pago ENUM('efectivo', 'transferencia', 'tarjeta', 'mixto') DEFAULT 'efectivo' 
         AFTER tipo_venta
       `);
-      console.log('✅ Campo metodo_pago agregado');
-    } catch (error) {
+} catch (error) {
       if (error.code === 'ER_DUP_FIELDNAME') {
-        console.log('ℹ️  Campo metodo_pago ya existe');
-      } else {
+} else {
         throw error;
       }
     }
@@ -52,22 +46,18 @@ async function updateDatabase() {
         ALTER TABLE ventas 
         MODIFY COLUMN estado ENUM('completada', 'credito', 'anulada') DEFAULT 'completada'
       `);
-      console.log('✅ Campo estado actualizado');
-    } catch (error) {
-      console.log('ℹ️  Campo estado ya está actualizado');
-    }
+} catch (error) {
+}
 
-    // Agregar índice único a numero_venta
+    // Agregar Ã­ndice Ãºnico a numero_venta
     try {
       await connection.execute(`
         ALTER TABLE ventas 
         ADD UNIQUE INDEX idx_numero_venta (numero_venta)
       `);
-      console.log('✅ Índice único agregado a numero_venta');
-    } catch (error) {
+} catch (error) {
       if (error.code === 'ER_DUP_KEYNAME') {
-        console.log('ℹ️  Índice único ya existe en numero_venta');
-      } else {
+} else {
         throw error;
       }
     }
@@ -85,14 +75,8 @@ async function updateDatabase() {
       WHERE metodo_pago IS NULL
     `);
 
-    console.log('✅ Registros existentes actualizados');
-    console.log('');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('✅ Tabla ventas actualizada exitosamente');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-
-  } catch (error) {
-    console.error('❌ Error al actualizar base de datos:', error);
+} catch (error) {
+    console.error('âŒ Error al actualizar base de datos:', error);
     throw error;
   } finally {
     await connection.end();
@@ -101,10 +85,11 @@ async function updateDatabase() {
 
 updateDatabase()
   .then(() => {
-    console.log('✅ Script completado');
-    process.exit(0);
+process.exit(0);
   })
   .catch((error) => {
-    console.error('❌ Error en el script:', error);
+    console.error('âŒ Error en el script:', error);
     process.exit(1);
   });
+
+

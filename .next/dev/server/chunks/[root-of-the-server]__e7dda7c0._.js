@@ -268,26 +268,20 @@ const authOptions = {
             },
             async authorize (credentials) {
                 if (!credentials?.username || !credentials?.password) {
-                    console.log('[Auth] Credenciales faltantes');
                     return null;
                 }
                 try {
-                    console.log('[Auth] Buscando usuario:', credentials.username);
                     const user = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])('SELECT * FROM usuarios WHERE username = ? AND estado = ?', [
                         credentials.username,
                         'activo'
                     ]);
                     if (!user) {
-                        console.log('[Auth] Usuario no encontrado o inactivo');
                         return null;
                     }
-                    console.log('[Auth] Usuario encontrado, verificando contraseña...');
                     const isValid = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$bcryptjs$40$3$2e$0$2e$3$2f$node_modules$2f$bcryptjs$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].compare(credentials.password, user.password_hash);
                     if (!isValid) {
-                        console.log('[Auth] Contraseña incorrecta');
                         return null;
                     }
-                    console.log('[Auth] Autenticación exitosa');
                     // Actualizar último acceso
                     await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])('UPDATE usuarios SET ultimo_acceso = CURRENT_TIMESTAMP WHERE id = ?', [
                         user.id

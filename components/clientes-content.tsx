@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Search, DollarSign, CreditCard, History, AlertCircle, Users } from "lucide-react"
+import { Search, DollarSign, CreditCard, History, AlertCircle, Users, X } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
 import { formatCurrency, normalizeText } from "@/lib/utils"
@@ -520,11 +520,23 @@ export function ClientesContent() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  className="pl-9"
+                  className="pl-9 pr-9"
                   placeholder="Buscar por factura, cliente o identificación..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                {searchTerm && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+                    onClick={() => setSearchTerm("")}
+                    aria-label="Limpiar búsqueda"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               <Button
                 type="button"

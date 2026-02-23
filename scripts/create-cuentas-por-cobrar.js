@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+﻿const mysql = require('mysql2/promise');
 
 async function createTableCuentasPorCobrar() {
   const connection = await mysql.createConnection({
@@ -9,9 +9,7 @@ async function createTableCuentasPorCobrar() {
   });
 
   try {
-    console.log('🔄 Creando tabla cuentas_por_cobrar...');
-
-    await connection.execute(`
+await connection.execute(`
       CREATE TABLE IF NOT EXISTS cuentas_por_cobrar (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         cliente_id INT UNSIGNED NOT NULL,
@@ -27,9 +25,7 @@ async function createTableCuentasPorCobrar() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
-    console.log('✅ Tabla cuentas_por_cobrar creada');
-
-    // Crear tabla abonos si no existe
+// Crear tabla abonos si no existe
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS abonos (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -45,30 +41,22 @@ async function createTableCuentasPorCobrar() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     `);
 
-    console.log('✅ Tabla abonos creada');
-
-    // Verificar y agregar campo saldo_actual a clientes si no existe
+// Verificar y agregar campo saldo_actual a clientes si no existe
     try {
       await connection.execute(`
         ALTER TABLE clientes 
         ADD COLUMN saldo_actual DECIMAL(10,2) DEFAULT 0 AFTER saldo_pendiente
       `);
-      console.log('✅ Campo saldo_actual agregado a clientes');
-    } catch (error) {
+} catch (error) {
       if (error.code === 'ER_DUP_FIELDNAME') {
-        console.log('ℹ️  Campo saldo_actual ya existe en clientes');
-      } else {
+} else {
         throw error;
       }
     }
 
-    console.log('');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('✅ Tablas de crédito creadas exitosamente');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('âŒ Error:', error);
     throw error;
   } finally {
     await connection.end();
@@ -78,6 +66,8 @@ async function createTableCuentasPorCobrar() {
 createTableCuentasPorCobrar()
   .then(() => process.exit(0))
   .catch((error) => {
-    console.error('❌ Error:', error);
+    console.error('âŒ Error:', error);
     process.exit(1);
   });
+
+

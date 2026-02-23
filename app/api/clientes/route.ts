@@ -2,6 +2,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { requirePermission } from '@/lib/auth/check-permission';
+import {
+  CLIENTE_IDENTIFICACION_REGEX,
+  isNombreClienteValido,
+  isTelefonoClienteValido,
+} from '@/lib/cliente-validations';
 
 // GET - Obtener todos los clientes
 export async function GET() {
@@ -69,26 +74,51 @@ export async function POST(request: NextRequest) {
       limite_credito
     } = body;
 
+    const nombreLimpio = nombre?.trim() || '';
+    const telefonoLimpio = telefono?.trim() || '';
+    const identificacionLimpia = identificacion?.trim() || '';
+
     // Validaciones
-    if (!nombre || !nombre.trim()) {
+    if (!nombreLimpio) {
       return NextResponse.json(
         { error: 'El nombre del cliente es requerido' },
         { status: 400 }
       );
     }
 
-    if (!telefono || !telefono.trim()) {
+    if (!isNombreClienteValido(nombreLimpio)) {
+      return NextResponse.json(
+        { error: 'El nombre del cliente solo puede contener letras y espacios' },
+        { status: 400 }
+      );
+    }
+
+    if (!telefonoLimpio) {
       return NextResponse.json(
         { error: 'El teléfono del cliente es requerido' },
         { status: 400 }
       );
     }
 
+    if (!isTelefonoClienteValido(telefonoLimpio)) {
+      return NextResponse.json(
+        { error: 'El teléfono del cliente solo puede contener números' },
+        { status: 400 }
+      );
+    }
+
+    if (identificacionLimpia && !CLIENTE_IDENTIFICACION_REGEX.test(identificacionLimpia)) {
+      return NextResponse.json(
+        { error: 'La cédula/identificación del cliente solo puede contener números' },
+        { status: 400 }
+      );
+    }
+
     // Verificar si ya existe un cliente con la misma identificación
-    if (identificacion && identificacion.trim()) {
+    if (identificacionLimpia) {
       const clienteExistente = await query<any[]>(
         'SELECT id FROM clientes WHERE identificacion = ? AND estado = "activo"',
-        [identificacion.trim()]
+        [identificacionLimpia]
       );
 
       if (clienteExistente.length > 0) {
@@ -106,9 +136,9 @@ export async function POST(request: NextRequest) {
         tipo_cliente, limite_credito, saldo_pendiente, saldo_actual, estado
       ) VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0, 'activo')`,
       [
-        nombre.trim(),
-        identificacion?.trim() || null,
-        telefono.trim(),
+        nombreLimpio,
+        identificacionLimpia || null,
+        telefonoLimpio,
         direccion?.trim() || null,
         email?.trim() || null,
         tipo_cliente || 'publico',

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Trash2, ShoppingCart, Search, Loader2 } from "lucide-react"
+import { Plus, Trash2, ShoppingCart, Search, Loader2, X } from "lucide-react"
 import type { Product, Cliente } from "@/lib/types"
 import { getClientes } from "@/lib/storage"
 import { SidebarToggle } from "./app-sidebar"
@@ -167,9 +167,24 @@ export function VentasContent() {
   const agregarProducto = (producto: Product) => {
     const tipoCliente = clienteSeleccionado?.tipoCliente || "publico"
     const precio = getPrecioByTipo(producto, tipoCliente)
+    const stockDisponible = Number(producto.cantidad) || 0
+
+    if (stockDisponible <= 0) {
+      toast.error('Sin stock disponible', {
+        description: `${producto.nombre} no tiene unidades disponibles`
+      })
+      return
+    }
 
     const existente = carrito.find((item) => item.product.id === producto.id)
     if (existente) {
+      if (existente.cantidad >= stockDisponible) {
+        toast.error('Stock máximo alcanzado', {
+          description: `Solo hay ${stockDisponible} unidad(es) disponibles de ${producto.nombre}`
+        })
+        return
+      }
+
       setCarrito(
         carrito.map((item) => (item.product.id === producto.id ? { ...item, cantidad: item.cantidad + 1 } : item)),
       )
@@ -192,6 +207,17 @@ export function VentasContent() {
 
   const actualizarCantidad = (id: string, cantidad: number) => {
     if (cantidad < 1) return
+    const itemActual = carrito.find((item) => item.product.id === id)
+    if (!itemActual) return
+
+    const stockDisponible = Number(itemActual.product.cantidad) || 0
+    if (cantidad > stockDisponible) {
+      toast.error('Cantidad excede el stock', {
+        description: `Máximo disponible: ${stockDisponible} unidad(es) de ${itemActual.product.nombre}`
+      })
+      return
+    }
+
     setCarrito(carrito.map((item) => (item.product.id === id ? { ...item, cantidad } : item)))
   }
 
@@ -495,11 +521,23 @@ export function VentasContent() {
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    className="pl-9"
+                    className="pl-9 pr-9"
                     placeholder="Buscar por nombre, código o referencia..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
+                  {searchTerm && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 md:h-7 md:w-7"
+                      onClick={() => setSearchTerm("")}
+                      aria-label="Limpiar búsqueda"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -519,6 +557,9 @@ export function VentasContent() {
                   {productosFiltrados.map((producto) => {
                     const tipoCliente = clienteSeleccionado?.tipoCliente || "publico"
                     const precioActual = getPrecioByTipo(producto, tipoCliente)
+                    const precioMinimoMostrado = (producto as any).tieneDescuento
+                      ? (producto.precioConDescuento || producto.precioVentaPublico)
+                      : producto.precioEspecial
 
                     return (
                       <div
@@ -552,7 +593,7 @@ export function VentasContent() {
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Precio mínimo:</span>
                             <span className="font-semibold text-[#D4AF37]">
-                              ${formatCurrency(producto.precioEspecial)}
+                              ${formatCurrency(precioMinimoMostrado)}
                             </span>
                           </div>
                         </div>
@@ -616,6 +657,8 @@ export function VentasContent() {
                             size="sm"
                             variant="outline"
                             onClick={() => actualizarCantidad(item.product.id, item.cantidad - 1)}
+                            disabled={item.cantidad <= 1}
+                            title={item.cantidad <= 1 ? 'Cantidad mínima alcanzada' : undefined}
                           >
                             -
                           </Button>
@@ -629,6 +672,8 @@ export function VentasContent() {
                             size="sm"
                             variant="outline"
                             onClick={() => actualizarCantidad(item.product.id, item.cantidad + 1)}
+                            disabled={item.cantidad >= Number(item.product.cantidad || 0)}
+                            title={item.cantidad >= Number(item.product.cantidad || 0) ? 'Stock máximo alcanzado' : undefined}
                           >
                             +
                           </Button>

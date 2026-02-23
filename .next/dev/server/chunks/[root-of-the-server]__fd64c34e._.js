@@ -335,7 +335,7 @@ async function POST(request) {
             });
         }
         const skuPrefix = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$barcode$2d$generator$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateSKUPrefix"])(categoriaResult[0].nombre, tipoPrendaResult[0].nombre, tallaResult[0].valor);
-        // Obtener la secuencia para el SKU (último número + 1) usando el prefijo exacto
+        // Obtener la secuencia para el SKU (Ãºltimo nÃºmero + 1) usando el prefijo exacto
         const secuenciaResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT MAX(CAST(SUBSTRING_INDEX(sku, '-', -1) AS UNSIGNED)) as max_secuencia
        FROM productos
        WHERE sku LIKE CONCAT(?, '-%')
@@ -343,7 +343,7 @@ async function POST(request) {
             skuPrefix
         ]);
         const secuencia = (Array.isArray(secuenciaResult) && secuenciaResult[0]?.max_secuencia ? secuenciaResult[0].max_secuencia : 0) + 1;
-        // Obtener el último código de barras corto usado (6 dígitos máximo)
+        // Obtener el Ãºltimo cÃ³digo de barras corto usado (6 dÃ­gitos mÃ¡ximo)
         const ultimoCodigoResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT CAST(codigo_barras AS UNSIGNED) as codigo_numero
        FROM productos 
        WHERE codigo_barras REGEXP '^[0-9]{1,6}$'
@@ -353,17 +353,12 @@ async function POST(request) {
         if (Array.isArray(ultimoCodigoResult) && ultimoCodigoResult.length > 0 && ultimoCodigoResult[0]?.codigo_numero) {
             nuevoCodigo = Number(ultimoCodigoResult[0].codigo_numero) + 1;
         } else {
-            // Si no hay productos con código corto, empezar desde 100001
+            // Si no hay productos con cÃ³digo corto, empezar desde 100001
             nuevoCodigo = 100001;
         }
-        // Generar códigos
+        // Generar cÃ³digos
         const sku = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$barcode$2d$generator$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateSKU"])(categoriaResult[0].nombre, tipoPrendaResult[0].nombre, tallaResult[0].valor, secuencia);
         const codigo_barras = nuevoCodigo.toString();
-        console.log('Códigos generados:', {
-            sku,
-            codigo_barras,
-            secuencia
-        });
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
             sku,
@@ -371,7 +366,7 @@ async function POST(request) {
             secuencia
         });
     } catch (error) {
-        console.error('Error generando códigos:', error);
+        console.error('Error generando cÃ³digos:', error);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: false,
             error: 'Error interno del servidor'

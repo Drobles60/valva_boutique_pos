@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise')
+﻿const mysql = require('mysql2/promise')
 
 async function testDescuentosVentas() {
   const connection = await mysql.createConnection({
@@ -9,26 +9,17 @@ async function testDescuentosVentas() {
   })
 
   try {
-    console.log('=== DESCUENTOS ACTIVOS ===\n')
-    const [descuentos] = await connection.execute(`
+const [descuentos] = await connection.execute(`
       SELECT id, nombre, tipo, valor, estado, fecha_inicio, fecha_fin
       FROM descuentos 
       WHERE estado = 'activo'
       ORDER BY id
     `)
     
-    console.log('Total descuentos activos:', descuentos.length)
-    descuentos.forEach(d => {
-      console.log(`\nID: ${d.id}`)
-      console.log(`  Nombre: ${d.nombre}`)
-      console.log(`  Tipo: ${d.tipo}`)
-      console.log(`  Valor: ${d.valor}${d.tipo === 'porcentaje' ? '%' : ' COP'}`)
-      console.log(`  Vigencia: ${d.fecha_inicio || 'Sin fecha inicio'} - ${d.fecha_fin || 'Sin fecha fin'}`)
-    })
+descuentos.forEach(d => {
+})
 
-    console.log('\n=== PRODUCTOS CON DESCUENTOS ===\n')
-    
-    // Obtener productos con descuentos directos
+// Obtener productos con descuentos directos
     const [prodDirectos] = await connection.execute(`
       SELECT DISTINCT p.id, p.nombre, p.precio_venta, d.nombre as descuento_nombre, d.tipo, d.valor
       FROM productos p
@@ -38,19 +29,12 @@ async function testDescuentosVentas() {
       ORDER BY p.nombre
     `)
     
-    console.log('Productos con descuentos directos:', prodDirectos.length)
-    prodDirectos.forEach(p => {
-      console.log(`\n${p.nombre}`)
-      console.log(`  Precio original: $${p.precio_venta}`)
-      console.log(`  Descuento: ${p.descuento_nombre}`)
-      if (p.tipo === 'porcentaje') {
+prodDirectos.forEach(p => {
+if (p.tipo === 'porcentaje') {
         const descuento = (p.precio_venta * p.valor) / 100
         const precioFinal = p.precio_venta - descuento
-        console.log(`  ${p.valor}% de descuento = -$${descuento}`)
-        console.log(`  Precio final: $${precioFinal}`)
       } else {
-        console.log(`  Precio fijo: $${p.valor}`)
-      }
+}
     })
 
     // Obtener productos con descuentos por tipo de prenda
@@ -64,19 +48,12 @@ async function testDescuentosVentas() {
       ORDER BY p.nombre
     `)
     
-    console.log('\n\nProductos con descuentos por tipo de prenda:', prodTipoPrenda.length)
-    prodTipoPrenda.forEach(p => {
-      console.log(`\n${p.nombre} (${p.tipo_prenda})`)
-      console.log(`  Precio original: $${p.precio_venta}`)
-      console.log(`  Descuento: ${p.descuento_nombre}`)
-      if (p.tipo === 'porcentaje') {
+prodTipoPrenda.forEach(p => {
+if (p.tipo === 'porcentaje') {
         const descuento = (p.precio_venta * p.valor) / 100
         const precioFinal = p.precio_venta - descuento
-        console.log(`  ${p.valor}% de descuento = -$${descuento}`)
-        console.log(`  Precio final: $${precioFinal}`)
       } else {
-        console.log(`  Precio fijo: $${p.valor}`)
-      }
+}
     })
 
   } catch (error) {
@@ -87,3 +64,5 @@ async function testDescuentosVentas() {
 }
 
 testDescuentosVentas()
+
+

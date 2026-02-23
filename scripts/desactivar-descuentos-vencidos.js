@@ -1,8 +1,8 @@
-/**
+﻿/**
  * Script para desactivar descuentos vencidos
  * 
  * Este script actualiza el estado de los descuentos cuya fecha de fin
- * ya ha pasado, cambiándolos de 'activo' a 'inactivo'.
+ * ya ha pasado, cambiÃ¡ndolos de 'activo' a 'inactivo'.
  * 
  * Uso:
  *   node scripts/desactivar-descuentos-vencidos.js
@@ -22,21 +22,15 @@ async function desactivarDescuentosVencidos() {
   let connection
 
   try {
-    console.log('🔄 Conectando a la base de datos...')
-    
-    connection = await mysql.createConnection({
+connection = await mysql.createConnection({
       host: process.env.DB_HOST || 'localhost',
       user: process.env.DB_USER || 'root',
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || 'valva_boutique_pos',
     })
 
-    console.log('✅ Conexión establecida')
-
-    // Actualizar descuentos vencidos
-    console.log('🔄 Verificando descuentos vencidos...')
-    
-    const [result] = await connection.execute(`
+// Actualizar descuentos vencidos
+const [result] = await connection.execute(`
       UPDATE descuentos 
       SET estado = 'inactivo' 
       WHERE fecha_fin IS NOT NULL 
@@ -47,9 +41,7 @@ async function desactivarDescuentosVencidos() {
     const descuentosActualizados = result.affectedRows
 
     if (descuentosActualizados > 0) {
-      console.log(`✅ Se desactivaron ${descuentosActualizados} descuento(s) vencido(s)`)
-      
-      // Mostrar cuáles fueron
+// Mostrar cuÃ¡les fueron
       const [descuentos] = await connection.execute(`
         SELECT id, nombre, fecha_fin 
         FROM descuentos 
@@ -60,15 +52,12 @@ async function desactivarDescuentosVencidos() {
         LIMIT 10
       `)
 
-      console.log('\n📋 Descuentos desactivados recientemente:')
-      descuentos.forEach(desc => {
-        console.log(`   - ID ${desc.id}: ${desc.nombre} (venció: ${desc.fecha_fin})`)
-      })
+descuentos.forEach(desc => {
+})
     } else {
-      console.log('ℹ️  No hay descuentos vencidos para desactivar')
-    }
+}
 
-    // Mostrar estadísticas
+    // Mostrar estadÃ­sticas
     const [stats] = await connection.execute(`
       SELECT 
         COUNT(*) as total,
@@ -78,22 +67,17 @@ async function desactivarDescuentosVencidos() {
       FROM descuentos
     `)
 
-    console.log('\n📊 Estadísticas de descuentos:')
-    console.log(`   Total: ${stats[0].total}`)
-    console.log(`   Activos: ${stats[0].activos}`)
-    console.log(`   Inactivos: ${stats[0].inactivos}`)
-    console.log(`   Activos con fecha de vigencia: ${stats[0].activos_con_vigencia}`)
-
-  } catch (error) {
-    console.error('❌ Error:', error.message)
+} catch (error) {
+    console.error('âŒ Error:', error.message)
     process.exit(1)
   } finally {
     if (connection) {
       await connection.end()
-      console.log('\n✅ Proceso completado')
-    }
+}
   }
 }
 
 // Ejecutar
 desactivarDescuentosVencidos()
+
+

@@ -1,4 +1,4 @@
-// Verificar discrepancias de saldos
+﻿// Verificar discrepancias de saldos
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -31,14 +31,7 @@ async function verificarDiscrepancias() {
       ORDER BY c.id`
     );
     
-    console.log('\n📊 Análisis de saldos de clientes "oscar":\n');
-    result.forEach(r => {
-      console.log(`Cliente: ${r.nombre} (${r.identificacion})`);
-      console.log(`  Saldo en tabla clientes: $${Number(r.saldo_tabla).toLocaleString('es-CO')}`);
-      console.log(`  Suma saldos facturas:    $${Number(r.saldo_calculado).toLocaleString('es-CO')}`);
-      console.log(`  Diferencia:              $${Number(r.diferencia).toLocaleString('es-CO')}`);
-      console.log(`  Facturas con saldo:      ${r.facturas_con_saldo}`);
-      console.log('');
+result.forEach(r => {
     });
     
   } finally {
@@ -47,3 +40,5 @@ async function verificarDiscrepancias() {
 }
 
 verificarDiscrepancias();
+
+

@@ -1,4 +1,4 @@
-// Verificar conteo correcto después de los cambios
+﻿// Verificar conteo correcto despuÃ©s de los cambios
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -14,8 +14,6 @@ async function verificarConteoCorregido() {
   });
   
   try {
-    console.log('\n📊 CONTEO CORRECTO DE FACTURAS (saldo > 0):\n');
-    console.log('='.repeat(80));
     
     const [result] = await connection.execute(
       `SELECT 
@@ -34,15 +32,8 @@ async function verificarConteoCorregido() {
     );
     
     result.forEach(r => {
-      console.log(`\nCliente: ${r.nombre} (${r.identificacion})`);
-      console.log(`  Total facturas:              ${r.total_facturas}`);
-      console.log(`  Facturas pendientes (>0):    ${r.facturas_pendientes} ✓`);
-      console.log(`  Facturas pagadas (=0):       ${r.facturas_pagadas}`);
-      console.log(`  Facturas crédito favor (<0): ${r.facturas_credito_favor}`);
-    });
+});
     
-    console.log('\n' + '='.repeat(80));
-    console.log('\n✅ Este es el conteo correcto que debe mostrarse en la UI\n');
     
   } finally {
     await connection.end();
@@ -50,3 +41,5 @@ async function verificarConteoCorregido() {
 }
 
 verificarConteoCorregido();
+
+

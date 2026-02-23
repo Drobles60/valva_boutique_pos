@@ -15,32 +15,24 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
-          console.log('[Auth] Credenciales faltantes');
           return null;
         }
 
         try {
-          console.log('[Auth] Buscando usuario:', credentials.username);
-          
           const user = await queryOne<any>(
             'SELECT * FROM usuarios WHERE username = ? AND estado = ?',
             [credentials.username, 'activo']
           );
 
           if (!user) {
-            console.log('[Auth] Usuario no encontrado o inactivo');
             return null;
           }
 
-          console.log('[Auth] Usuario encontrado, verificando contraseña...');
           const isValid = await bcrypt.compare(credentials.password, user.password_hash);
 
           if (!isValid) {
-            console.log('[Auth] Contraseña incorrecta');
             return null;
           }
-
-          console.log('[Auth] Autenticación exitosa');
 
           // Actualizar último acceso
           await queryOne(

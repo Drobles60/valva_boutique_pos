@@ -232,7 +232,6 @@ async function GET(request) {
             });
         }
         // Si se especifica tipo de prenda, filtrar por las tallas compatibles
-        console.log('Buscando tallas para tipo_prenda_id:', tipo_prenda_id);
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT t.id, t.valor, t.sistema_talla_id 
        FROM tallas t
        INNER JOIN tipo_prenda_sistema_talla tpst ON t.sistema_talla_id = tpst.sistema_talla_id
@@ -240,8 +239,6 @@ async function GET(request) {
        ORDER BY t.sistema_talla_id, t.orden`, [
             parseInt(tipo_prenda_id)
         ]);
-        console.log('Tallas encontradas:', result?.length || 0);
-        console.log('Resultado:', result);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
             data: Array.isArray(result) ? result : []

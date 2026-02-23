@@ -1,4 +1,4 @@
-// Script para crear un usuario vendedor
+﻿// Script para crear un usuario vendedor
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 
@@ -11,17 +11,15 @@ async function createVendedor() {
   });
 
   try {
-    console.log('🔑 Creando usuario vendedor...');
-
-    // Datos del vendedor
+// Datos del vendedor
     const username = 'vendedor1';
-    const password = '1234';  // Contraseña simple para pruebas
+    const password = '1234';  // ContraseÃ±a simple para pruebas
     const email = 'vendedor1@valvaboutique.com';
     const nombre = 'Vendedor';
     const apellido = 'Uno';
     const telefono = '0987654321';
 
-    // Hashear la contraseña
+    // Hashear la contraseÃ±a
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Verificar si el usuario ya existe
@@ -31,8 +29,6 @@ async function createVendedor() {
     );
 
     if (existingUser.length > 0) {
-      console.log('⚠️  El usuario vendedor1 ya existe');
-      console.log('🗑️  Eliminando usuario existente...');
       await connection.execute('DELETE FROM usuarios WHERE username = ?', [username]);
     }
 
@@ -43,38 +39,23 @@ async function createVendedor() {
       [username, email, hashedPassword, nombre, apellido, telefono]
     );
 
-    console.log('✅ Usuario vendedor creado exitosamente!');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('📋 CREDENCIALES DE ACCESO:');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log(`   Usuario:     ${username}`);
-    console.log(`   Contraseña:  ${password}`);
-    console.log(`   Rol:         vendedor`);
-    console.log(`   Estado:      activo`);
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('');
-    console.log('🔐 PERMISOS DEL VENDEDOR:');
-    console.log('   ✓ Abrir/Cerrar Caja');
-    console.log('   ✓ Realizar Ventas');
-    console.log('   ✓ Ver Clientes');
-    console.log('   ✗ No puede acceder a otras secciones');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
   } catch (error) {
-    console.error('❌ Error al crear usuario vendedor:', error);
+    console.error('âŒ Error al crear usuario vendedor:', error);
     throw error;
   } finally {
     await connection.end();
   }
 }
 
-// Ejecutar la función
+// Ejecutar la funciÃ³n
 createVendedor()
   .then(() => {
-    console.log('✅ Script completado exitosamente');
-    process.exit(0);
+process.exit(0);
   })
   .catch((error) => {
-    console.error('❌ Error en el script:', error);
+    console.error('âŒ Error en el script:', error);
     process.exit(1);
   });
+
+

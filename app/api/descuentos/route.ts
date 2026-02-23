@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
 // Helper function to convert date to MySQL DATE format (YYYY-MM-DD)
@@ -71,9 +71,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    console.log('Datos recibidos:', body)
-    
-    const {
+const {
       nombre,
       descripcion,
       tipo,
@@ -94,7 +92,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Convertir a mayúsculas
+    // Convertir a mayÃºsculas
     const nombreMayusculas = nombre.toUpperCase()
     const descripcionMayusculas = descripcion ? descripcion.toUpperCase() : null
 
@@ -106,9 +104,7 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log('Insertando descuento...')
-    
-    // Insertar descuento
+// Insertar descuento
     const result = await query<any>(`
       INSERT INTO descuentos (
         nombre, 
@@ -132,22 +128,16 @@ export async function POST(request: Request) {
     ])
 
     const descuentoId = result.insertId
-    console.log('Descuento creado con ID:', descuentoId)
-
-    // Insertar relaciones según el tipo
+// Insertar relaciones segÃºn el tipo
     if (aplicable_a === 'productos' && productos_seleccionados && productos_seleccionados.length > 0) {
-      console.log('Insertando productos:', productos_seleccionados)
-      
-      for (const prodId of productos_seleccionados) {
+for (const prodId of productos_seleccionados) {
         await query(`
           INSERT INTO descuento_productos (descuento_id, producto_id)
           VALUES (?, ?)
         `, [descuentoId, parseInt(prodId)])
       }
     } else if (aplicable_a === 'tipos_prenda' && tipos_prenda_seleccionados && tipos_prenda_seleccionados.length > 0) {
-      console.log('Insertando tipos de prenda:', tipos_prenda_seleccionados)
-      
-      for (const tipoId of tipos_prenda_seleccionados) {
+for (const tipoId of tipos_prenda_seleccionados) {
         await query(`
           INSERT INTO descuento_tipos_prenda (descuento_id, tipo_prenda_id)
           VALUES (?, ?)
@@ -155,9 +145,7 @@ export async function POST(request: Request) {
       }
     }
 
-    console.log('Descuento creado exitosamente')
-    
-    return NextResponse.json({
+return NextResponse.json({
       success: true,
       data: { id: descuentoId, ...body }
     })
@@ -204,7 +192,7 @@ export async function PUT(request: Request) {
       )
     }
 
-    // Convertir a mayúsculas
+    // Convertir a mayÃºsculas
     const nombreMayusculas = nombre.toUpperCase()
     const descripcionMayusculas = descripcion ? descripcion.toUpperCase() : null
 
@@ -287,18 +275,14 @@ export async function DELETE(request: Request) {
       )
     }
 
-    console.log('Eliminando descuento con ID:', id)
-
-    // Primero eliminar las relaciones manualmente para mayor control
+// Primero eliminar las relaciones manualmente para mayor control
     await query(`DELETE FROM descuento_productos WHERE descuento_id = ?`, [id])
     await query(`DELETE FROM descuento_tipos_prenda WHERE descuento_id = ?`, [id])
     
     // Luego eliminar el descuento
     const result = await query<any>(`DELETE FROM descuentos WHERE id = ?`, [id])
 
-    console.log('Resultado de eliminación:', result)
-
-    if (result.affectedRows === 0) {
+if (result.affectedRows === 0) {
       return NextResponse.json(
         { success: false, error: 'Descuento no encontrado' },
         { status: 404 }
@@ -321,3 +305,4 @@ export async function DELETE(request: Request) {
     )
   }
 }
+

@@ -1,13 +1,11 @@
-import { query } from '@/lib/db'
+﻿import { query } from '@/lib/db'
 
 /**
- * Obtiene los descuentos aplicables a un producto específico
+ * Obtiene los descuentos aplicables a un producto especÃ­fico
  */
 export async function getDescuentosForProduct(productoId: number) {
   try {
-    console.log(`[DESCUENTOS] Buscando descuentos para producto ID: ${productoId}`)
-    
-    // Primero, actualizar el estado de descuentos vencidos
+// Primero, actualizar el estado de descuentos vencidos
     await query(`
       UPDATE descuentos 
       SET estado = 'inactivo' 
@@ -25,13 +23,11 @@ export async function getDescuentosForProduct(productoId: number) {
     `, [productoId])
 
     if (!producto || producto.length === 0) {
-      console.log(`[DESCUENTOS] Producto ${productoId} no encontrado`)
-      return []
+return []
     }
 
     const prod = producto[0]
-    console.log(`[DESCUENTOS] Producto: ${prod.nombre}, Tipo Prenda ID: ${prod.tipo_prenda_id}`)
-    const descuentos = []
+const descuentos = []
 
     // Buscar descuentos directos al producto (solo activos)
     const descuentosProducto = await query<any[]>(`
@@ -44,10 +40,8 @@ export async function getDescuentosForProduct(productoId: number) {
         AND (d.fecha_fin IS NULL OR d.fecha_fin >= CURDATE())
     `, [productoId])
 
-    console.log(`[DESCUENTOS] Descuentos directos encontrados: ${descuentosProducto.length}`)
-    if (descuentosProducto.length > 0) {
-      console.log(`[DESCUENTOS] Detalles:`, descuentosProducto.map(d => ({ id: d.id, nombre: d.nombre, tipo: d.tipo, valor: d.valor })))
-    }
+if (descuentosProducto.length > 0) {
+}
     descuentos.push(...descuentosProducto)
 
     // Buscar descuentos por tipo de prenda (solo activos)
@@ -62,17 +56,13 @@ export async function getDescuentosForProduct(productoId: number) {
           AND (d.fecha_fin IS NULL OR d.fecha_fin >= CURDATE())
       `, [prod.tipo_prenda_id])
 
-      console.log(`[DESCUENTOS] Descuentos por tipo de prenda encontrados: ${descuentosTipoPrenda.length}`)
-      if (descuentosTipoPrenda.length > 0) {
-        console.log(`[DESCUENTOS] Detalles:`, descuentosTipoPrenda.map(d => ({ id: d.id, nombre: d.nombre, tipo: d.tipo, valor: d.valor })))
-      }
+if (descuentosTipoPrenda.length > 0) {
+}
       descuentos.push(...descuentosTipoPrenda)
     } else {
-      console.log(`[DESCUENTOS] Producto sin tipo_prenda_id, no se buscaron descuentos por tipo`)
-    }
+}
 
-    console.log(`[DESCUENTOS] Total descuentos aplicables: ${descuentos.length}`)
-    return descuentos
+return descuentos
   } catch (error) {
     console.error('[DESCUENTOS] Error obteniendo descuentos para producto:', error)
     return []
@@ -94,9 +84,7 @@ export function calcularPrecioConDescuento(
     }
   }
 
-  console.log(`[CALC] Calculando descuento para precio: $${precioOriginal}, descuentos disponibles: ${descuentos.length}`)
-
-  // Calcular el precio final para cada descuento
+// Calcular el precio final para cada descuento
   const descuentosCalculados = descuentos.map(descuento => {
     let precioFinal = precioOriginal
     let montoDescuento = 0
@@ -116,9 +104,7 @@ export function calcularPrecioConDescuento(
     // Asegurar que el precio nunca sea negativo
     precioFinal = Math.max(0, precioFinal)
     
-    console.log(`[CALC] Descuento "${descuento.nombre}" (${descuento.tipo}): ${descuento.tipo === 'fijo' ? `Precio fijo $${descuento.valor}` : `${descuento.valor}% sobre $${precioOriginal} = -$${montoDescuento.toFixed(2)}`} → Precio final: $${precioFinal.toFixed(2)}`)
-
-    return {
+return {
       ...descuento,
       montoDescuento,
       precioFinal
@@ -130,9 +116,7 @@ export function calcularPrecioConDescuento(
     return actual.precioFinal < mejor.precioFinal ? actual : mejor
   })
 
-  console.log(`[CALC] Mejor descuento seleccionado: "${mejorDescuento.nombre}" - Precio final: $${mejorDescuento.precioFinal}`)
-
-  return {
+return {
     precioFinal: mejorDescuento.precioFinal,
     descuentoAplicado: mejorDescuento,
     montoDescuento: mejorDescuento.montoDescuento
@@ -182,3 +166,4 @@ export async function getProductosConDescuentos() {
     throw error
   }
 }
+
