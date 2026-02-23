@@ -861,21 +861,47 @@ async function POST(request, { params }) {
                 status: 404
             });
         }
-        // Validar que el monto no exceda el saldo pendiente total del cliente (usar valor absoluto por si hay saldos negativos)
-        const saldoClienteAbsoluto = Math.abs(cliente.saldo_pendiente);
-        if (monto > saldoClienteAbsoluto) {
+        // Calcular saldo pendiente real basado en abonos registrados
+        const saldoClienteResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])(`SELECT COALESCE(SUM(cpc.monto_total - COALESCE(a.total_abonado, 0)), 0) as saldo_total
+       FROM cuentas_por_cobrar cpc
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
+       WHERE cpc.cliente_id = ?
+         AND (cpc.monto_total - COALESCE(a.total_abonado, 0)) > 0`, [
+            clienteId
+        ]);
+        const saldoPendienteReal = Number(saldoClienteResult?.saldo_total || 0);
+        if (saldoPendienteReal <= 0) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-                error: `El monto ($${monto.toFixed(2)}) no puede exceder el saldo pendiente total ($${saldoClienteAbsoluto.toFixed(2)})`
+                error: 'No hay saldo pendiente para este cliente'
+            }, {
+                status: 400
+            });
+        }
+        // Validar que el monto no exceda el saldo pendiente total del cliente
+        if (monto > saldoPendienteReal) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: `El monto ($${monto.toFixed(2)}) no puede exceder el saldo pendiente total ($${saldoPendienteReal.toFixed(2)})`
             }, {
                 status: 400
             });
         }
         // Obtener todas las cuentas pendientes del cliente ordenadas por fecha (más antiguas primero)
-        const cuentasPendientes = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT cpc.id, cpc.venta_id, cpc.monto_total, cpc.saldo_pendiente, 
+        const cuentasPendientes = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT cpc.id, cpc.venta_id, cpc.monto_total,
+              (cpc.monto_total - COALESCE(a.total_abonado, 0)) as saldo_pendiente,
               v.numero_venta, cpc.fecha_vencimiento, cpc.created_at
        FROM cuentas_por_cobrar cpc
        INNER JOIN ventas v ON cpc.venta_id = v.id
-       WHERE cpc.cliente_id = ? AND ABS(cpc.saldo_pendiente) > 0
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
+       WHERE cpc.cliente_id = ?
+         AND (cpc.monto_total - COALESCE(a.total_abonado, 0)) > 0
        ORDER BY cpc.created_at ASC`, [
             clienteId
         ]);
@@ -891,9 +917,9 @@ async function POST(request, { params }) {
         // Distribuir el abono entre las cuentas (primero las más antiguas)
         for (const cuenta of cuentasPendientes){
             if (montoRestante <= 0) break;
-            // Calcular cuánto abonar a esta cuenta (usar valor absoluto por si hay saldos negativos)
-            const saldoCuentaAbsoluto = Math.abs(cuenta.saldo_pendiente);
-            const montoAbono = Math.min(montoRestante, saldoCuentaAbsoluto);
+            // Calcular cuánto abonar a esta cuenta
+            const saldoCuenta = Number(cuenta.saldo_pendiente) || 0;
+            const montoAbono = Math.min(montoRestante, saldoCuenta);
             const saldoAnterior = cuenta.saldo_pendiente;
             // Registrar el abono
             await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`INSERT INTO abonos (

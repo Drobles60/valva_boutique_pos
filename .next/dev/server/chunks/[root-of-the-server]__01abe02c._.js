@@ -226,7 +226,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$
 async function GET() {
     try {
         const pedidos = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
-              p.total_abonado, p.saldo_pendiente,
+              LEAST(p.total_abonado, p.costo_total) as total_abonado,
+              GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -234,7 +235,7 @@ async function GET() {
        ORDER BY p.created_at DESC`);
         // Obtener detalles de cada pedido
         for (const pedido of pedidos){
-            const detalles = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT id, descripcion, cantidad, precio_total
+            const detalles = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT id, descripcion, cantidad, precio_total as precioTotal
          FROM detalle_pedidos
          WHERE pedido_id = ?`, [
                 pedido.id
@@ -298,7 +299,8 @@ async function POST(request) {
         }
         // Obtener el pedido recién creado con sus detalles
         const nuevoPedido = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
-              p.total_abonado, p.saldo_pendiente,
+              LEAST(p.total_abonado, p.costo_total) as total_abonado,
+              GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -306,7 +308,7 @@ async function POST(request) {
        WHERE p.id = ?`, [
             pedidoId
         ]);
-        const detallesPedido = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT id, descripcion, cantidad, precio_total
+        const detallesPedido = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT id, descripcion, cantidad, precio_total as precioTotal
        FROM detalle_pedidos
        WHERE pedido_id = ?`, [
             pedidoId
@@ -359,6 +361,8 @@ async function PATCH(request) {
         ]);
         // Obtener el pedido actualizado
         const pedidoActualizado = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              LEAST(p.total_abonado, p.costo_total) as total_abonado,
+              GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -366,7 +370,7 @@ async function PATCH(request) {
        WHERE p.id = ?`, [
             id
         ]);
-        const detalles = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT id, descripcion, cantidad, precio_total
+        const detalles = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT id, descripcion, cantidad, precio_total as precioTotal
        FROM detalle_pedidos
        WHERE pedido_id = ?`, [
             id

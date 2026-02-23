@@ -3533,7 +3533,7 @@ function FacturaDialog({ open, onClose, venta }) {
                 });
                 yPos += 4;
                 // Saldo pendiente
-                const saldoPendiente = venta.credito_saldo_pendiente || venta.total;
+                const saldoPendiente = venta.credito_saldo_pendiente ?? venta.total;
                 pdf.setFont('Lucida Console', 'bold');
                 pdf.text('Saldo Pendiente:', margin, yPos);
                 pdf.text(`$ ${(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(saldoPendiente)}`, pageWidth - margin, yPos, {
@@ -4390,6 +4390,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
     const [montoEfectivo, setMontoEfectivo] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("");
     const [montoTransferencia, setMontoTransferencia] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("");
     const [referenciaTransferencia, setReferenciaTransferencia] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("Nequi");
+    const [referenciaPago, setReferenciaPago] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("");
     // Resetear cuando se abre el diálogo
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"]({
         "CambioDialog.useEffect": ()=>{
@@ -4398,6 +4399,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                 setMontoEfectivo("");
                 setMontoTransferencia("");
                 setReferenciaTransferencia("Nequi");
+                setReferenciaPago("");
             }
         }
     }["CambioDialog.useEffect"], [
@@ -4450,6 +4452,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
         setter(numeros);
     };
     const handleConfirmar = ()=>{
+        const referenciaFinal = referenciaPago ? `${referenciaTransferencia} - ${referenciaPago}` : referenciaTransferencia;
         if (metodoPago === 'efectivo') {
             const recibido = parseFloat(efectivoRecibido) || 0;
             if (recibido < total) {
@@ -4466,10 +4469,14 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe seleccionar el origen de la transferencia');
                 return;
             }
+            if (!referenciaPago.trim()) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe ingresar la referencia de pago');
+                return;
+            }
             onConfirmar({
                 efectivoRecibido: total,
                 cambio: 0,
-                referenciaTransferencia
+                referenciaTransferencia: referenciaFinal
             });
         } else if (metodoPago === 'mixto') {
             const efectivo = parseFloat(montoEfectivo) || 0;
@@ -4486,6 +4493,10 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe seleccionar el origen de la transferencia');
                 return;
             }
+            if (!referenciaPago.trim()) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe ingresar la referencia de pago');
+                return;
+            }
             onConfirmar({
                 efectivoRecibido: efectivo,
                 cambio: cambioMixto > 0 ? cambioMixto : 0,
@@ -4493,7 +4504,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                     efectivo,
                     transferencia
                 },
-                referenciaTransferencia
+                referenciaTransferencia: referenciaFinal
             });
         }
     };
@@ -4509,20 +4520,20 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                             children: "Procesar Pago"
                         }, void 0, false, {
                             fileName: "[project]/components/cambio-dialog.tsx",
-                            lineNumber: 155,
+                            lineNumber: 169,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                             children: "Complete los datos del pago para finalizar la venta"
                         }, void 0, false, {
                             fileName: "[project]/components/cambio-dialog.tsx",
-                            lineNumber: 156,
+                            lineNumber: 170,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/cambio-dialog.tsx",
-                    lineNumber: 154,
+                    lineNumber: 168,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4536,7 +4547,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                     children: "Total a Pagar"
                                 }, void 0, false, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 164,
+                                    lineNumber: 178,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4547,13 +4558,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 165,
+                                    lineNumber: 179,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/cambio-dialog.tsx",
-                            lineNumber: 163,
+                            lineNumber: 177,
                             columnNumber: 11
                         }, this),
                         metodoPago === 'efectivo' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -4568,14 +4579,14 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     className: "inline h-4 w-4 mr-1"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 173,
+                                                    lineNumber: 187,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Efectivo Recibido"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 172,
+                                            lineNumber: 186,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -4588,13 +4599,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                             autoFocus: true
                                         }, void 0, false, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 176,
+                                            lineNumber: 190,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 171,
+                                    lineNumber: 185,
                                     columnNumber: 15
                                 }, this),
                                 efectivoRecibido && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4605,7 +4616,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                             children: "Cambio a Devolver"
                                         }, void 0, false, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 189,
+                                            lineNumber: 203,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4616,7 +4627,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 190,
+                                            lineNumber: 204,
                                             columnNumber: 19
                                         }, this),
                                         cambio < 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4627,13 +4638,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 194,
+                                            lineNumber: 208,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 188,
+                                    lineNumber: 202,
                                     columnNumber: 17
                                 }, this)
                             ]
@@ -4648,7 +4659,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                             children: "Origen de la Transferencia"
                                         }, void 0, false, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 207,
+                                            lineNumber: 221,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -4661,12 +4672,12 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                         placeholder: "Seleccione el origen"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/cambio-dialog.tsx",
-                                                        lineNumber: 210,
+                                                        lineNumber: 224,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 209,
+                                                    lineNumber: 223,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -4676,7 +4687,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             children: "Nequi"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 213,
+                                                            lineNumber: 227,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -4684,7 +4695,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             children: "Bancolombia"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 214,
+                                                            lineNumber: 228,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -4692,7 +4703,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             children: "Daviplata"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 215,
+                                                            lineNumber: 229,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -4700,25 +4711,53 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             children: "Otro"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 216,
+                                                            lineNumber: 230,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 212,
+                                                    lineNumber: 226,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 208,
+                                            lineNumber: 222,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 206,
+                                    lineNumber: 220,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                                            htmlFor: "referenciaPago",
+                                            children: "Referencia de Pago"
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/cambio-dialog.tsx",
+                                            lineNumber: 235,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                            id: "referenciaPago",
+                                            type: "text",
+                                            placeholder: "Ingrese la referencia",
+                                            value: referenciaPago,
+                                            onChange: (e)=>setReferenciaPago(e.target.value)
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/cambio-dialog.tsx",
+                                            lineNumber: 236,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/components/cambio-dialog.tsx",
+                                    lineNumber: 234,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4731,7 +4770,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     className: "h-5 w-5 text-blue-600"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 223,
+                                                    lineNumber: 247,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -4739,13 +4778,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     children: "Pago por Transferencia"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 224,
+                                                    lineNumber: 248,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 222,
+                                            lineNumber: 246,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4757,13 +4796,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 226,
+                                            lineNumber: 250,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 221,
+                                    lineNumber: 245,
                                     columnNumber: 15
                                 }, this)
                             ]
@@ -4780,7 +4819,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     className: "h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 238,
+                                                    lineNumber: 262,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -4788,13 +4827,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     children: "Pago Mixto"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 239,
+                                                    lineNumber: 263,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 237,
+                                            lineNumber: 261,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4807,14 +4846,14 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             className: "inline h-4 w-4 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 244,
+                                                            lineNumber: 268,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Monto en Efectivo"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 243,
+                                                    lineNumber: 267,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -4826,13 +4865,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     autoFocus: true
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 247,
+                                                    lineNumber: 271,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 242,
+                                            lineNumber: 266,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4845,14 +4884,14 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             className: "inline h-4 w-4 mr-1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 259,
+                                                            lineNumber: 283,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Monto en Transferencia"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 258,
+                                                    lineNumber: 282,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -4863,13 +4902,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     onChange: (e)=>handleMontoChange(e, setMontoTransferencia)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 262,
+                                                    lineNumber: 286,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 257,
+                                            lineNumber: 281,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4880,7 +4919,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     children: "Origen de la Transferencia"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 272,
+                                                    lineNumber: 296,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -4893,12 +4932,12 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                                 placeholder: "Seleccione el origen"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/cambio-dialog.tsx",
-                                                                lineNumber: 275,
+                                                                lineNumber: 299,
                                                                 columnNumber: 23
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 274,
+                                                            lineNumber: 298,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -4908,7 +4947,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                                     children: "Nequi"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                                    lineNumber: 278,
+                                                                    lineNumber: 302,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -4916,7 +4955,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                                     children: "Bancolombia"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                                    lineNumber: 279,
+                                                                    lineNumber: 303,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -4924,7 +4963,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                                     children: "Daviplata"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                                    lineNumber: 280,
+                                                                    lineNumber: 304,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -4932,31 +4971,59 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                                     children: "Otro"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                                    lineNumber: 281,
+                                                                    lineNumber: 305,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 277,
+                                                            lineNumber: 301,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 273,
+                                                    lineNumber: 297,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 271,
+                                            lineNumber: 295,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "space-y-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                                                    htmlFor: "referenciaPagoMixto",
+                                                    children: "Referencia de Pago"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/cambio-dialog.tsx",
+                                                    lineNumber: 310,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                    id: "referenciaPagoMixto",
+                                                    type: "text",
+                                                    placeholder: "Ingrese la referencia",
+                                                    value: referenciaPago,
+                                                    onChange: (e)=>setReferenciaPago(e.target.value)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/cambio-dialog.tsx",
+                                                    lineNumber: 311,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/components/cambio-dialog.tsx",
+                                            lineNumber: 309,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 236,
+                                    lineNumber: 260,
                                     columnNumber: 15
                                 }, this),
                                 (montoEfectivo || montoTransferencia) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4971,7 +5038,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                         children: "Total Recibido:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/cambio-dialog.tsx",
-                                                        lineNumber: 291,
+                                                        lineNumber: 325,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4982,18 +5049,18 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/cambio-dialog.tsx",
-                                                        lineNumber: 292,
+                                                        lineNumber: 326,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/cambio-dialog.tsx",
-                                                lineNumber: 290,
+                                                lineNumber: 324,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 289,
+                                            lineNumber: 323,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5007,7 +5074,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             children: "Cambio:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 298,
+                                                            lineNumber: 332,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5018,13 +5085,13 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                                            lineNumber: 299,
+                                                            lineNumber: 333,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 297,
+                                                    lineNumber: 331,
                                                     columnNumber: 21
                                                 }, this),
                                                 cambioMixto < 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5035,19 +5102,19 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                                    lineNumber: 304,
+                                                    lineNumber: 338,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/cambio-dialog.tsx",
-                                            lineNumber: 296,
+                                            lineNumber: 330,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/cambio-dialog.tsx",
-                                    lineNumber: 288,
+                                    lineNumber: 322,
                                     columnNumber: 17
                                 }, this)
                             ]
@@ -5055,7 +5122,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/cambio-dialog.tsx",
-                    lineNumber: 161,
+                    lineNumber: 175,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -5067,7 +5134,7 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                             children: "Cancelar"
                         }, void 0, false, {
                             fileName: "[project]/components/cambio-dialog.tsx",
-                            lineNumber: 316,
+                            lineNumber: 350,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -5075,28 +5142,28 @@ function CambioDialog({ open, onClose, total, metodoPago, onConfirmar }) {
                             children: "Confirmar Venta"
                         }, void 0, false, {
                             fileName: "[project]/components/cambio-dialog.tsx",
-                            lineNumber: 319,
+                            lineNumber: 353,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/cambio-dialog.tsx",
-                    lineNumber: 315,
+                    lineNumber: 349,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/cambio-dialog.tsx",
-            lineNumber: 153,
+            lineNumber: 167,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/cambio-dialog.tsx",
-        lineNumber: 152,
+        lineNumber: 166,
         columnNumber: 5
     }, this);
 }
-_s(CambioDialog, "DeYpeo+BlCEaxgL2DUIqF363gc8=");
+_s(CambioDialog, "Wsw0GPEqwzaML/a1oOYn5IYBvMY=");
 _c = CambioDialog;
 var _c;
 __turbopack_context__.k.register(_c, "CambioDialog");
@@ -5224,6 +5291,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
     const [montoEfectivo, setMontoEfectivo] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("");
     const [montoTransferencia, setMontoTransferencia] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("");
     const [referenciaTransferencia, setReferenciaTransferencia] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("Nequi");
+    const [referenciaPago, setReferenciaPago] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"]("");
     // Resetear cuando se abre el diálogo
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"]({
         "CreditoDialog.useEffect": ()=>{
@@ -5241,6 +5309,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                 setMontoEfectivo("");
                 setMontoTransferencia("");
                 setReferenciaTransferencia("Nequi");
+                setReferenciaPago("");
             }
         }
     }["CreditoDialog.useEffect"], [
@@ -5318,28 +5387,37 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe seleccionar el origen de la transferencia');
                     return;
                 }
+                if (!referenciaPago.trim()) {
+                    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe ingresar la referencia de pago');
+                    return;
+                }
             }
             if (metodoAbono === 'transferencia' && !referenciaTransferencia) {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe seleccionar el origen de la transferencia');
+                return;
+            }
+            if (metodoAbono === 'transferencia' && !referenciaPago.trim()) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$sonner$40$1$2e$7$2e$4_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error('Debe ingresar la referencia de pago');
                 return;
             }
         }
         // Preparar datos
         let abonoData = undefined;
         if (abonoMonto > 0) {
+            const referenciaFinal = referenciaPago ? `${referenciaTransferencia} - ${referenciaPago}` : referenciaTransferencia;
             if (metodoAbono === 'mixto') {
                 abonoData = {
                     monto: abonoMonto,
                     metodo: 'mixto',
                     montoEfectivo: parseFloat(montoEfectivo) || 0,
                     montoTransferencia: parseFloat(montoTransferencia) || 0,
-                    referenciaTransferencia
+                    referenciaTransferencia: referenciaFinal
                 };
             } else if (metodoAbono === 'transferencia') {
                 abonoData = {
                     monto: abonoMonto,
                     metodo: metodoAbono,
-                    referenciaTransferencia
+                    referenciaTransferencia: referenciaFinal
                 };
             } else {
                 abonoData = {
@@ -5386,20 +5464,20 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                             children: "Venta a Crédito"
                         }, void 0, false, {
                             fileName: "[project]/components/credito-dialog.tsx",
-                            lineNumber: 226,
+                            lineNumber: 242,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                             children: "Registre el cliente y un abono inicial (opcional)"
                         }, void 0, false, {
                             fileName: "[project]/components/credito-dialog.tsx",
-                            lineNumber: 227,
+                            lineNumber: 243,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/credito-dialog.tsx",
-                    lineNumber: 225,
+                    lineNumber: 241,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5416,7 +5494,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                             children: "Total de la Venta"
                                         }, void 0, false, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 236,
+                                            lineNumber: 252,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5427,13 +5505,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 237,
+                                            lineNumber: 253,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/credito-dialog.tsx",
-                                    lineNumber: 235,
+                                    lineNumber: 251,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5444,7 +5522,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                             children: "Saldo Pendiente"
                                         }, void 0, false, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 240,
+                                            lineNumber: 256,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5455,19 +5533,19 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 241,
+                                            lineNumber: 257,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/credito-dialog.tsx",
-                                    lineNumber: 239,
+                                    lineNumber: 255,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/credito-dialog.tsx",
-                            lineNumber: 234,
+                            lineNumber: 250,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -5484,14 +5562,14 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                     className: "h-4 w-4 mr-2"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 251,
+                                                    lineNumber: 267,
                                                     columnNumber: 17
                                                 }, this),
                                                 "Cliente Existente"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 250,
+                                            lineNumber: 266,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -5501,20 +5579,20 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                     className: "h-4 w-4 mr-2"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 255,
+                                                    lineNumber: 271,
                                                     columnNumber: 17
                                                 }, this),
                                                 "Nuevo Cliente"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 254,
+                                            lineNumber: 270,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/credito-dialog.tsx",
-                                    lineNumber: 249,
+                                    lineNumber: 265,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -5529,7 +5607,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                     children: "Seleccione el Cliente"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 262,
+                                                    lineNumber: 278,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -5542,12 +5620,12 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 placeholder: "Seleccione un cliente..."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 265,
+                                                                lineNumber: 281,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 264,
+                                                            lineNumber: 280,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -5562,24 +5640,24 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                     ]
                                                                 }, cliente.id, true, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 269,
+                                                                    lineNumber: 285,
                                                                     columnNumber: 23
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 267,
+                                                            lineNumber: 283,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 263,
+                                                    lineNumber: 279,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 261,
+                                            lineNumber: 277,
                                             columnNumber: 15
                                         }, this),
                                         clienteSeleccionado && (()=>{
@@ -5594,7 +5672,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 children: "Nombre:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 281,
+                                                                lineNumber: 297,
                                                                 columnNumber: 24
                                                             }, this),
                                                             " ",
@@ -5602,7 +5680,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 281,
+                                                        lineNumber: 297,
                                                         columnNumber: 21
                                                     }, this),
                                                     cliente.identificacion && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5612,7 +5690,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 children: "ID:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 282,
+                                                                lineNumber: 298,
                                                                 columnNumber: 51
                                                             }, this),
                                                             " ",
@@ -5620,7 +5698,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 282,
+                                                        lineNumber: 298,
                                                         columnNumber: 48
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5630,7 +5708,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 children: "Teléfono:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 283,
+                                                                lineNumber: 299,
                                                                 columnNumber: 24
                                                             }, this),
                                                             " ",
@@ -5638,7 +5716,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 283,
+                                                        lineNumber: 299,
                                                         columnNumber: 21
                                                     }, this),
                                                     cliente.email && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5648,7 +5726,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 children: "Email:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 284,
+                                                                lineNumber: 300,
                                                                 columnNumber: 42
                                                             }, this),
                                                             " ",
@@ -5656,7 +5734,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 284,
+                                                        lineNumber: 300,
                                                         columnNumber: 39
                                                     }, this),
                                                     cliente.saldo_pendiente !== undefined && cliente.saldo_pendiente > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5667,7 +5745,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 children: "Saldo Pendiente Actual:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 287,
+                                                                lineNumber: 303,
                                                                 columnNumber: 25
                                                             }, this),
                                                             " $",
@@ -5675,20 +5753,20 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 286,
+                                                        lineNumber: 302,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                lineNumber: 280,
+                                                lineNumber: 296,
                                                 columnNumber: 19
                                             }, this) : null;
                                         })()
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/credito-dialog.tsx",
-                                    lineNumber: 260,
+                                    lineNumber: 276,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -5705,7 +5783,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         children: "Nombre Completo *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 298,
+                                                        lineNumber: 314,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5715,13 +5793,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         onChange: (e)=>setNombre(e.target.value)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 299,
+                                                        lineNumber: 315,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                lineNumber: 297,
+                                                lineNumber: 313,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5732,7 +5810,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         children: "Cédula/RUC"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 308,
+                                                        lineNumber: 324,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5742,13 +5820,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         onChange: (e)=>setIdentificacion(e.target.value)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 309,
+                                                        lineNumber: 325,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                lineNumber: 307,
+                                                lineNumber: 323,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5759,7 +5837,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         children: "Teléfono *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 318,
+                                                        lineNumber: 334,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5769,13 +5847,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         onChange: (e)=>setTelefono(e.target.value)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 319,
+                                                        lineNumber: 335,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                lineNumber: 317,
+                                                lineNumber: 333,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5786,7 +5864,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         children: "Email"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 328,
+                                                        lineNumber: 344,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5797,13 +5875,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         onChange: (e)=>setEmail(e.target.value)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 329,
+                                                        lineNumber: 345,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                lineNumber: 327,
+                                                lineNumber: 343,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5814,7 +5892,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         children: "Dirección"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 339,
+                                                        lineNumber: 355,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5824,13 +5902,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         onChange: (e)=>setDireccion(e.target.value)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 340,
+                                                        lineNumber: 356,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                lineNumber: 338,
+                                                lineNumber: 354,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5841,7 +5919,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                         children: "Tipo de Cliente"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 349,
+                                                        lineNumber: 365,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -5852,12 +5930,12 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 id: "tipoCliente",
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 352,
+                                                                    lineNumber: 368,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 351,
+                                                                lineNumber: 367,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -5867,7 +5945,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                         children: "Público"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                                        lineNumber: 355,
+                                                                        lineNumber: 371,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -5875,7 +5953,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                         children: "Mayorista"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                                        lineNumber: 356,
+                                                                        lineNumber: 372,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -5883,42 +5961,42 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                         children: "Especial"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                                        lineNumber: 357,
+                                                                        lineNumber: 373,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 354,
+                                                                lineNumber: 370,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 350,
+                                                        lineNumber: 366,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                lineNumber: 348,
+                                                lineNumber: 364,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/credito-dialog.tsx",
-                                        lineNumber: 296,
+                                        lineNumber: 312,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/credito-dialog.tsx",
-                                    lineNumber: 295,
+                                    lineNumber: 311,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/credito-dialog.tsx",
-                            lineNumber: 248,
+                            lineNumber: 264,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5929,7 +6007,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                     children: "Abono Inicial (Opcional)"
                                 }, void 0, false, {
                                     fileName: "[project]/components/credito-dialog.tsx",
-                                    lineNumber: 367,
+                                    lineNumber: 383,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5943,7 +6021,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                     children: "Método de Pago"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 373,
+                                                    lineNumber: 389,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -5954,12 +6032,12 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             id: "metodoAbono",
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 376,
+                                                                lineNumber: 392,
                                                                 columnNumber: 21
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 375,
+                                                            lineNumber: 391,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -5971,14 +6049,14 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             className: "inline h-4 w-4 mr-1"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 380,
+                                                                            lineNumber: 396,
                                                                             columnNumber: 23
                                                                         }, this),
                                                                         "Efectivo"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 379,
+                                                                    lineNumber: 395,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -5988,14 +6066,14 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             className: "inline h-4 w-4 mr-1"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 384,
+                                                                            lineNumber: 400,
                                                                             columnNumber: 23
                                                                         }, this),
                                                                         "Transferencia"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 383,
+                                                                    lineNumber: 399,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6005,32 +6083,32 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             className: "inline h-4 w-4 mr-1"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 388,
+                                                                            lineNumber: 404,
                                                                             columnNumber: 23
                                                                         }, this),
                                                                         "Mixto"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 387,
+                                                                    lineNumber: 403,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 378,
+                                                            lineNumber: 394,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 374,
+                                                    lineNumber: 390,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 372,
+                                            lineNumber: 388,
                                             columnNumber: 15
                                         }, this),
                                         metodoAbono !== 'mixto' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -6043,7 +6121,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             children: "Origen de la Transferencia"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 399,
+                                                            lineNumber: 415,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -6056,12 +6134,12 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                         placeholder: "Seleccione el origen"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                                        lineNumber: 402,
+                                                                        lineNumber: 418,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 401,
+                                                                    lineNumber: 417,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -6071,7 +6149,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Nequi"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 405,
+                                                                            lineNumber: 421,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6079,7 +6157,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Bancolombia"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 406,
+                                                                            lineNumber: 422,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6087,7 +6165,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Daviplata"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 407,
+                                                                            lineNumber: 423,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6095,25 +6173,53 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Otro"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 408,
+                                                                            lineNumber: 424,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 404,
+                                                                    lineNumber: 420,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 400,
+                                                            lineNumber: 416,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 398,
+                                                    lineNumber: 414,
+                                                    columnNumber: 21
+                                                }, this),
+                                                metodoAbono === 'transferencia' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "space-y-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                                                            htmlFor: "referenciaPagoAbono",
+                                                            children: "Referencia de Pago"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/credito-dialog.tsx",
+                                                            lineNumber: 431,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                            id: "referenciaPagoAbono",
+                                                            type: "text",
+                                                            placeholder: "Ingrese la referencia",
+                                                            value: referenciaPago,
+                                                            onChange: (e)=>setReferenciaPago(e.target.value)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/credito-dialog.tsx",
+                                                            lineNumber: 432,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/components/credito-dialog.tsx",
+                                                    lineNumber: 430,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6124,7 +6230,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             children: "Monto del Abono"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 415,
+                                                            lineNumber: 443,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -6135,7 +6241,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             onChange: (e)=>handleMontoChange(e, setMontoAbono)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 416,
+                                                            lineNumber: 444,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -6143,13 +6249,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             children: "Deje en 0 si no hay abono inicial"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 423,
+                                                            lineNumber: 451,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 414,
+                                                    lineNumber: 442,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
@@ -6164,7 +6270,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             children: "Monto en Efectivo"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 431,
+                                                            lineNumber: 459,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -6175,13 +6281,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             onChange: (e)=>handleMontoChange(e, setMontoEfectivo)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 432,
+                                                            lineNumber: 460,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 430,
+                                                    lineNumber: 458,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6192,7 +6298,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             children: "Monto en Transferencia"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 442,
+                                                            lineNumber: 470,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -6203,13 +6309,13 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             onChange: (e)=>handleMontoChange(e, setMontoTransferencia)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 443,
+                                                            lineNumber: 471,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 441,
+                                                    lineNumber: 469,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6220,7 +6326,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                             children: "Origen de la Transferencia"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 453,
+                                                            lineNumber: 481,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -6233,12 +6339,12 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                         placeholder: "Seleccione el origen"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                                        lineNumber: 456,
+                                                                        lineNumber: 484,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 455,
+                                                                    lineNumber: 483,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -6248,7 +6354,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Nequi"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 459,
+                                                                            lineNumber: 487,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6256,7 +6362,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Bancolombia"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 460,
+                                                                            lineNumber: 488,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6264,7 +6370,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Daviplata"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 461,
+                                                                            lineNumber: 489,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -6272,25 +6378,53 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                             children: "Otro"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                                            lineNumber: 462,
+                                                                            lineNumber: 490,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                                    lineNumber: 458,
+                                                                    lineNumber: 486,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/credito-dialog.tsx",
-                                                            lineNumber: 454,
+                                                            lineNumber: 482,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 452,
+                                                    lineNumber: 480,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "space-y-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                                                            htmlFor: "referenciaPagoMixtoAbono",
+                                                            children: "Referencia de Pago"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/credito-dialog.tsx",
+                                                            lineNumber: 495,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                            id: "referenciaPagoMixtoAbono",
+                                                            type: "text",
+                                                            placeholder: "Ingrese la referencia",
+                                                            value: referenciaPago,
+                                                            onChange: (e)=>setReferenciaPago(e.target.value)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/components/credito-dialog.tsx",
+                                                            lineNumber: 496,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/components/credito-dialog.tsx",
+                                                    lineNumber: 494,
                                                     columnNumber: 19
                                                 }, this),
                                                 (montoEfectivo || montoTransferencia) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6302,7 +6436,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 children: "Total Abono:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 470,
+                                                                lineNumber: 508,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6313,42 +6447,42 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/credito-dialog.tsx",
-                                                                lineNumber: 471,
+                                                                lineNumber: 509,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/credito-dialog.tsx",
-                                                        lineNumber: 469,
+                                                        lineNumber: 507,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/credito-dialog.tsx",
-                                                    lineNumber: 468,
+                                                    lineNumber: 506,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/credito-dialog.tsx",
-                                            lineNumber: 429,
+                                            lineNumber: 457,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/credito-dialog.tsx",
-                                    lineNumber: 371,
+                                    lineNumber: 387,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/credito-dialog.tsx",
-                            lineNumber: 366,
+                            lineNumber: 382,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/credito-dialog.tsx",
-                    lineNumber: 232,
+                    lineNumber: 248,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogFooter"], {
@@ -6360,7 +6494,7 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                             children: "Cancelar"
                         }, void 0, false, {
                             fileName: "[project]/components/credito-dialog.tsx",
-                            lineNumber: 482,
+                            lineNumber: 520,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -6368,28 +6502,28 @@ function CreditoDialog({ open, onClose, total, clientesExistentes, onConfirmar }
                             children: "Confirmar Venta a Crédito"
                         }, void 0, false, {
                             fileName: "[project]/components/credito-dialog.tsx",
-                            lineNumber: 485,
+                            lineNumber: 523,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/credito-dialog.tsx",
-                    lineNumber: 481,
+                    lineNumber: 519,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/credito-dialog.tsx",
-            lineNumber: 224,
+            lineNumber: 240,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/credito-dialog.tsx",
-        lineNumber: 223,
+        lineNumber: 239,
         columnNumber: 5
     }, this);
 }
-_s(CreditoDialog, "pF+UWA1xVs6Ly23WHdq7Oed4hWA=");
+_s(CreditoDialog, "WZw33rQ90QLnK1odHDD3RGhm4ys=");
 _c = CreditoDialog;
 var _c;
 __turbopack_context__.k.register(_c, "CreditoDialog");
@@ -7246,10 +7380,14 @@ function VentasContent() {
     };
     const actualizarPrecio = (id, precio)=>{
         if (precio < 0) return;
-        setCarrito(carrito.map((item)=>item.product.id === id ? {
+        setCarrito(carrito.map((item)=>{
+            if (item.product.id !== id) return item;
+            if (item.product.tieneDescuento) return item;
+            return {
                 ...item,
                 precioUnitario: precio
-            } : item));
+            };
+        }));
     };
     const subtotal = carrito.reduce((sum, item)=>sum + item.precioUnitario * item.cantidad, 0);
     const total = subtotal;
@@ -7460,7 +7598,7 @@ function VentasContent() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$app$2d$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarToggle"], {}, void 0, false, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 444,
+                                lineNumber: 450,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7470,7 +7608,7 @@ function VentasContent() {
                                         children: "Punto de Venta"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 446,
+                                        lineNumber: 452,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7478,19 +7616,19 @@ function VentasContent() {
                                         children: "Sistema POS con múltiples precios"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 447,
+                                        lineNumber: 453,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 445,
+                                lineNumber: 451,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ventas-content.tsx",
-                        lineNumber: 443,
+                        lineNumber: 449,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -7503,7 +7641,7 @@ function VentasContent() {
                                     className: "mr-2 h-4 w-4 animate-spin"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ventas-content.tsx",
-                                    lineNumber: 453,
+                                    lineNumber: 459,
                                     columnNumber: 15
                                 }, this),
                                 "Procesando..."
@@ -7514,7 +7652,7 @@ function VentasContent() {
                                     className: "mr-2 h-4 w-4"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ventas-content.tsx",
-                                    lineNumber: 458,
+                                    lineNumber: 464,
                                     columnNumber: 15
                                 }, this),
                                 "Procesar Venta"
@@ -7522,13 +7660,13 @@ function VentasContent() {
                         }, void 0, true)
                     }, void 0, false, {
                         fileName: "[project]/components/ventas-content.tsx",
-                        lineNumber: 450,
+                        lineNumber: 456,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ventas-content.tsx",
-                lineNumber: 442,
+                lineNumber: 448,
                 columnNumber: 7
             }, this),
             cajaAbierta === false && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7547,12 +7685,12 @@ function VentasContent() {
                             d: "M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
                         }, void 0, false, {
                             fileName: "[project]/components/ventas-content.tsx",
-                            lineNumber: 468,
+                            lineNumber: 474,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/ventas-content.tsx",
-                        lineNumber: 467,
+                        lineNumber: 473,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7562,7 +7700,7 @@ function VentasContent() {
                                 children: "Caja cerrada"
                             }, void 0, false, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 471,
+                                lineNumber: 477,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7576,7 +7714,7 @@ function VentasContent() {
                                         children: "Gestión de Caja"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 474,
+                                        lineNumber: 480,
                                         columnNumber: 15
                                     }, this),
                                     ' ',
@@ -7584,19 +7722,19 @@ function VentasContent() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 472,
+                                lineNumber: 478,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ventas-content.tsx",
-                        lineNumber: 470,
+                        lineNumber: 476,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ventas-content.tsx",
-                lineNumber: 466,
+                lineNumber: 472,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7612,12 +7750,12 @@ function VentasContent() {
                                             children: "Búsqueda de Productos"
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 485,
+                                            lineNumber: 491,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 484,
+                                        lineNumber: 490,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -7630,7 +7768,7 @@ function VentasContent() {
                                                         className: "absolute left-3 top-3 h-4 w-4 text-muted-foreground"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                        lineNumber: 490,
+                                                        lineNumber: 496,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -7640,29 +7778,29 @@ function VentasContent() {
                                                         onChange: (e)=>setSearchTerm(e.target.value)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                        lineNumber: 491,
+                                                        lineNumber: 497,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                lineNumber: 489,
+                                                lineNumber: 495,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 488,
+                                            lineNumber: 494,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 487,
+                                        lineNumber: 493,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 483,
+                                lineNumber: 489,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -7672,12 +7810,12 @@ function VentasContent() {
                                             children: "Productos Disponibles"
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 504,
+                                            lineNumber: 510,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 503,
+                                        lineNumber: 509,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -7688,12 +7826,12 @@ function VentasContent() {
                                                 children: "No se encontraron productos"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                lineNumber: 509,
+                                                lineNumber: 515,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 508,
+                                            lineNumber: 514,
                                             columnNumber: 17
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "grid gap-3 sm:grid-cols-2",
@@ -7715,7 +7853,7 @@ function VentasContent() {
                                                                             children: producto.nombre
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 525,
+                                                                            lineNumber: 531,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7723,7 +7861,7 @@ function VentasContent() {
                                                                             children: producto.codigo
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 526,
+                                                                            lineNumber: 532,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         producto.tieneDescuento && producto.descuentoAplicado && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -7732,13 +7870,13 @@ function VentasContent() {
                                                                             children: producto.descuentoAplicado.tipo === 'porcentaje' ? `${producto.descuentoAplicado.valor}% OFF` : `Precio ${producto.descuentoAplicado.nombre}`
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 528,
+                                                                            lineNumber: 534,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 524,
+                                                                    lineNumber: 530,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -7749,18 +7887,18 @@ function VentasContent() {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 536,
+                                                                        lineNumber: 542,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 535,
+                                                                    lineNumber: 541,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 523,
+                                                            lineNumber: 529,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7774,7 +7912,7 @@ function VentasContent() {
                                                                             children: "Precio de venta:"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 541,
+                                                                            lineNumber: 547,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -7782,34 +7920,6 @@ function VentasContent() {
                                                                             children: [
                                                                                 "$",
                                                                                 (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(producto.precioVentaPublico)
-                                                                            ]
-                                                                        }, void 0, true, {
-                                                                            fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 542,
-                                                                            columnNumber: 29
-                                                                        }, this)
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 540,
-                                                                    columnNumber: 27
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    className: "flex justify-between",
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                            className: "text-muted-foreground",
-                                                                            children: "Precio mínimo:"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 547,
-                                                                            columnNumber: 29
-                                                                        }, this),
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                            className: "font-semibold text-[#D4AF37]",
-                                                                            children: [
-                                                                                "$",
-                                                                                (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(producto.precioEspecial)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
@@ -7821,11 +7931,39 @@ function VentasContent() {
                                                                     fileName: "[project]/components/ventas-content.tsx",
                                                                     lineNumber: 546,
                                                                     columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex justify-between",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "text-muted-foreground",
+                                                                            children: "Precio mínimo:"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/components/ventas-content.tsx",
+                                                                            lineNumber: 553,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                            className: "font-semibold text-[#D4AF37]",
+                                                                            children: [
+                                                                                "$",
+                                                                                (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["formatCurrency"])(producto.precioEspecial)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/components/ventas-content.tsx",
+                                                                            lineNumber: 554,
+                                                                            columnNumber: 29
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/components/ventas-content.tsx",
+                                                                    lineNumber: 552,
+                                                                    columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 539,
+                                                            lineNumber: 545,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7839,7 +7977,7 @@ function VentasContent() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 554,
+                                                                    lineNumber: 560,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7852,42 +7990,42 @@ function VentasContent() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 555,
+                                                                    lineNumber: 561,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 553,
+                                                            lineNumber: 559,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, producto.id, true, {
                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                    lineNumber: 518,
+                                                    lineNumber: 524,
                                                     columnNumber: 23
                                                 }, this);
                                             })
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 512,
+                                            lineNumber: 518,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 506,
+                                        lineNumber: 512,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 502,
+                                lineNumber: 508,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ventas-content.tsx",
-                        lineNumber: 482,
+                        lineNumber: 488,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7900,12 +8038,12 @@ function VentasContent() {
                                             children: "Carrito de Compra"
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 571,
+                                            lineNumber: 577,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 570,
+                                        lineNumber: 576,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -7917,7 +8055,7 @@ function VentasContent() {
                                                     className: "h-12 w-12 text-muted-foreground mb-3"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                    lineNumber: 576,
+                                                    lineNumber: 582,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -7925,13 +8063,13 @@ function VentasContent() {
                                                     children: "No hay productos en el carrito"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                    lineNumber: 577,
+                                                    lineNumber: 583,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 575,
+                                            lineNumber: 581,
                                             columnNumber: 17
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "space-y-3",
@@ -7949,7 +8087,7 @@ function VentasContent() {
                                                                             children: item.product.nombre
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 585,
+                                                                            lineNumber: 591,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7961,7 +8099,7 @@ function VentasContent() {
                                                                                     children: item.tipoCliente === "publico" ? "Público" : item.tipoCliente === "mayorista" ? "Mayorista" : "Especial"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                                    lineNumber: 587,
+                                                                                    lineNumber: 593,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 item.product.tieneDescuento && item.product.descuentoAplicado && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -7970,19 +8108,19 @@ function VentasContent() {
                                                                                     children: item.product.descuentoAplicado.tipo === 'porcentaje' ? `${item.product.descuentoAplicado.valor}% OFF` : `${item.product.descuentoAplicado.nombre}`
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                                    lineNumber: 595,
+                                                                                    lineNumber: 601,
                                                                                     columnNumber: 31
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 586,
+                                                                            lineNumber: 592,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 584,
+                                                                    lineNumber: 590,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -7993,18 +8131,18 @@ function VentasContent() {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 604,
+                                                                        lineNumber: 610,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 603,
+                                                                    lineNumber: 609,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 583,
+                                                            lineNumber: 589,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -8019,7 +8157,7 @@ function VentasContent() {
                                                                         children: "-"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 609,
+                                                                        lineNumber: 615,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -8029,7 +8167,7 @@ function VentasContent() {
                                                                         className: "h-8 w-12 text-center"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 616,
+                                                                        lineNumber: 622,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -8039,18 +8177,18 @@ function VentasContent() {
                                                                         children: "+"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 622,
+                                                                        lineNumber: 628,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                                lineNumber: 608,
+                                                                lineNumber: 614,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 607,
+                                                            lineNumber: 613,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -8061,23 +8199,33 @@ function VentasContent() {
                                                                     children: "Precio:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 632,
+                                                                    lineNumber: 638,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                                                    type: "number",
-                                                                    value: item.precioUnitario,
-                                                                    onChange: (e)=>actualizarPrecio(item.product.id, Number.parseFloat(e.target.value) || 0),
-                                                                    className: "h-8 flex-1 text-sm"
+                                                                    type: "text",
+                                                                    inputMode: "numeric",
+                                                                    pattern: "[0-9]*",
+                                                                    value: item.precioUnitario === 0 ? '' : String(item.precioUnitario),
+                                                                    onChange: (e)=>{
+                                                                        const raw = e.target.value;
+                                                                        const digits = raw.replace(/\D/g, '');
+                                                                        const normalized = digits.replace(/^0+(?=\d)/, '');
+                                                                        const nextValue = normalized ? Number.parseInt(normalized, 10) : 0;
+                                                                        actualizarPrecio(item.product.id, nextValue);
+                                                                    },
+                                                                    className: "h-8 flex-1 text-sm",
+                                                                    disabled: item.product.tieneDescuento,
+                                                                    title: item.product.tieneDescuento ? 'Precio bloqueado por descuento' : undefined
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 633,
+                                                                    lineNumber: 639,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 631,
+                                                            lineNumber: 637,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -8088,7 +8236,7 @@ function VentasContent() {
                                                                     children: "Subtotal:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 641,
+                                                                    lineNumber: 657,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -8099,35 +8247,35 @@ function VentasContent() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 642,
+                                                                    lineNumber: 658,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 640,
+                                                            lineNumber: 656,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, item.product.id, true, {
                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                    lineNumber: 582,
+                                                    lineNumber: 588,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 580,
+                                            lineNumber: 586,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 573,
+                                        lineNumber: 579,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 569,
+                                lineNumber: 575,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -8137,12 +8285,12 @@ function VentasContent() {
                                             children: "Detalles de Pago"
                                         }, void 0, false, {
                                             fileName: "[project]/components/ventas-content.tsx",
-                                            lineNumber: 655,
+                                            lineNumber: 671,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 654,
+                                        lineNumber: 670,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -8156,7 +8304,7 @@ function VentasContent() {
                                                         children: "Tipo de Venta"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                        lineNumber: 659,
+                                                        lineNumber: 675,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -8167,12 +8315,12 @@ function VentasContent() {
                                                                 id: "tipo-venta",
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 662,
+                                                                    lineNumber: 678,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                                lineNumber: 661,
+                                                                lineNumber: 677,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -8182,7 +8330,7 @@ function VentasContent() {
                                                                         children: "Contado"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 665,
+                                                                        lineNumber: 681,
                                                                         columnNumber: 21
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -8190,25 +8338,25 @@ function VentasContent() {
                                                                         children: "Crédito"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 666,
+                                                                        lineNumber: 682,
                                                                         columnNumber: 21
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                                lineNumber: 664,
+                                                                lineNumber: 680,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                        lineNumber: 660,
+                                                        lineNumber: 676,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                lineNumber: 658,
+                                                lineNumber: 674,
                                                 columnNumber: 15
                                             }, this),
                                             tipoVenta === "contado" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -8220,7 +8368,7 @@ function VentasContent() {
                                                             children: "Método de Pago"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 674,
+                                                            lineNumber: 690,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -8231,12 +8379,12 @@ function VentasContent() {
                                                                     id: "metodo-pago",
                                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                                        lineNumber: 677,
+                                                                        lineNumber: 693,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 676,
+                                                                    lineNumber: 692,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -8246,7 +8394,7 @@ function VentasContent() {
                                                                             children: "Efectivo"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 680,
+                                                                            lineNumber: 696,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -8254,7 +8402,7 @@ function VentasContent() {
                                                                             children: "Transferencia"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 681,
+                                                                            lineNumber: 697,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -8262,25 +8410,25 @@ function VentasContent() {
                                                                             children: "Mixto"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                                            lineNumber: 682,
+                                                                            lineNumber: 698,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                                    lineNumber: 679,
+                                                                    lineNumber: 695,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 675,
+                                                            lineNumber: 691,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/ventas-content.tsx",
-                                                    lineNumber: 673,
+                                                    lineNumber: 689,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false),
@@ -8295,7 +8443,7 @@ function VentasContent() {
                                                                 children: "Subtotal:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                                lineNumber: 691,
+                                                                lineNumber: 707,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -8306,13 +8454,13 @@ function VentasContent() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                                lineNumber: 692,
+                                                                lineNumber: 708,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                        lineNumber: 690,
+                                                        lineNumber: 706,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -8323,7 +8471,7 @@ function VentasContent() {
                                                                 children: "Total:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                                lineNumber: 695,
+                                                                lineNumber: 711,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -8334,19 +8482,19 @@ function VentasContent() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                                lineNumber: 696,
+                                                                lineNumber: 712,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/ventas-content.tsx",
-                                                        lineNumber: 694,
+                                                        lineNumber: 710,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                lineNumber: 689,
+                                                lineNumber: 705,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -8360,7 +8508,7 @@ function VentasContent() {
                                                             className: "mr-2 h-4 w-4 animate-spin"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/ventas-content.tsx",
-                                                            lineNumber: 708,
+                                                            lineNumber: 724,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Procesando..."
@@ -8368,31 +8516,31 @@ function VentasContent() {
                                                 }, void 0, true) : 'Finalizar Venta'
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ventas-content.tsx",
-                                                lineNumber: 700,
+                                                lineNumber: 716,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/ventas-content.tsx",
-                                        lineNumber: 657,
+                                        lineNumber: 673,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ventas-content.tsx",
-                                lineNumber: 653,
+                                lineNumber: 669,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ventas-content.tsx",
-                        lineNumber: 568,
+                        lineNumber: 574,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ventas-content.tsx",
-                lineNumber: 481,
+                lineNumber: 487,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$resumen$2d$precios$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ResumenPreciosDialog"], {
@@ -8402,7 +8550,7 @@ function VentasContent() {
                 onConfirmar: confirmarResumenPrecios
             }, void 0, false, {
                 fileName: "[project]/components/ventas-content.tsx",
-                lineNumber: 721,
+                lineNumber: 737,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$factura$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FacturaDialog"], {
@@ -8411,7 +8559,7 @@ function VentasContent() {
                 venta: ventaActual
             }, void 0, false, {
                 fileName: "[project]/components/ventas-content.tsx",
-                lineNumber: 729,
+                lineNumber: 745,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$cambio$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CambioDialog"], {
@@ -8422,7 +8570,7 @@ function VentasContent() {
                 onConfirmar: finalizarVentaContado
             }, void 0, false, {
                 fileName: "[project]/components/ventas-content.tsx",
-                lineNumber: 736,
+                lineNumber: 752,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$credito$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CreditoDialog"], {
@@ -8433,13 +8581,13 @@ function VentasContent() {
                 onConfirmar: finalizarVentaCredito
             }, void 0, false, {
                 fileName: "[project]/components/ventas-content.tsx",
-                lineNumber: 745,
+                lineNumber: 761,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/ventas-content.tsx",
-        lineNumber: 441,
+        lineNumber: 447,
         columnNumber: 5
     }, this);
 }

@@ -267,6 +267,14 @@ async function POST(request, { params }) {
                 notas || null,
                 usuarioId || null
             ]);
+            await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`UPDATE pedidos
+         SET total_abonado = total_abonado + ?,
+             saldo_pendiente = GREATEST(saldo_pendiente - ?, 0)
+         WHERE id = ?`, [
+                montoAbono,
+                montoAbono,
+                pedido.id
+            ]);
             abonosRealizados.push({
                 pedido_id: pedido.id,
                 numero_pedido: pedido.numero_pedido,

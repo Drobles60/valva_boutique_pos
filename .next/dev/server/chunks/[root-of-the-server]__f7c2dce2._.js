@@ -803,10 +803,17 @@ async function POST(request, { params }) {
             });
         }
         // Verificar que la cuenta existe
-        const cuenta = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])(`SELECT cpc.*, c.nombre as cliente_nombre, v.numero_venta
+        const cuenta = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])(`SELECT cpc.*, c.nombre as cliente_nombre, v.numero_venta,
+              (cpc.monto_total - COALESCE(a.total_abonado, 0)) as saldo_pendiente_real,
+              LEAST(COALESCE(a.total_abonado, 0), cpc.monto_total) as total_abonado_real
        FROM cuentas_por_cobrar cpc
        INNER JOIN clientes c ON cpc.cliente_id = c.id
        INNER JOIN ventas v ON cpc.venta_id = v.id
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
        WHERE cpc.id = ?`, [
             cuentaId
         ]);
@@ -819,11 +826,19 @@ async function POST(request, { params }) {
             });
         }
         // Validar que el monto no exceda el saldo pendiente (usar valor absoluto por si hay saldos negativos por error)
-        const saldoPendienteAbsoluto = Math.abs(cuenta.saldo_pendiente);
-        if (monto > saldoPendienteAbsoluto) {
+        const saldoPendienteReal = Number(cuenta.saldo_pendiente_real || 0);
+        if (saldoPendienteReal <= 0) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 success: false,
-                error: `El monto no puede exceder el saldo pendiente de $${saldoPendienteAbsoluto.toFixed(2)}`
+                error: 'La cuenta ya no tiene saldo pendiente'
+            }, {
+                status: 400
+            });
+        }
+        if (monto > saldoPendienteReal) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                success: false,
+                error: `El monto no puede exceder el saldo pendiente de $${saldoPendienteReal.toFixed(2)}`
             }, {
                 status: 400
             });
@@ -848,10 +863,17 @@ async function POST(request, { params }) {
         // El trigger actualizar_saldo_cliente_abono se encarga de actualizar
         // cuenta.saldo_pendiente y cliente.saldo_pendiente automáticamente
         // Obtener el saldo actualizado
-        const cuentaActualizada = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])(`SELECT cpc.*, v.numero_venta, c.nombre as cliente_nombre
+        const cuentaActualizada = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["queryOne"])(`SELECT cpc.*, v.numero_venta, c.nombre as cliente_nombre,
+              (cpc.monto_total - COALESCE(a.total_abonado, 0)) as saldo_pendiente_real,
+              LEAST(COALESCE(a.total_abonado, 0), cpc.monto_total) as total_abonado_real
        FROM cuentas_por_cobrar cpc
        INNER JOIN ventas v ON cpc.venta_id = v.id
        INNER JOIN clientes c ON cpc.cliente_id = c.id
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
        WHERE cpc.id = ?`, [
             cuentaId
         ]);
@@ -861,7 +883,7 @@ async function POST(request, { params }) {
             data: {
                 abono_id: result.insertId,
                 cuenta: cuentaActualizada,
-                nuevo_saldo_pendiente: cuentaActualizada.saldo_pendiente,
+                nuevo_saldo_pendiente: Math.max(0, Number(cuentaActualizada?.saldo_pendiente_real ?? cuentaActualizada?.saldo_pendiente ?? 0)),
                 numero_venta: cuentaActualizada.numero_venta
             }
         });

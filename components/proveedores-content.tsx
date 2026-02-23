@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Search, Plus, Edit, Trash2, Building2, Phone, Mail, Ban, CheckCircle } from "lucide-react"
+import { Search, Plus, Edit, Building2, Phone, Mail, Ban, CheckCircle } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
@@ -67,6 +67,22 @@ export function ProveedoresContent() {
     personaContacto: "",
     telefonoContacto: "",
   })
+
+  const hasEmoji = (value: string) => /\p{Extended_Pictographic}/u.test(value)
+
+  const getRazonSocialError = (value: string) => {
+    if (!value) return null
+    if (/[@#$%^*<>{}\[\]]/.test(value)) {
+      return 'No se permiten caracteres @ # $ % ^ * < > { } [ ]'
+    }
+    if (hasEmoji(value)) {
+      return 'No se permiten emojis'
+    }
+    if (/^\s*\d+\s*$/.test(value)) {
+      return 'No se permite solo numeros'
+    }
+    return null
+  }
 
   useEffect(() => {
     loadProveedores()
@@ -128,6 +144,14 @@ export function ProveedoresContent() {
     e.preventDefault()
 
     try {
+      const razonSocialError = getRazonSocialError(formData.razonSocial.trim())
+      if (razonSocialError) {
+        toast.error('Razon social invalida', {
+          description: razonSocialError
+        })
+        return
+      }
+
       setLoading(true)
       
       const proveedorData = {
@@ -458,16 +482,6 @@ export function ProveedoresContent() {
                             <CheckCircle className="h-4 w-4 text-green-600" />
                           )}
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-destructive"
-                          onClick={() => handleDelete(proveedor.id)}
-                          disabled={loading}
-                          title="Eliminar"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -519,7 +533,26 @@ export function ProveedoresContent() {
                   <Input
                     id="razonSocial"
                     value={formData.razonSocial}
-                    onChange={(e) => setFormData({ ...formData, razonSocial: e.target.value })}
+                    onChange={(e) => {
+                      const nextValue = e.target.value
+                      const error = getRazonSocialError(nextValue)
+                      if (error && error !== 'No se permite solo numeros') {
+                        toast.error('Razon social invalida', {
+                          description: error
+                        })
+                        return
+                      }
+                      setFormData({ ...formData, razonSocial: nextValue })
+                    }}
+                    onBlur={() => {
+                      const error = getRazonSocialError(formData.razonSocial)
+                      if (error === 'No se permite solo numeros') {
+                        toast.error('Razon social invalida', {
+                          description: error
+                        })
+                        setFormData({ ...formData, razonSocial: '' })
+                      }
+                    }}
                     required
                   />
                 </div>
@@ -539,7 +572,10 @@ export function ProveedoresContent() {
                   <Input
                     id="telefono"
                     value={formData.telefono}
-                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '')
+                      setFormData({ ...formData, telefono: value })
+                    }}
                     required
                   />
                 </div>
@@ -548,7 +584,10 @@ export function ProveedoresContent() {
                   <Input
                     id="celular"
                     value={formData.celular}
-                    onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '')
+                      setFormData({ ...formData, celular: value })
+                    }}
                   />
                 </div>
                 <div className="space-y-2">
@@ -599,7 +638,10 @@ export function ProveedoresContent() {
                     <Input
                       id="personaContacto"
                       value={formData.personaContacto}
-                      onChange={(e) => setFormData({ ...formData, personaContacto: e.target.value })}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^A-Za-z\s]/g, '')
+                        setFormData({ ...formData, personaContacto: value })
+                      }}
                     />
                   </div>
                   <div className="space-y-2">
@@ -607,7 +649,10 @@ export function ProveedoresContent() {
                     <Input
                       id="telefonoContacto"
                       value={formData.telefonoContacto}
-                      onChange={(e) => setFormData({ ...formData, telefonoContacto: e.target.value })}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '')
+                        setFormData({ ...formData, telefonoContacto: value })
+                      }}
                     />
                   </div>
                 </div>
