@@ -392,6 +392,15 @@ export function PedidosContent() {
       return
     }
 
+    const saldoTotalProveedor = pedidos
+      .filter(p => p.proveedor_id === selectedProveedor.id && p.saldo_pendiente > 0)
+      .reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
+
+    if (monto > saldoTotalProveedor) {
+      toast.error('El monto no puede ser mayor al saldo pendiente total')
+      return
+    }
+
     try {
       setLoading(true)
       
@@ -1125,6 +1134,21 @@ export function PedidosContent() {
                   value={abonoForm.monto ? formatCurrency(abonoForm.monto) : ''}
                   onChange={(e) => {
                     const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
+                    const maximo = selectedProveedor
+                      ? pedidos
+                          .filter(p => p.proveedor_id === selectedProveedor.id && p.saldo_pendiente > 0)
+                          .reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
+                      : 0
+                    const montoNumerico = Number.parseFloat(value) || 0
+
+                    if (maximo > 0 && montoNumerico > maximo) {
+                      setAbonoForm({ ...abonoForm, monto: maximo.toString() })
+                      toast.error('Monto excedido', {
+                        description: `El monto no puede ser mayor al saldo pendiente total de $${formatCurrency(maximo)}`
+                      })
+                      return
+                    }
+
                     setAbonoForm({ ...abonoForm, monto: value })
                   }}
                   onFocus={(e) => {

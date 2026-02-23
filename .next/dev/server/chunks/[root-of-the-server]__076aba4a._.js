@@ -985,10 +985,18 @@ async function POST(request) {
               u.nombre as vendedor_nombre,
               u.apellido as vendedor_apellido,
               cpc.monto_total as credito_monto_total,
-              cpc.saldo_pendiente as credito_saldo_pendiente,
-              (SELECT COALESCE(SUM(a.monto), 0) 
-               FROM abonos a 
-               WHERE a.cuenta_por_cobrar_id = cpc.id) as credito_abono_total
+              GREATEST(
+                cpc.monto_total - (SELECT COALESCE(SUM(a.monto), 0)
+                 FROM abonos a
+                 WHERE a.cuenta_por_cobrar_id = cpc.id),
+                0
+              ) as credito_saldo_pendiente,
+              LEAST(
+                (SELECT COALESCE(SUM(a.monto), 0)
+                 FROM abonos a
+                 WHERE a.cuenta_por_cobrar_id = cpc.id),
+                cpc.monto_total
+              ) as credito_abono_total
        FROM ventas v
        LEFT JOIN clientes c ON v.cliente_id = c.id
        LEFT JOIN usuarios u ON v.usuario_id = u.id

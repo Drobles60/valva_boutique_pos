@@ -247,7 +247,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
         yPos += 4
 
         // Saldo pendiente
-        const saldoPendiente = venta.credito_saldo_pendiente || venta.total
+        const saldoPendiente = venta.credito_saldo_pendiente ?? venta.total
         pdf.setFont('Lucida Console', 'bold')
         pdf.text('Saldo Pendiente:', margin, yPos)
         pdf.text(`$ ${formatCurrency(saldoPendiente)}`, pageWidth - margin, yPos, { align: 'right' })

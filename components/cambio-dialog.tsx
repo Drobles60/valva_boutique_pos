@@ -46,6 +46,7 @@ export function CambioDialog({
   const [montoEfectivo, setMontoEfectivo] = React.useState("")
   const [montoTransferencia, setMontoTransferencia] = React.useState("")
   const [referenciaTransferencia, setReferenciaTransferencia] = React.useState("Nequi")
+  const [referenciaPago, setReferenciaPago] = React.useState("")
 
   // Resetear cuando se abre el diálogo
   React.useEffect(() => {
@@ -54,6 +55,7 @@ export function CambioDialog({
       setMontoEfectivo("")
       setMontoTransferencia("")
       setReferenciaTransferencia("Nequi")
+      setReferenciaPago("")
     }
   }, [open])
 
@@ -93,6 +95,10 @@ export function CambioDialog({
   }
 
   const handleConfirmar = () => {
+    const referenciaFinal = referenciaPago
+      ? `${referenciaTransferencia} - ${referenciaPago}`
+      : referenciaTransferencia
+
     if (metodoPago === 'efectivo') {
       const recibido = parseFloat(efectivoRecibido) || 0
       
@@ -111,11 +117,15 @@ export function CambioDialog({
         toast.error('Debe seleccionar el origen de la transferencia')
         return
       }
+      if (!referenciaPago.trim()) {
+        toast.error('Debe ingresar la referencia de pago')
+        return
+      }
       
       onConfirmar({
         efectivoRecibido: total,
         cambio: 0,
-        referenciaTransferencia
+        referenciaTransferencia: referenciaFinal
       })
     } else if (metodoPago === 'mixto') {
       const efectivo = parseFloat(montoEfectivo) || 0
@@ -135,6 +145,10 @@ export function CambioDialog({
         toast.error('Debe seleccionar el origen de la transferencia')
         return
       }
+      if (!referenciaPago.trim()) {
+        toast.error('Debe ingresar la referencia de pago')
+        return
+      }
 
       onConfirmar({
         efectivoRecibido: efectivo,
@@ -143,7 +157,7 @@ export function CambioDialog({
           efectivo,
           transferencia
         },
-        referenciaTransferencia
+        referenciaTransferencia: referenciaFinal
       })
     }
   }
@@ -217,6 +231,16 @@ export function CambioDialog({
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="referenciaPago">Referencia de Pago</Label>
+                <Input
+                  id="referenciaPago"
+                  type="text"
+                  placeholder="Ingrese la referencia"
+                  value={referenciaPago}
+                  onChange={(e) => setReferenciaPago(e.target.value)}
+                />
+              </div>
               
               <div className="rounded-lg border p-4 bg-blue-50 border-blue-200">
                 <div className="flex items-center gap-2 mb-2">
@@ -281,6 +305,16 @@ export function CambioDialog({
                       <SelectItem value="Otro">Otro</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="referenciaPagoMixto">Referencia de Pago</Label>
+                  <Input
+                    id="referenciaPagoMixto"
+                    type="text"
+                    placeholder="Ingrese la referencia"
+                    value={referenciaPago}
+                    onChange={(e) => setReferenciaPago(e.target.value)}
+                  />
                 </div>
               </div>
 

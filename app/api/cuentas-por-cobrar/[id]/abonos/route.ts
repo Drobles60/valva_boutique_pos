@@ -106,10 +106,17 @@ export async function POST(
 
     // Verificar que la cuenta existe
     const cuenta = await queryOne(
-      `SELECT cpc.*, c.nombre as cliente_nombre, v.numero_venta
+      `SELECT cpc.*, c.nombre as cliente_nombre, v.numero_venta,
+              (cpc.monto_total - COALESCE(a.total_abonado, 0)) as saldo_pendiente_real,
+              LEAST(COALESCE(a.total_abonado, 0), cpc.monto_total) as total_abonado_real
        FROM cuentas_por_cobrar cpc
        INNER JOIN clientes c ON cpc.cliente_id = c.id
        INNER JOIN ventas v ON cpc.venta_id = v.id
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
        WHERE cpc.id = ?`,
       [cuentaId]
     )
@@ -122,12 +129,18 @@ export async function POST(
     }
 
     // Validar que el monto no exceda el saldo pendiente (usar valor absoluto por si hay saldos negativos por error)
-    const saldoPendienteAbsoluto = Math.abs(cuenta.saldo_pendiente)
-    if (monto > saldoPendienteAbsoluto) {
+    const saldoPendienteReal = Number(cuenta.saldo_pendiente_real || 0)
+    if (saldoPendienteReal <= 0) {
+      return NextResponse.json(
+        { success: false, error: 'La cuenta ya no tiene saldo pendiente' },
+        { status: 400 }
+      )
+    }
+    if (monto > saldoPendienteReal) {
       return NextResponse.json(
         { 
           success: false, 
-          error: `El monto no puede exceder el saldo pendiente de $${saldoPendienteAbsoluto.toFixed(2)}` 
+          error: `El monto no puede exceder el saldo pendiente de $${saldoPendienteReal.toFixed(2)}` 
         },
         { status: 400 }
       )
@@ -159,10 +172,17 @@ export async function POST(
 
     // Obtener el saldo actualizado
     const cuentaActualizada = await queryOne(
-      `SELECT cpc.*, v.numero_venta, c.nombre as cliente_nombre
+      `SELECT cpc.*, v.numero_venta, c.nombre as cliente_nombre,
+              (cpc.monto_total - COALESCE(a.total_abonado, 0)) as saldo_pendiente_real,
+              LEAST(COALESCE(a.total_abonado, 0), cpc.monto_total) as total_abonado_real
        FROM cuentas_por_cobrar cpc
        INNER JOIN ventas v ON cpc.venta_id = v.id
        INNER JOIN clientes c ON cpc.cliente_id = c.id
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
        WHERE cpc.id = ?`,
       [cuentaId]
     )
@@ -173,7 +193,7 @@ export async function POST(
       data: {
         abono_id: result.insertId,
         cuenta: cuentaActualizada,
-        nuevo_saldo_pendiente: cuentaActualizada.saldo_pendiente,
+        nuevo_saldo_pendiente: Math.max(0, Number(cuentaActualizada?.saldo_pendiente_real ?? cuentaActualizada?.saldo_pendiente ?? 0)),
         numero_venta: cuentaActualizada.numero_venta
       }
     })

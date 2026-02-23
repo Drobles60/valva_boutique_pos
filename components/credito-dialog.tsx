@@ -70,6 +70,7 @@ export function CreditoDialog({
   const [montoEfectivo, setMontoEfectivo] = React.useState("")
   const [montoTransferencia, setMontoTransferencia] = React.useState("")
   const [referenciaTransferencia, setReferenciaTransferencia] = React.useState("Nequi")
+  const [referenciaPago, setReferenciaPago] = React.useState("")
 
   // Resetear cuando se abre el diálogo
   React.useEffect(() => {
@@ -87,6 +88,7 @@ export function CreditoDialog({
       setMontoEfectivo("")
       setMontoTransferencia("")
       setReferenciaTransferencia("Nequi")
+      setReferenciaPago("")
     }
   }, [open])
 
@@ -158,10 +160,20 @@ export function CreditoDialog({
           toast.error('Debe seleccionar el origen de la transferencia')
           return
         }
+
+        if (!referenciaPago.trim()) {
+          toast.error('Debe ingresar la referencia de pago')
+          return
+        }
       }
 
       if (metodoAbono === 'transferencia' && !referenciaTransferencia) {
         toast.error('Debe seleccionar el origen de la transferencia')
+        return
+      }
+
+      if (metodoAbono === 'transferencia' && !referenciaPago.trim()) {
+        toast.error('Debe ingresar la referencia de pago')
         return
       }
     }
@@ -169,19 +181,23 @@ export function CreditoDialog({
     // Preparar datos
     let abonoData: AbonoData | undefined = undefined
     if (abonoMonto > 0) {
+      const referenciaFinal = referenciaPago
+        ? `${referenciaTransferencia} - ${referenciaPago}`
+        : referenciaTransferencia
+
       if (metodoAbono === 'mixto') {
         abonoData = {
           monto: abonoMonto,
           metodo: 'mixto',
           montoEfectivo: parseFloat(montoEfectivo) || 0,
           montoTransferencia: parseFloat(montoTransferencia) || 0,
-          referenciaTransferencia
+          referenciaTransferencia: referenciaFinal
         }
       } else if (metodoAbono === 'transferencia') {
         abonoData = {
           monto: abonoMonto,
           metodo: metodoAbono,
-          referenciaTransferencia
+          referenciaTransferencia: referenciaFinal
         }
       } else {
         abonoData = {
@@ -410,6 +426,18 @@ export function CreditoDialog({
                       </Select>
                     </div>
                   )}
+                  {metodoAbono === 'transferencia' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="referenciaPagoAbono">Referencia de Pago</Label>
+                      <Input
+                        id="referenciaPagoAbono"
+                        type="text"
+                        placeholder="Ingrese la referencia"
+                        value={referenciaPago}
+                        onChange={(e) => setReferenciaPago(e.target.value)}
+                      />
+                    </div>
+                  )}
                   
                   <div className="space-y-2">
                     <Label htmlFor="montoAbono">Monto del Abono</Label>
@@ -462,6 +490,16 @@ export function CreditoDialog({
                         <SelectItem value="Otro">Otro</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="referenciaPagoMixtoAbono">Referencia de Pago</Label>
+                    <Input
+                      id="referenciaPagoMixtoAbono"
+                      type="text"
+                      placeholder="Ingrese la referencia"
+                      value={referenciaPago}
+                      onChange={(e) => setReferenciaPago(e.target.value)}
+                    />
                   </div>
 
                   {(montoEfectivo || montoTransferencia) && (

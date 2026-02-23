@@ -172,22 +172,50 @@ export async function POST(
       );
     }
 
-    // Validar que el monto no exceda el saldo pendiente total del cliente (usar valor absoluto por si hay saldos negativos)
-    const saldoClienteAbsoluto = Math.abs(cliente.saldo_pendiente)
-    if (monto > saldoClienteAbsoluto) {
+    // Calcular saldo pendiente real basado en abonos registrados
+    const saldoClienteResult = await queryOne<any>(
+      `SELECT COALESCE(SUM(cpc.monto_total - COALESCE(a.total_abonado, 0)), 0) as saldo_total
+       FROM cuentas_por_cobrar cpc
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
+       WHERE cpc.cliente_id = ?
+         AND (cpc.monto_total - COALESCE(a.total_abonado, 0)) > 0`,
+      [clienteId]
+    )
+
+    const saldoPendienteReal = Number(saldoClienteResult?.saldo_total || 0)
+    if (saldoPendienteReal <= 0) {
       return NextResponse.json(
-        { error: `El monto ($${monto.toFixed(2)}) no puede exceder el saldo pendiente total ($${saldoClienteAbsoluto.toFixed(2)})` },
+        { error: 'No hay saldo pendiente para este cliente' },
+        { status: 400 }
+      )
+    }
+
+    // Validar que el monto no exceda el saldo pendiente total del cliente
+    if (monto > saldoPendienteReal) {
+      return NextResponse.json(
+        { error: `El monto ($${monto.toFixed(2)}) no puede exceder el saldo pendiente total ($${saldoPendienteReal.toFixed(2)})` },
         { status: 400 }
       );
     }
 
     // Obtener todas las cuentas pendientes del cliente ordenadas por fecha (más antiguas primero)
     const cuentasPendientes = await query<any[]>(
-      `SELECT cpc.id, cpc.venta_id, cpc.monto_total, cpc.saldo_pendiente, 
+      `SELECT cpc.id, cpc.venta_id, cpc.monto_total,
+              (cpc.monto_total - COALESCE(a.total_abonado, 0)) as saldo_pendiente,
               v.numero_venta, cpc.fecha_vencimiento, cpc.created_at
        FROM cuentas_por_cobrar cpc
        INNER JOIN ventas v ON cpc.venta_id = v.id
-       WHERE cpc.cliente_id = ? AND ABS(cpc.saldo_pendiente) > 0
+       LEFT JOIN (
+         SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+         FROM abonos
+         GROUP BY cuenta_por_cobrar_id
+       ) a ON a.cuenta_por_cobrar_id = cpc.id
+       WHERE cpc.cliente_id = ?
+         AND (cpc.monto_total - COALESCE(a.total_abonado, 0)) > 0
        ORDER BY cpc.created_at ASC`,
       [clienteId]
     );
@@ -206,9 +234,9 @@ export async function POST(
     for (const cuenta of cuentasPendientes) {
       if (montoRestante <= 0) break;
 
-      // Calcular cuánto abonar a esta cuenta (usar valor absoluto por si hay saldos negativos)
-      const saldoCuentaAbsoluto = Math.abs(cuenta.saldo_pendiente)
-      const montoAbono = Math.min(montoRestante, saldoCuentaAbsoluto);
+      // Calcular cuánto abonar a esta cuenta
+      const saldoCuenta = Number(cuenta.saldo_pendiente) || 0
+      const montoAbono = Math.min(montoRestante, saldoCuenta);
       const saldoAnterior = cuenta.saldo_pendiente;
 
       // Registrar el abono

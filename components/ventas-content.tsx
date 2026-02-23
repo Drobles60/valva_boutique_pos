@@ -197,7 +197,13 @@ export function VentasContent() {
 
   const actualizarPrecio = (id: string, precio: number) => {
     if (precio < 0) return
-    setCarrito(carrito.map((item) => (item.product.id === id ? { ...item, precioUnitario: precio } : item)))
+    setCarrito(
+      carrito.map((item) => {
+        if (item.product.id !== id) return item
+        if ((item.product as any).tieneDescuento) return item
+        return { ...item, precioUnitario: precio }
+      })
+    )
   }
 
   const subtotal = carrito.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0)
@@ -631,10 +637,20 @@ export function VentasContent() {
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-muted-foreground">Precio:</span>
                         <Input
-                          type="number"
-                          value={item.precioUnitario}
-                          onChange={(e) => actualizarPrecio(item.product.id, Number.parseFloat(e.target.value) || 0)}
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={item.precioUnitario === 0 ? '' : String(item.precioUnitario)}
+                          onChange={(e) => {
+                            const raw = e.target.value
+                            const digits = raw.replace(/\D/g, '')
+                            const normalized = digits.replace(/^0+(?=\d)/, '')
+                            const nextValue = normalized ? Number.parseInt(normalized, 10) : 0
+                            actualizarPrecio(item.product.id, nextValue)
+                          }}
                           className="h-8 flex-1 text-sm"
+                          disabled={(item.product as any).tieneDescuento}
+                          title={(item.product as any).tieneDescuento ? 'Precio bloqueado por descuento' : undefined}
                         />
                       </div>
                       <div className="flex justify-between items-center pt-2 border-t">

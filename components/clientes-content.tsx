@@ -136,6 +136,20 @@ export function ClientesContent() {
     loadClientes()
   }, [])
 
+  useEffect(() => {
+    if (abonoClienteDialogOpen) {
+      setSelectedCliente(null)
+      setClienteSearchTerm("")
+      setDistribucionDetalle([])
+      setAbonoClienteData({
+        monto: "",
+        metodoPago: "efectivo",
+        referencia: "",
+        notas: "",
+      })
+    }
+  }, [abonoClienteDialogOpen])
+
   // Cargar todas las facturas (cuentas por cobrar)
   const loadCuentas = async (fechaInicioParam?: string, fechaFinParam?: string) => {
     try {
@@ -292,6 +306,7 @@ export function ClientesContent() {
       })
 
       await loadCuentas()
+      await loadClientes()
       handleCloseAbonoIndividualDialog()
     } catch (error: any) {
       console.error('Error al registrar abono:', error)
@@ -426,8 +441,8 @@ export function ClientesContent() {
 
   const filteredClientes = clientes.filter(
     (c) =>
-      normalizeText(c.nombre).includes(normalizeText(clienteSearchTerm)) ||
-      normalizeText(c.identificacion).includes(normalizeText(clienteSearchTerm)),
+      normalizeText(c.nombre || '').includes(normalizeText(clienteSearchTerm)) ||
+      normalizeText(c.identificacion || '').includes(normalizeText(clienteSearchTerm)),
   )
 
   const totalCuentas = cuentas.length
@@ -903,9 +918,14 @@ export function ClientesContent() {
                     id="cliente"
                     placeholder="Buscar por nombre o identificación..."
                     value={clienteSearchTerm}
-                    onChange={(e) => setClienteSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                      if (selectedCliente) {
+                        setSelectedCliente(null)
+                      }
+                      setClienteSearchTerm(e.target.value)
+                    }}
                   />
-                  {clienteSearchTerm && (
+                  {clienteSearchTerm && !selectedCliente && (
                     <div className="border rounded-md max-h-48 overflow-y-auto mt-2">
                       {filteredClientes.length === 0 ? (
                         <p className="text-sm text-muted-foreground text-center py-4">

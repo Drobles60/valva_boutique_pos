@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
         cpc.venta_id,
         cpc.cliente_id,
         cpc.monto_total,
-        cpc.saldo_pendiente,
+        GREATEST(cpc.monto_total - COALESCE(a.total_abonado, 0), 0) as saldo_pendiente,
         cpc.fecha_vencimiento,
         cpc.estado,
         cpc.created_at,
@@ -29,15 +29,18 @@ export async function GET(request: NextRequest) {
         c.identificacion as cliente_identificacion,
         c.telefono as cliente_telefono,
         c.email as cliente_email,
-        (SELECT COALESCE(SUM(a.monto), 0) 
-         FROM abonos a 
-         WHERE a.cuenta_por_cobrar_id = cpc.id) as total_abonado,
-        (SELECT COUNT(*) 
-         FROM abonos a 
-         WHERE a.cuenta_por_cobrar_id = cpc.id) as cantidad_abonos
+        LEAST(COALESCE(a.total_abonado, 0), cpc.monto_total) as total_abonado,
+        COALESCE(a.cantidad_abonos, 0) as cantidad_abonos
       FROM cuentas_por_cobrar cpc
       INNER JOIN ventas v ON cpc.venta_id = v.id
-      INNER JOIN clientes c ON cpc.cliente_id = c.id`
+      INNER JOIN clientes c ON cpc.cliente_id = c.id
+      LEFT JOIN (
+        SELECT cuenta_por_cobrar_id,
+               COALESCE(SUM(monto), 0) as total_abonado,
+               COUNT(*) as cantidad_abonos
+        FROM abonos
+        GROUP BY cuenta_por_cobrar_id
+      ) a ON a.cuenta_por_cobrar_id = cpc.id`
     
     const queryParams: any[] = []
     const whereConditions: string[] = []

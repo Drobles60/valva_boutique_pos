@@ -730,23 +730,24 @@ async function GET(request) {
         c.nombre,
         c.identificacion,
         c.telefono,
-        c.saldo_pendiente,
+        COALESCE(SUM(GREATEST(cpc.monto_total - COALESCE(a.total_abonado, 0), 0)), 0) as saldo_pendiente,
         COUNT(DISTINCT cpc.id) as total_cuentas,
-        COUNT(DISTINCT CASE WHEN cpc.saldo_pendiente > 0 THEN cpc.id END) as cuentas_pendientes,
-        COUNT(DISTINCT CASE WHEN cpc.estado = 'vencida' AND cpc.saldo_pendiente > 0 THEN cpc.id END) as cuentas_vencidas,
-        MIN(cpc.fecha_vencimiento) as fecha_vencimiento_proxima,
+        COUNT(DISTINCT CASE WHEN (cpc.monto_total - COALESCE(a.total_abonado, 0)) > 0 THEN cpc.id END) as cuentas_pendientes,
+        COUNT(DISTINCT CASE WHEN cpc.estado = 'vencida' AND (cpc.monto_total - COALESCE(a.total_abonado, 0)) > 0 THEN cpc.id END) as cuentas_vencidas,
+        MIN(CASE WHEN (cpc.monto_total - COALESCE(a.total_abonado, 0)) > 0 THEN cpc.fecha_vencimiento END) as fecha_vencimiento_proxima,
         SUM(cpc.monto_total) as monto_total_creditos,
-        SUM(CASE WHEN cpc.saldo_pendiente > 0 THEN (
-          SELECT COALESCE(SUM(a.monto), 0) 
-          FROM abonos a 
-          WHERE a.cuenta_por_cobrar_id = cpc.id
-        ) ELSE 0 END) as total_abonado
+        SUM(LEAST(COALESCE(a.total_abonado, 0), cpc.monto_total)) as total_abonado
       FROM clientes c
       INNER JOIN cuentas_por_cobrar cpc ON c.id = cpc.cliente_id
-      WHERE c.estado = 'activo' 
-        AND cpc.saldo_pendiente > 0
-      GROUP BY c.id, c.nombre, c.identificacion, c.telefono, c.saldo_pendiente
-      ORDER BY c.saldo_pendiente DESC, c.nombre ASC`, []);
+      LEFT JOIN (
+        SELECT cuenta_por_cobrar_id, COALESCE(SUM(monto), 0) as total_abonado
+        FROM abonos
+        GROUP BY cuenta_por_cobrar_id
+      ) a ON a.cuenta_por_cobrar_id = cpc.id
+      WHERE c.estado = 'activo'
+      GROUP BY c.id, c.nombre, c.identificacion, c.telefono
+      HAVING COALESCE(SUM(GREATEST(cpc.monto_total - COALESCE(a.total_abonado, 0), 0)), 0) > 0
+      ORDER BY saldo_pendiente DESC, c.nombre ASC`, []);
         // Si está en modo debug, incluir el detalle de facturas
         if (debug) {
             const clientesConDetalle = await Promise.all(clientes.map(async (cliente)=>{

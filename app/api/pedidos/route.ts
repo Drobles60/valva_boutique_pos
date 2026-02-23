@@ -5,8 +5,9 @@ import { query } from '@/lib/db';
 export async function GET() {
   try {
     const pedidos = await query<any[]>(
-      `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
-              p.total_abonado, p.saldo_pendiente,
+            `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              LEAST(p.total_abonado, p.costo_total) as total_abonado,
+              GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -17,7 +18,7 @@ export async function GET() {
     // Obtener detalles de cada pedido
     for (const pedido of pedidos) {
       const detalles = await query<any[]>(
-        `SELECT id, descripcion, cantidad, precio_total
+        `SELECT id, descripcion, cantidad, precio_total as precioTotal
          FROM detalle_pedidos
          WHERE pedido_id = ?`,
         [pedido.id]
@@ -91,8 +92,9 @@ export async function POST(request: NextRequest) {
 
     // Obtener el pedido recién creado con sus detalles
     const nuevoPedido = await query<any[]>(
-      `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
-              p.total_abonado, p.saldo_pendiente,
+            `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              LEAST(p.total_abonado, p.costo_total) as total_abonado,
+              GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -102,7 +104,7 @@ export async function POST(request: NextRequest) {
     );
 
     const detallesPedido = await query<any[]>(
-      `SELECT id, descripcion, cantidad, precio_total
+      `SELECT id, descripcion, cantidad, precio_total as precioTotal
        FROM detalle_pedidos
        WHERE pedido_id = ?`,
       [pedidoId]
@@ -161,7 +163,9 @@ export async function PATCH(request: NextRequest) {
 
     // Obtener el pedido actualizado
     const pedidoActualizado = await query<any[]>(
-      `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+            `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
+              LEAST(p.total_abonado, p.costo_total) as total_abonado,
+              GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
               p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
@@ -171,7 +175,7 @@ export async function PATCH(request: NextRequest) {
     );
 
     const detalles = await query<any[]>(
-      `SELECT id, descripcion, cantidad, precio_total
+      `SELECT id, descripcion, cantidad, precio_total as precioTotal
        FROM detalle_pedidos
        WHERE pedido_id = ?`,
       [id]

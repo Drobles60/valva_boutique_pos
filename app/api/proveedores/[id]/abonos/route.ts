@@ -35,6 +35,18 @@ export async function POST(
       [proveedorId]
     );
 
+    const totalPendiente = pedidosPendientes.reduce(
+      (sum, pedido) => sum + parseFloat(pedido.saldo_pendiente?.toString() || '0'),
+      0
+    )
+
+    if (monto > totalPendiente) {
+      return NextResponse.json(
+        { error: 'El monto del abono no puede ser mayor al saldo pendiente total' },
+        { status: 400 }
+      );
+    }
+
     if (pedidosPendientes.length === 0) {
       return NextResponse.json(
         { error: 'No hay pedidos con saldo pendiente para este proveedor' },
@@ -66,6 +78,14 @@ export async function POST(
           usuarioId || null
         ]
       );
+
+      await query(
+        `UPDATE pedidos
+         SET total_abonado = total_abonado + ?,
+             saldo_pendiente = GREATEST(saldo_pendiente - ?, 0)
+         WHERE id = ?`,
+        [montoAbono, montoAbono, pedido.id]
+      )
 
       abonosRealizados.push({
         pedido_id: pedido.id,
