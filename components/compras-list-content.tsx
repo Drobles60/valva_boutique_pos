@@ -135,7 +135,7 @@ export function ComprasListContent() {
                                 <td className="py-1.5 px-3 font-mono font-semibold">{c.numero_compra || `#${c.id}`}</td>
                                 <td className="py-1.5 px-2 max-w-[150px] truncate" title={c.proveedor_nombre}>{c.proveedor_nombre}</td>
                                 <td className="py-1.5 px-2 text-muted-foreground">{c.factura_numero || "—"}</td>
-                                <td className="py-1.5 px-2 whitespace-nowrap">{c.fecha ? new Date(c.fecha).toLocaleDateString("es-EC") : "—"}</td>
+                                <td className="py-1.5 px-2 whitespace-nowrap">{c.fecha ? new Date(c.fecha).toLocaleDateString("es-CO") : "—"}</td>
                                 <td className="py-1.5 px-2 text-center">{c.total_items || 0}</td>
                                 <td className="py-1.5 px-2 text-center capitalize">{c.tipo_pago}</td>
                                 <td className="py-1.5 px-3 text-right font-mono font-semibold">${formatCurrency(c.total)}</td>

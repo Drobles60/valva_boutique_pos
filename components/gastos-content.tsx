@@ -52,7 +52,7 @@ export function GastosContent() {
   const [gastoToDelete, setGastoToDelete] = useState<number | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(false)
-  
+
   // Filtros de fecha
   const [fechaInicio, setFechaInicio] = useState("")
   const [fechaFin, setFechaFin] = useState("")
@@ -77,12 +77,12 @@ export function GastosContent() {
       setLoading(true)
       let url = '/api/gastos'
       const params = new URLSearchParams()
-      
+
       if (fechaInicioParam) params.append('fechaInicio', fechaInicioParam)
       if (fechaFinParam) params.append('fechaFin', fechaFinParam)
-      
+
       if (params.toString()) url += `?${params.toString()}`
-      
+
       const response = await fetch(url)
       if (response.ok) {
         const result = await response.json()
@@ -100,7 +100,7 @@ export function GastosContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.descripcion || !formData.monto || !formData.fecha_gasto) {
       toast.error('Completa todos los campos requeridos')
       return
@@ -408,7 +408,7 @@ export function GastosContent() {
                 filteredGastos.map((gasto) => (
                   <TableRow key={gasto.id}>
                     <TableCell className="font-medium">
-                      {new Date(gasto.fecha_gasto).toLocaleDateString('es-EC')}
+                      {new Date(gasto.fecha_gasto).toLocaleDateString('es-CO')}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">
@@ -465,8 +465,8 @@ export function GastosContent() {
               {editingGasto ? "Editar Gasto" : "Registrar Nuevo Gasto"}
             </DialogTitle>
             <DialogDescription>
-              {editingGasto 
-                ? "Modifica los datos del gasto" 
+              {editingGasto
+                ? "Modifica los datos del gasto"
                 : "Completa la información del gasto a registrar"
               }
             </DialogDescription>

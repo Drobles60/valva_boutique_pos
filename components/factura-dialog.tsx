@@ -83,7 +83,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
           img.onerror = reject
           setTimeout(reject, 2000)
         })
-        
+
         const logoWidth = 40
         const logoHeight = 20
         pdf.addImage(img, 'JPEG', centerX - (logoWidth / 2), yPos, logoWidth, logoHeight)
@@ -129,14 +129,14 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
       // Información de la factura (alineado a la izquierda)
       pdf.setFontSize(11)
-      const fechaFormateada = new Date(venta.fecha_venta).toLocaleString('es-EC', {
+      const fechaFormateada = new Date(venta.fecha_venta).toLocaleString('es-CO', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
         minute: '2-digit'
       }).replace(',', ' -')
-      
+
       // Fecha
       pdf.setFont('Lucida Console', 'bold')
       pdf.text('Fecha:', margin, yPos)
@@ -144,7 +144,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       pdf.setFont('Lucida Console', 'normal')
       pdf.text(fechaFormateada, margin + anchoFecha, yPos)
       yPos += 4
-      
+
       // Factura #
       pdf.setFont('Lucida Console', 'bold')
       pdf.text('Factura #:', margin, yPos)
@@ -152,7 +152,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       pdf.setFont('Lucida Console', 'normal')
       pdf.text(venta.numero_venta, margin + anchoFactura, yPos)
       yPos += 4
-      
+
       // Cajero
       pdf.setFont('Lucida Console', 'bold')
       pdf.text('Cajero:', margin, yPos)
@@ -160,7 +160,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       pdf.setFont('Lucida Console', 'normal')
       pdf.text(`${venta.vendedor_nombre || 'admin'} ${venta.vendedor_apellido || ''}`, margin + anchoCajero, yPos)
       yPos += 4
-      
+
       // Caja
       pdf.setFont('Lucida Console', 'bold')
       pdf.text('Caja:', margin, yPos)
@@ -168,7 +168,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       pdf.setFont('Lucida Console', 'normal')
       pdf.text('Principal', margin + anchoCaja, yPos)
       yPos += 4
-      
+
       // Máquina
       pdf.setFont('Lucida Console', 'bold')
       pdf.text('Máquina:', margin, yPos)
@@ -201,12 +201,12 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
         pdf.setFont('Lucida Console', 'normal')
         const nombreMaxWidth = pageWidth - margin * 2 - 20 // Espacio para el precio
         const lineasNombre = pdf.splitTextToSize(detalle.producto_nombre, nombreMaxWidth)
-        
+
         // Primera línea: nombre a la izquierda, total a la derecha
         pdf.text(lineasNombre[0], margin, yPos)
         pdf.text(formatCurrency(detalle.subtotal), pageWidth - margin, yPos, { align: 'right' })
         yPos += 4
-        
+
         // Si el nombre tiene más de una línea, imprimir el resto
         if (lineasNombre.length > 1) {
           for (let i = 1; i < lineasNombre.length; i++) {
@@ -214,7 +214,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
             yPos += 4
           }
         }
-        
+
         // Unidades en la siguiente línea (en negrilla)
         pdf.setFontSize(9)
         pdf.setFont('Lucida Console', 'bold')
@@ -238,7 +238,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
       if (venta.tipo_venta === 'credito') {
         pdf.setFontSize(10)
         pdf.setFont('Lucida Console', 'normal')
-        
+
         // Abono inicial
         const abonoInicial = venta.credito_abono_total || 0
         pdf.text('Abono Inicial:', margin, yPos)
@@ -267,10 +267,10 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
       pdf.setFont('Lucida Console', 'normal')
       const metodoPago = venta.metodo_pago === 'efectivo' ? 'Efectivo' :
-                         venta.metodo_pago === 'transferencia' ? 'Transferencia' :
-                         venta.metodo_pago === 'tarjeta' ? 'Tarjeta' : 'Mixto'
+        venta.metodo_pago === 'transferencia' ? 'Transferencia' :
+          venta.metodo_pago === 'tarjeta' ? 'Tarjeta' : 'Mixto'
       const tipoPago = venta.tipo_venta === 'contado' ? 'Contado' : 'Crédito'
-      
+
       pdf.text(tipoPago, margin + 10, yPos)
       pdf.text(formatCurrency(venta.total), pageWidth - margin - 10, yPos, { align: 'right' })
       yPos += 5
@@ -359,7 +359,7 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
 
   const formatearFecha = (fecha: string) => {
     const date = new Date(fecha)
-    return date.toLocaleString('es-EC', {
+    return date.toLocaleString('es-CO', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -441,8 +441,8 @@ export function FacturaDialog({ open, onClose, venta }: FacturaDialogProps) {
                 <p>
                   <span className="font-semibold">Pago:</span> {
                     venta.metodo_pago === 'efectivo' ? 'Efectivo' :
-                    venta.metodo_pago === 'transferencia' ? 'Transferencia' :
-                    venta.metodo_pago === 'tarjeta' ? 'Tarjeta' : 'Mixto'
+                      venta.metodo_pago === 'transferencia' ? 'Transferencia' :
+                        venta.metodo_pago === 'tarjeta' ? 'Tarjeta' : 'Mixto'
                   }
                 </p>
               </div>

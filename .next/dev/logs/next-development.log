@@ -732,3 +732,24 @@ It can also happen if the client has a browser extension installed which messes 
 [02:19:39.886] Server  LOG      ✓ Compiled in 379ms
 [02:22:05.843] Server  LOG      ✓ Compiled in 379ms
 [02:25:45.933] Server  LOG      ✓ Compiled in 957ms
+[02:48:35.909] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:48:36.447] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:48:36.447] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
+[02:48:36.447] Browser LOG     %c[Vercel Web Analytics]%c [view] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771905766124} /_vercel/insights/view
+[02:55:09.989] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./Desktop/valva_boutique_pos/lib/utils.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[02:55:17.236] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./Desktop/valva_boutique_pos/lib/utils.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[02:55:17.239] Server  LOG      ✓ Compiled in 1782ms
+[02:55:17.253] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./Desktop/valva_boutique_pos/lib/utils.ts changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[02:55:26.984] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:55:27.431] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:55:29.186] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:55:29.186] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
+[02:55:29.186] Browser LOG     %c[Vercel Web Analytics]%c [view] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771906178541} /_vercel/insights/view
+[02:55:29.319] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:55:29.319] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/ventas","route":"/ventas"}
+[02:55:29.319] Browser LOG     %c[Vercel Web Analytics]%c [view] http://localhost:3000/ventas color: rgb(120, 120, 120) color: inherit {"dp":"/ventas","o":"http://localhost:3000/ventas","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771906179031} /_vercel/insights/view
+[02:56:56.606] Server  LOG      ✓ Compiled in 494ms
+[02:58:21.020] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:58:22.892] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[02:58:22.892] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/inventario/productos","route":"/inventario/productos"}
+[02:58:22.892] Browser LOG     %c[Vercel Web Analytics]%c [view] http://localhost:3000/inventario/productos color: rgb(120, 120, 120) color: inherit {"dp":"/inventario/productos","o":"http://localhost:3000/inventario/productos","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1771906352600} /_vercel/insights/view

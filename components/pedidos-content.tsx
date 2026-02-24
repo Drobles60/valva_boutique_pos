@@ -94,14 +94,14 @@ export function PedidosContent() {
   const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null)
   const [selectedProveedor, setSelectedProveedor] = useState<Proveedor | null>(null)
   const [loading, setLoading] = useState(false)
-  
+
   const [abonoForm, setAbonoForm] = useState({
     monto: "",
     metodoPago: "efectivo" as "efectivo" | "transferencia" | "tarjeta" | "cheque" | "otro",
     referencia: "",
     notas: "",
   })
-  
+
   const [formData, setFormData] = useState({
     proveedorId: "",
     fechaPedido: new Date().toISOString().split('T')[0],
@@ -161,7 +161,7 @@ export function PedidosContent() {
 
     const cantidad = parseInt(nuevaLinea.cantidad)
     const precioTotal = parseFloat(nuevaLinea.precioTotal)
-    
+
     if (cantidad <= 0 || precioTotal < 0) {
       toast.error('Cantidad y precio deben ser valores válidos')
       return
@@ -200,7 +200,7 @@ export function PedidosContent() {
 
     try {
       setLoading(true)
-      
+
       const pedidoData = {
         proveedorId: parseInt(formData.proveedorId),
         fechaPedido: formData.fechaPedido,
@@ -224,7 +224,7 @@ export function PedidosContent() {
 
       await loadPedidos()
       handleCloseDialog()
-      
+
       toast.success('Pedido creado', {
         description: `Pedido ${data.numero_pedido} registrado correctamente`
       })
@@ -268,7 +268,7 @@ export function PedidosContent() {
       }
 
       await loadPedidos()
-      
+
       toast.success('Estado actualizado', {
         description: `Pedido ${selectedPedido.numero_pedido} marcado como recibido`
       })
@@ -304,15 +304,15 @@ export function PedidosContent() {
 
   const abrirDialogAbonoProveedor = () => {
     // Filtrar proveedores que tengan pedidos con saldo pendiente
-    const proveedoresConDeuda = proveedores.filter(prov => 
+    const proveedoresConDeuda = proveedores.filter(prov =>
       pedidos.some(ped => ped.proveedor_id === prov.id && ped.saldo_pendiente > 0)
     )
-    
+
     if (proveedoresConDeuda.length === 0) {
       toast.info('No hay proveedores con saldo pendiente')
       return
     }
-    
+
     setAbonoForm({
       monto: "",
       metodoPago: "efectivo",
@@ -325,16 +325,16 @@ export function PedidosContent() {
 
   const registrarAbonoPedido = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!selectedPedido) return
-    
+
     const monto = parseFloat(abonoForm.monto)
-    
+
     if (!monto || monto <= 0) {
       toast.error('Ingrese un monto válido')
       return
     }
-    
+
     if (monto > selectedPedido.saldo_pendiente) {
       toast.error('El monto no puede ser mayor al saldo pendiente')
       return
@@ -342,7 +342,7 @@ export function PedidosContent() {
 
     try {
       setLoading(true)
-      
+
       const response = await fetch(`/api/pedidos/${selectedPedido.id}/abonos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -363,7 +363,7 @@ export function PedidosContent() {
       await loadPedidos()
       setAbonoDialogOpen(false)
       setSelectedPedido(null)
-      
+
       toast.success('Abono registrado correctamente', {
         description: `Pedido ${selectedPedido.numero_pedido}: $${formatCurrency(monto)}`
       })
@@ -379,14 +379,14 @@ export function PedidosContent() {
 
   const registrarAbonoProveedor = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!selectedProveedor) {
       toast.error('Seleccione un proveedor')
       return
     }
-    
+
     const monto = parseFloat(abonoForm.monto)
-    
+
     if (!monto || monto <= 0) {
       toast.error('Ingrese un monto válido')
       return
@@ -403,7 +403,7 @@ export function PedidosContent() {
 
     try {
       setLoading(true)
-      
+
       const response = await fetch(`/api/proveedores/${selectedProveedor.id}/abonos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -424,7 +424,7 @@ export function PedidosContent() {
       await loadPedidos()
       setAbonoProveedorDialogOpen(false)
       setSelectedProveedor(null)
-      
+
       toast.success('Abono distribuido correctamente', {
         description: `${data.pedidos_afectados} pedido(s) afectado(s) - Total: $${formatCurrency(data.monto_aplicado)}`
       })
@@ -474,8 +474,8 @@ export function PedidosContent() {
               <p className="text-muted-foreground">Registra y controla pedidos a proveedores</p>
             </div>
             <div className="flex gap-2">
-              <Button 
-                onClick={abrirDialogAbonoProveedor} 
+              <Button
+                onClick={abrirDialogAbonoProveedor}
                 variant="outline"
                 className="w-full md:w-auto"
               >
@@ -621,16 +621,16 @@ export function PedidosContent() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {new Date(pedido.fecha_pedido).toLocaleDateString('es-EC')}
+                          {new Date(pedido.fecha_pedido).toLocaleDateString('es-CO')}
                         </TableCell>
                         <TableCell>
                           {pedido.estado === 'recibido' && pedido.fecha_recibido ? (
                             <div>
                               <p className="font-medium text-green-600">
-                                {new Date(pedido.fecha_recibido).toLocaleDateString('es-EC')}
+                                {new Date(pedido.fecha_recibido).toLocaleDateString('es-CO')}
                               </p>
                               <p className="text-xs text-muted-foreground">
-                                {new Date(pedido.fecha_recibido).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' })}
+                                {new Date(pedido.fecha_recibido).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
                               </p>
                             </div>
                           ) : (
@@ -657,9 +657,9 @@ export function PedidosContent() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
+                            <Button
+                              variant="ghost"
+                              size="icon"
                               className="h-8 w-8"
                               onClick={() => verDetalle(pedido)}
                               title="Ver detalle"
@@ -760,7 +760,7 @@ export function PedidosContent() {
 
               <div className="border-t pt-4">
                 <h3 className="text-sm font-medium mb-4">Detalles del Pedido</h3>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 mb-2">
                   <div className="sm:col-span-5">
                     <Input
@@ -894,17 +894,17 @@ export function PedidosContent() {
                 <div>
                   <Label className="text-muted-foreground">Fecha de Pedido</Label>
                   <p className="font-medium">
-                    {new Date(selectedPedido.fecha_pedido).toLocaleDateString('es-EC')}
+                    {new Date(selectedPedido.fecha_pedido).toLocaleDateString('es-CO')}
                   </p>
                 </div>
                 {selectedPedido.estado === 'recibido' && selectedPedido.fecha_recibido && (
                   <div>
                     <Label className="text-muted-foreground">Fecha de Entrega</Label>
                     <p className="font-medium text-green-600">
-                      {new Date(selectedPedido.fecha_recibido).toLocaleDateString('es-EC')}
+                      {new Date(selectedPedido.fecha_recibido).toLocaleDateString('es-CO')}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(selectedPedido.fecha_recibido).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(selectedPedido.fecha_recibido).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                 )}
@@ -1126,7 +1126,7 @@ export function PedidosContent() {
                           .filter(p => p.proveedor_id === proveedor.id && p.saldo_pendiente > 0)
                           .reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
                         const numPedidos = pedidos.filter(p => p.proveedor_id === proveedor.id && p.saldo_pendiente > 0).length
-                        
+
                         return (
                           <SelectItem key={proveedor.id} value={proveedor.id.toString()}>
                             {proveedor.razon_social} - {numPedidos} pedido(s) - Deuda: ${formatCurrency(saldoTotal)}
@@ -1148,8 +1148,8 @@ export function PedidosContent() {
                     const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
                     const maximo = selectedProveedor
                       ? pedidos
-                          .filter(p => p.proveedor_id === selectedProveedor.id && p.saldo_pendiente > 0)
-                          .reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
+                        .filter(p => p.proveedor_id === selectedProveedor.id && p.saldo_pendiente > 0)
+                        .reduce((sum, p) => sum + parseFloat(p.saldo_pendiente.toString()), 0)
                       : 0
                     const montoNumerico = Number.parseFloat(value) || 0
 

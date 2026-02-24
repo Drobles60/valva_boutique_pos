@@ -41,19 +41,19 @@ export function exportToPDF(
     doc.setFont('helvetica', 'bold')
     doc.text(config.companyInfo.name, 15, currentY)
     currentY += 7
-    
+
     if (config.companyInfo.address) {
       doc.setFontSize(10)
       doc.setFont('helvetica', 'normal')
       doc.text(config.companyInfo.address, 15, currentY)
       currentY += 5
     }
-    
+
     if (config.companyInfo.phone) {
       doc.text(config.companyInfo.phone, 15, currentY)
       currentY += 8
     }
-    
+
     currentY += 3
   }
 
@@ -82,7 +82,7 @@ export function exportToPDF(
   // Fecha de generación
   doc.setFontSize(9)
   doc.setFont('helvetica', 'normal')
-  doc.text(`Generado: ${new Date().toLocaleString('es-MX')}`, 15, currentY)
+  doc.text(`Generado: ${new Date().toLocaleString('es-CO')}`, 15, currentY)
   currentY += 10
 
   // Tabla de datos
@@ -94,11 +94,11 @@ export function exportToPDF(
   // Headers de la tabla
   doc.setFillColor(41, 128, 185)
   doc.rect(margins.left, currentY, tableWidth, 8, 'F')
-  
+
   doc.setTextColor(255, 255, 255)
   doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
-  
+
   tableData.headers.forEach((header, index) => {
     doc.text(
       header,
@@ -106,13 +106,13 @@ export function exportToPDF(
       currentY + 5.5
     )
   })
-  
+
   currentY += 8
 
   // Filas de la tabla
   doc.setTextColor(0, 0, 0)
   doc.setFont('helvetica', 'normal')
-  
+
   tableData.rows.forEach((row, rowIndex) => {
     // Alternar color de fila
     if (rowIndex % 2 === 0) {
@@ -135,13 +135,13 @@ export function exportToPDF(
     if (currentY > 250) {
       doc.addPage()
       currentY = 20
-      
+
       // Re-pintar headers
       doc.setFillColor(41, 128, 185)
       doc.rect(margins.left, currentY, tableWidth, 8, 'F')
       doc.setTextColor(255, 255, 255)
       doc.setFont('helvetica', 'bold')
-      
+
       tableData.headers.forEach((header, index) => {
         doc.text(
           header,
@@ -149,7 +149,7 @@ export function exportToPDF(
           currentY + 5.5
         )
       })
-      
+
       currentY += 8
       doc.setTextColor(0, 0, 0)
       doc.setFont('helvetica', 'normal')
@@ -231,10 +231,11 @@ export function exportToExcel(
  * Formatea un número como moneda
  */
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('es-MX', {
+  return new Intl.NumberFormat('es-CO', {
     style: 'currency',
-    currency: 'MXN',
-    minimumFractionDigits: 2
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   }).format(value)
 }
 
@@ -269,14 +270,14 @@ export function exportSimpleReportToPDF(
     doc.setFont('helvetica', 'bold')
     doc.text(config.companyInfo.name, 15, currentY)
     currentY += 7
-    
+
     if (config.companyInfo.address) {
       doc.setFontSize(10)
       doc.setFont('helvetica', 'normal')
       doc.text(config.companyInfo.address, 15, currentY)
       currentY += 5
     }
-    
+
     currentY += 5
   }
 
@@ -323,7 +324,7 @@ export function exportSimpleReportToPDF(
   currentY += 10
   doc.setFontSize(9)
   doc.setFont('helvetica', 'italic')
-  doc.text(`Generado: ${new Date().toLocaleString('es-MX')}`, 15, currentY)
+  doc.text(`Generado: ${new Date().toLocaleString('es-CO')}`, 15, currentY)
 
   // Descargar
   const fileName = `${config.title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`

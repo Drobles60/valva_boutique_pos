@@ -23,7 +23,7 @@ import {
 
 function fmt(d: string) {
     if (!d) return "—"
-    return new Date(d).toLocaleDateString("es-EC", { day: "2-digit", month: "2-digit", year: "2-digit" })
+    return new Date(d).toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit", year: "2-digit" })
 }
 
 function tipoBadge(tipo: string) {
@@ -354,8 +354,8 @@ export function KardexContent() {
                             <span className="text-xs font-semibold whitespace-nowrap">Tabla Kardex</span>
                             {/* Búsqueda rápida inline */}
                             <div className={`flex flex-1 items-center gap-1.5 rounded border px-2 py-1 transition-all ${busquedaVisible
-                                    ? 'border-[#D4AF37]/70 bg-[#D4AF37]/5 shadow-sm'
-                                    : 'border-transparent bg-muted/40 hover:border-muted-foreground/20'
+                                ? 'border-[#D4AF37]/70 bg-[#D4AF37]/5 shadow-sm'
+                                : 'border-transparent bg-muted/40 hover:border-muted-foreground/20'
                                 }`}>
                                 <Search className="h-3 w-3 text-muted-foreground shrink-0" />
                                 <input

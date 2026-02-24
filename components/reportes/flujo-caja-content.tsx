@@ -52,7 +52,7 @@ export function FlujoCajaContent() {
     const tableData: TableData = {
       headers: ['Fecha', 'Tipo', 'Concepto', 'Entrada', 'Salida', 'Balance'],
       rows: reporte.movimientos.map(mov => [
-        new Date(mov.fecha).toLocaleDateString('es-MX'),
+        new Date(mov.fecha).toLocaleDateString('es-CO'),
         mov.tipo === 'entrada' ? 'Entrada' : 'Salida',
         mov.concepto,
         mov.tipo === 'entrada' ? formatCurrency(mov.monto) : '-',
@@ -82,7 +82,7 @@ export function FlujoCajaContent() {
     const tableData: TableData = {
       headers: ['Fecha', 'Tipo', 'Concepto', 'Entrada', 'Salida', 'Balance'],
       rows: reporte.movimientos.map(mov => [
-        new Date(mov.fecha).toLocaleDateString('es-MX'),
+        new Date(mov.fecha).toLocaleDateString('es-CO'),
         mov.tipo === 'entrada' ? 'Entrada' : 'Salida',
         mov.concepto,
         mov.tipo === 'entrada' ? mov.monto : 0,
@@ -118,7 +118,7 @@ export function FlujoCajaContent() {
             </p>
           </div>
         </div>
-        
+
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -278,7 +278,7 @@ export function FlujoCajaContent() {
                       reporte.movimientos.map((mov, index) => (
                         <TableRow key={index} className={index % 2 === 0 ? 'bg-muted/50' : ''}>
                           <TableCell className="font-medium">
-                            {new Date(mov.fecha).toLocaleDateString('es-MX')}
+                            {new Date(mov.fecha).toLocaleDateString('es-CO')}
                           </TableCell>
                           <TableCell>
                             <Badge

@@ -78,35 +78,35 @@ export function ClientesContent() {
   // Estados para facturas
   const [cuentas, setCuentas] = useState<CuentaPorCobrar[]>([])
   const [selectedCuenta, setSelectedCuenta] = useState<CuentaPorCobrar | null>(null)
-  
+
   // Estados para clientes
   const [clientes, setClientes] = useState<ClienteConDeuda[]>([])
   const [selectedCliente, setSelectedCliente] = useState<ClienteConDeuda | null>(null)
   const [clienteSearchTerm, setClienteSearchTerm] = useState("")
   const [historialSearchTerm, setHistorialSearchTerm] = useState("")
   const [abonoSearchTerm, setAbonoSearchTerm] = useState("")
-  
+
   // Estados para filtros de fecha (historial de abonos)
   const [showDateFilters, setShowDateFilters] = useState(false)
   const [fechaInicio, setFechaInicio] = useState("")
   const [fechaFin, setFechaFin] = useState("")
-  
+
   // Estados para filtros de fecha (facturas)
   const [showFacturasDateFilters, setShowFacturasDateFilters] = useState(false)
   const [facturasFechaInicio, setFacturasFechaInicio] = useState("")
   const [facturasFechaFin, setFacturasFechaFin] = useState("")
-  
+
   // Estados generales
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(false)
-  
+
   // Estados de diálogos
   const [abonoIndividualDialogOpen, setAbonoIndividualDialogOpen] = useState(false)
   const [abonoClienteDialogOpen, setAbonoClienteDialogOpen] = useState(false)
   const [historialDialogOpen, setHistorialDialogOpen] = useState(false)
   const [historialClienteDialogOpen, setHistorialClienteDialogOpen] = useState(false)
   const [buscarHistorialDialogOpen, setBuscarHistorialDialogOpen] = useState(false)
-  
+
   // Estados de datos
   const [abonos, setAbonos] = useState<Abono[]>([])
   const [distribucionDetalle, setDistribucionDetalle] = useState<AbonoDistribucion[]>([])
@@ -156,18 +156,18 @@ export function ClientesContent() {
       setLoading(true)
       let url = '/api/cuentas-por-cobrar'
       const params = new URLSearchParams()
-      
+
       if (fechaInicioParam) {
         params.append('fechaInicio', fechaInicioParam)
       }
       if (fechaFinParam) {
         params.append('fechaFin', fechaFinParam)
       }
-      
+
       if (params.toString()) {
         url += `?${params.toString()}`
       }
-      
+
       const response = await fetch(url)
       const data = await response.json()
 
@@ -226,18 +226,18 @@ export function ClientesContent() {
     try {
       let url = `/api/clientes/${clienteId}/abonos`
       const params = new URLSearchParams()
-      
+
       if (fechaInicioParam) {
         params.append('fechaInicio', fechaInicioParam)
       }
       if (fechaFinParam) {
         params.append('fechaFin', fechaFinParam)
       }
-      
+
       if (params.toString()) {
         url += `?${params.toString()}`
       }
-      
+
       const response = await fetch(url)
       const data = await response.json()
 
@@ -547,7 +547,7 @@ export function ClientesContent() {
                 {showFacturasDateFilters ? "Ocultar Fechas" : "Buscar por Fechas"}
               </Button>
             </div>
-            
+
             {showFacturasDateFilters && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-md bg-muted/50">
                 <div className="space-y-2">
@@ -627,7 +627,7 @@ export function ClientesContent() {
                   const saldoPendiente = cuenta.saldo_pendiente
                   const estadoReal = saldoPendiente > 0 ? 'pendiente' : 'pagada'
                   const tieneSaldoAFavor = saldoPendiente < 0
-                  
+
                   const diasVencimiento = Math.ceil(
                     (new Date(cuenta.fecha_vencimiento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
                   )
@@ -646,7 +646,7 @@ export function ClientesContent() {
                         </div>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell text-sm">
-                        {new Date(cuenta.fecha_venta).toLocaleDateString('es-EC')}
+                        {new Date(cuenta.fecha_venta).toLocaleDateString('es-CO')}
                       </TableCell>
                       <TableCell className="text-right font-medium">
                         ${formatCurrency(cuenta.monto_total)}
@@ -681,7 +681,7 @@ export function ClientesContent() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Badge 
+                        <Badge
                           variant={estadoReal === 'pagada' ? 'default' : estaVencida ? 'destructive' : 'secondary'}
                         >
                           {estadoReal === 'pagada' ? 'Pagada' : estaVencida ? 'Vencida' : 'Pendiente'}
@@ -690,9 +690,9 @@ export function ClientesContent() {
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
                           {estadoReal === 'pendiente' && (
-                            <Button 
-                              variant="default" 
-                              size="sm" 
+                            <Button
+                              variant="default"
+                              size="sm"
                               onClick={() => handleOpenAbonoIndividual(cuenta)}
                               disabled={loading}
                             >
@@ -700,9 +700,9 @@ export function ClientesContent() {
                               Abonar
                             </Button>
                           )}
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => handleOpenHistorial(cuenta)}
                             title="Ver historial de abonos"
                           >
@@ -761,7 +761,7 @@ export function ClientesContent() {
                     const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
                     const montoNumerico = Number.parseFloat(value) || 0
                     const saldoMaximo = selectedCuenta?.saldo_pendiente || 0
-                    
+
                     // Solo actualizar si el monto no excede el saldo pendiente
                     if (montoNumerico <= saldoMaximo) {
                       setAbonoIndividualData({ ...abonoIndividualData, monto: value })
@@ -864,7 +864,7 @@ export function ClientesContent() {
                 autoFocus
               />
             </div>
-            
+
             {historialSearchTerm && (
               <ScrollArea className="h-[400px] border rounded-md">
                 {clientes
@@ -947,9 +947,8 @@ export function ClientesContent() {
                         filteredClientes.map((cliente) => (
                           <div
                             key={cliente.id}
-                            className={`p-3 border-b cursor-pointer hover:bg-accent ${
-                              selectedCliente?.id === cliente.id ? 'bg-accent' : ''
-                            }`}
+                            className={`p-3 border-b cursor-pointer hover:bg-accent ${selectedCliente?.id === cliente.id ? 'bg-accent' : ''
+                              }`}
                             onClick={() => {
                               setSelectedCliente(cliente)
                               setClienteSearchTerm(cliente.nombre)
@@ -1022,7 +1021,7 @@ export function ClientesContent() {
                           const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
                           const montoNumerico = Number.parseFloat(value) || 0
                           const saldoMaximo = selectedCliente?.saldo_pendiente || 0
-                          
+
                           // Solo actualizar si el monto no excede el saldo pendiente total del cliente
                           if (montoNumerico <= saldoMaximo) {
                             setAbonoClienteData({ ...abonoClienteData, monto: value })
@@ -1174,7 +1173,7 @@ export function ClientesContent() {
                   if (!abonoSearchTerm) return true
                   const searchNormalized = normalizeText(abonoSearchTerm)
                   return (
-                    normalizeText(new Date(abono.fecha).toLocaleString('es-EC')).includes(searchNormalized) ||
+                    normalizeText(new Date(abono.fecha).toLocaleString('es-CO')).includes(searchNormalized) ||
                     normalizeText(abono.monto.toString()).includes(searchNormalized) ||
                     normalizeText(abono.metodoPago).includes(searchNormalized) ||
                     normalizeText(abono.referencia || '').includes(searchNormalized) ||
@@ -1182,7 +1181,7 @@ export function ClientesContent() {
                     normalizeText(abono.usuario).includes(searchNormalized)
                   )
                 })
-                
+
                 return filteredAbonos.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <History className="h-12 w-12 mx-auto mb-3 opacity-50" />
@@ -1212,46 +1211,46 @@ export function ClientesContent() {
                             </TableHeader>
                             <TableBody>
                               {filteredAbonos.map((abono) => (
-                          <TableRow key={abono.id} className="hover:bg-muted/30">
-                            <TableCell className="text-sm whitespace-nowrap font-medium">
-                              {new Date(abono.fecha).toLocaleString('es-EC', {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </TableCell>
-                            <TableCell className="text-base font-bold text-green-600 text-right whitespace-nowrap">
-                              ${formatCurrency(abono.monto)}
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="secondary" className="capitalize">
-                                {abono.metodoPago}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-sm">
-                              {abono.referencia ? (
-                                <span className="font-mono text-xs bg-muted px-2 py-1 rounded break-words">
-                                  {abono.referencia}
-                                </span>
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-sm">
-                              {abono.notas ? (
-                                <div className="break-words" title={abono.notas}>
-                                  {abono.notas}
-                                </div>
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-sm font-medium">
-                              {abono.usuario}
-                            </TableCell>
-                          </TableRow>
+                                <TableRow key={abono.id} className="hover:bg-muted/30">
+                                  <TableCell className="text-sm whitespace-nowrap font-medium">
+                                    {new Date(abono.fecha).toLocaleString('es-CO', {
+                                      year: 'numeric',
+                                      month: '2-digit',
+                                      day: '2-digit',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </TableCell>
+                                  <TableCell className="text-base font-bold text-green-600 text-right whitespace-nowrap">
+                                    ${formatCurrency(abono.monto)}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge variant="secondary" className="capitalize">
+                                      {abono.metodoPago}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-sm">
+                                    {abono.referencia ? (
+                                      <span className="font-mono text-xs bg-muted px-2 py-1 rounded break-words">
+                                        {abono.referencia}
+                                      </span>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-sm">
+                                    {abono.notas ? (
+                                      <div className="break-words" title={abono.notas}>
+                                        {abono.notas}
+                                      </div>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-sm font-medium">
+                                    {abono.usuario}
+                                  </TableCell>
+                                </TableRow>
                               ))}
                             </TableBody>
                           </Table>
@@ -1262,66 +1261,66 @@ export function ClientesContent() {
                     {/* Vista Mobile */}
                     <div className="md:hidden space-y-4">
                       {filteredAbonos.map((abono) => (
-                      <Card key={abono.id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
-                        <CardContent className="p-0">
-                          {/* Header del Card */}
-                          <div className="bg-muted/50 p-3 border-b">
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <p className="text-xs text-muted-foreground font-medium mb-1">
-                                  {new Date(abono.fecha).toLocaleString('es-EC', {
-                                    year: 'numeric',
-                                    month: '2-digit',
-                                    day: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-xl font-bold text-green-600">
-                                  ${formatCurrency(abono.monto)}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Cuerpo del Card */}
-                          <div className="p-4 space-y-3">
-                            <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Método de Pago</p>
-                                <Badge variant="secondary" className="text-xs capitalize">
-                                  {abono.metodoPago}
-                                </Badge>
-                              </div>
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Usuario</p>
-                                <p className="text-sm font-medium">{abono.usuario}</p>
+                        <Card key={abono.id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
+                          <CardContent className="p-0">
+                            {/* Header del Card */}
+                            <div className="bg-muted/50 p-3 border-b">
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <p className="text-xs text-muted-foreground font-medium mb-1">
+                                    {new Date(abono.fecha).toLocaleString('es-CO', {
+                                      year: 'numeric',
+                                      month: '2-digit',
+                                      day: '2-digit',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-xl font-bold text-green-600">
+                                    ${formatCurrency(abono.monto)}
+                                  </p>
+                                </div>
                               </div>
                             </div>
 
-                            {abono.referencia && (
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Referencia</p>
-                                <p className="text-sm font-mono bg-muted px-2 py-1 rounded break-all">
-                                  {abono.referencia}
-                                </p>
+                            {/* Cuerpo del Card */}
+                            <div className="p-4 space-y-3">
+                              <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Método de Pago</p>
+                                  <Badge variant="secondary" className="text-xs capitalize">
+                                    {abono.metodoPago}
+                                  </Badge>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Usuario</p>
+                                  <p className="text-sm font-medium">{abono.usuario}</p>
+                                </div>
                               </div>
-                            )}
 
-                            {abono.notas && (
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Notas</p>
-                                <p className="text-sm bg-muted/50 px-3 py-2 rounded">
-                                  {abono.notas}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                              {abono.referencia && (
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Referencia</p>
+                                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded break-all">
+                                    {abono.referencia}
+                                  </p>
+                                </div>
+                              )}
+
+                              {abono.notas && (
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Notas</p>
+                                  <p className="text-sm bg-muted/50 px-3 py-2 rounded">
+                                    {abono.notas}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   </>
                 )
@@ -1381,7 +1380,7 @@ export function ClientesContent() {
                       {showDateFilters ? "Ocultar Fechas" : "Buscar por Fechas"}
                     </Button>
                   </div>
-                  
+
                   {showDateFilters && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-md bg-muted/50">
                       <div className="space-y-2">
@@ -1437,7 +1436,7 @@ export function ClientesContent() {
                   if (!abonoSearchTerm) return true
                   const searchNormalized = normalizeText(abonoSearchTerm)
                   return (
-                    normalizeText(new Date(abono.fecha).toLocaleString('es-EC')).includes(searchNormalized) ||
+                    normalizeText(new Date(abono.fecha).toLocaleString('es-CO')).includes(searchNormalized) ||
                     normalizeText(abono.numero_venta?.toString() || '').includes(searchNormalized) ||
                     normalizeText(abono.monto.toString()).includes(searchNormalized) ||
                     normalizeText(abono.metodoPago).includes(searchNormalized) ||
@@ -1446,7 +1445,7 @@ export function ClientesContent() {
                     normalizeText(abono.usuario).includes(searchNormalized)
                   )
                 })
-                
+
                 return filteredAbonos.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <History className="h-12 w-12 mx-auto mb-3 opacity-50" />
@@ -1458,37 +1457,37 @@ export function ClientesContent() {
                     </p>
                   </div>
                 ) : (
-                <>
-                  {/* Resumen Superior */}
-                  {historialResumen && (
-                    <Card className="mb-6 bg-gradient-to-r from-muted to-muted/50 border-2">
-                      <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                          <div className="text-center sm:text-left">
-                            <p className="text-sm font-medium text-muted-foreground mb-1">Total Abonado</p>
-                            <p className="text-3xl font-bold text-green-600">
-                              ${formatCurrency(historialResumen.total_abonado)}
-                            </p>
+                  <>
+                    {/* Resumen Superior */}
+                    {historialResumen && (
+                      <Card className="mb-6 bg-gradient-to-r from-muted to-muted/50 border-2">
+                        <CardContent className="p-6">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div className="text-center sm:text-left">
+                              <p className="text-sm font-medium text-muted-foreground mb-1">Total Abonado</p>
+                              <p className="text-3xl font-bold text-green-600">
+                                ${formatCurrency(historialResumen.total_abonado)}
+                              </p>
+                            </div>
+                            <div className="text-center sm:text-left">
+                              <p className="text-sm font-medium text-muted-foreground mb-1">Cantidad de Abonos</p>
+                              <p className="text-3xl font-bold text-primary">
+                                {historialResumen.cantidad_abonos}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                pagos registrados
+                              </p>
+                            </div>
+                            <div className="text-center sm:text-left">
+                              <p className="text-sm font-medium text-muted-foreground mb-1">Saldo Pendiente</p>
+                              <p className="text-3xl font-bold text-[#D4AF37]">
+                                ${formatCurrency(historialResumen.saldo_pendiente)}
+                              </p>
+                            </div>
                           </div>
-                          <div className="text-center sm:text-left">
-                            <p className="text-sm font-medium text-muted-foreground mb-1">Cantidad de Abonos</p>
-                            <p className="text-3xl font-bold text-primary">
-                              {historialResumen.cantidad_abonos}
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              pagos registrados
-                            </p>
-                          </div>
-                          <div className="text-center sm:text-left">
-                            <p className="text-sm font-medium text-muted-foreground mb-1">Saldo Pendiente</p>
-                            <p className="text-3xl font-bold text-[#D4AF37]">
-                              ${formatCurrency(historialResumen.saldo_pendiente)}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
+                        </CardContent>
+                      </Card>
+                    )}
 
                     {/* Vista Desktop */}
                     <div className="hidden md:block border rounded-lg">
@@ -1508,55 +1507,55 @@ export function ClientesContent() {
                             </TableHeader>
                             <TableBody>
                               {filteredAbonos.map((abono) => (
-                          <TableRow key={abono.id} className="hover:bg-muted/30">
-                            <TableCell className="text-sm whitespace-nowrap font-medium">
-                              {new Date(abono.fecha).toLocaleString('es-EC', {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </TableCell>
-                            <TableCell>
-                              {abono.numero_venta ? (
-                                <Badge variant="outline" className="font-mono">
-                                  #{abono.numero_venta}
-                                </Badge>
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-base font-bold text-green-600 text-right whitespace-nowrap">
-                              ${formatCurrency(abono.monto)}
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="secondary" className="capitalize">
-                                {abono.metodoPago}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-sm">
-                              {abono.referencia ? (
-                                <span className="font-mono text-xs bg-muted px-2 py-1 rounded break-words">
-                                  {abono.referencia}
-                                </span>
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-sm">
-                              {abono.notas ? (
-                                <div className="break-words" title={abono.notas}>
-                                  {abono.notas}
-                                </div>
-                              ) : (
-                                <span className="text-muted-foreground">-</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-sm font-medium">
-                              {abono.usuario}
-                            </TableCell>
-                          </TableRow>
+                                <TableRow key={abono.id} className="hover:bg-muted/30">
+                                  <TableCell className="text-sm whitespace-nowrap font-medium">
+                                    {new Date(abono.fecha).toLocaleString('es-CO', {
+                                      year: 'numeric',
+                                      month: '2-digit',
+                                      day: '2-digit',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </TableCell>
+                                  <TableCell>
+                                    {abono.numero_venta ? (
+                                      <Badge variant="outline" className="font-mono">
+                                        #{abono.numero_venta}
+                                      </Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-base font-bold text-green-600 text-right whitespace-nowrap">
+                                    ${formatCurrency(abono.monto)}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge variant="secondary" className="capitalize">
+                                      {abono.metodoPago}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-sm">
+                                    {abono.referencia ? (
+                                      <span className="font-mono text-xs bg-muted px-2 py-1 rounded break-words">
+                                        {abono.referencia}
+                                      </span>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-sm">
+                                    {abono.notas ? (
+                                      <div className="break-words" title={abono.notas}>
+                                        {abono.notas}
+                                      </div>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-sm font-medium">
+                                    {abono.usuario}
+                                  </TableCell>
+                                </TableRow>
                               ))}
                             </TableBody>
                           </Table>
@@ -1567,73 +1566,73 @@ export function ClientesContent() {
                     {/* Vista Mobile */}
                     <div className="md:hidden space-y-4">
                       {filteredAbonos.map((abono) => (
-                      <Card key={abono.id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
-                        <CardContent className="p-0">
-                          {/* Header del Card */}
-                          <div className="bg-muted/50 p-3 border-b">
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <p className="text-xs text-muted-foreground font-medium mb-1">
-                                  {new Date(abono.fecha).toLocaleString('es-EC', {
-                                    year: 'numeric',
-                                    month: '2-digit',
-                                    day: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
-                                {abono.numero_venta && (
-                                  <Badge variant="outline" className="text-xs font-mono">
-                                    #{abono.numero_venta}
+                        <Card key={abono.id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors">
+                          <CardContent className="p-0">
+                            {/* Header del Card */}
+                            <div className="bg-muted/50 p-3 border-b">
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <p className="text-xs text-muted-foreground font-medium mb-1">
+                                    {new Date(abono.fecha).toLocaleString('es-CO', {
+                                      year: 'numeric',
+                                      month: '2-digit',
+                                      day: '2-digit',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                  {abono.numero_venta && (
+                                    <Badge variant="outline" className="text-xs font-mono">
+                                      #{abono.numero_venta}
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-xl font-bold text-green-600">
+                                    ${formatCurrency(abono.monto)}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Cuerpo del Card */}
+                            <div className="p-4 space-y-3">
+                              <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Método de Pago</p>
+                                  <Badge variant="secondary" className="text-xs capitalize">
+                                    {abono.metodoPago}
                                   </Badge>
-                                )}
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Usuario</p>
+                                  <p className="text-sm font-medium">{abono.usuario}</p>
+                                </div>
                               </div>
-                              <div className="text-right">
-                                <p className="text-xl font-bold text-green-600">
-                                  ${formatCurrency(abono.monto)}
-                                </p>
-                              </div>
+
+                              {abono.referencia && (
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Referencia</p>
+                                  <p className="text-sm font-mono bg-muted px-2 py-1 rounded break-all">
+                                    {abono.referencia}
+                                  </p>
+                                </div>
+                              )}
+
+                              {abono.notas && (
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground mb-1">Notas</p>
+                                  <p className="text-sm bg-muted/50 px-3 py-2 rounded">
+                                    {abono.notas}
+                                  </p>
+                                </div>
+                              )}
                             </div>
-                          </div>
-
-                          {/* Cuerpo del Card */}
-                          <div className="p-4 space-y-3">
-                            <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Método de Pago</p>
-                                <Badge variant="secondary" className="text-xs capitalize">
-                                  {abono.metodoPago}
-                                </Badge>
-                              </div>
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Usuario</p>
-                                <p className="text-sm font-medium">{abono.usuario}</p>
-                              </div>
-                            </div>
-
-                            {abono.referencia && (
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Referencia</p>
-                                <p className="text-sm font-mono bg-muted px-2 py-1 rounded break-all">
-                                  {abono.referencia}
-                                </p>
-                              </div>
-                            )}
-
-                            {abono.notas && (
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Notas</p>
-                                <p className="text-sm bg-muted/50 px-3 py-2 rounded">
-                                  {abono.notas}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </>
                 )
               })()}
             </div>
