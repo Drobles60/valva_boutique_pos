@@ -579,8 +579,9 @@ export function ProductosContent() {
       }
 
       // Guardar en base de datos
+      const url = editingProduct ? `/api/productos/${editingProduct.id}` : '/api/productos'
       const method = editingProduct ? 'PUT' : 'POST'
-      const response = await fetch('/api/productos', {
+      const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(productData)
@@ -733,14 +734,38 @@ export function ProductosContent() {
     setConfirmDeleteOpen(true)
   }
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (productToDelete) {
-      deleteProduct(productToDelete)
-      loadProductos()
-      toast.success("Producto eliminado", {
-        description: "El producto ha sido eliminado del inventario"
-      })
-      setProductToDelete(null)
+      try {
+        const response = await fetch(`/api/productos/${productToDelete}`, {
+          method: 'DELETE'
+        })
+
+        const result = await response.json()
+
+        if (response.ok) {
+          // Si cargó exitosamente en la DB, también eliminamos de localStorage para consistencia
+          deleteProduct(productToDelete)
+          loadProductos()
+          toast.success("Producto eliminado", {
+            description: "El producto ha sido eliminado del inventario correctamente"
+          })
+          setConfirmDeleteOpen(false)
+          setProductToDelete(null)
+        } else {
+          // Manejo detallado de errores (ej: Llaves foráneas)
+          toast.error("No se pudo eliminar", {
+            description: result.error || "El producto tiene historial de ventas o compras y no puede ser borrado físicamente."
+          })
+          setConfirmDeleteOpen(false)
+          setProductToDelete(null)
+        }
+      } catch (error) {
+        console.error("Error eliminando producto:", error)
+        toast.error("Error de conexión", {
+          description: "No se pudo comunicar con el servidor para eliminar el producto"
+        })
+      }
     }
   }
 

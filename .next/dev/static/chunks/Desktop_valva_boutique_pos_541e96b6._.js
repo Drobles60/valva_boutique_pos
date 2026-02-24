@@ -54,9 +54,10 @@ function cn(...inputs) {
     return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$tailwind$2d$merge$40$3$2e$3$2e$1$2f$node_modules$2f$tailwind$2d$merge$2f$dist$2f$bundle$2d$mjs$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["twMerge"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$clsx$40$2$2e$1$2e$1$2f$node_modules$2f$clsx$2f$dist$2f$clsx$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["clsx"])(inputs));
 }
 function formatCurrency(value) {
+    if (value === undefined || value === null || value === '') return '0';
     const num = typeof value === 'string' ? parseFloat(value) : value;
     if (isNaN(num)) return '0';
-    return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return Math.round(num).toLocaleString('es-CO').replace(/,/g, '.');
 }
 function normalizeText(text) {
     return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -1781,6 +1782,22 @@ const inventorySubmenu = [
         ]
     },
     {
+        title: "Kardex",
+        href: "/inventario/kardex",
+        permissions: [
+            'productos.ver',
+            'inventario.ver'
+        ]
+    },
+    {
+        title: "Compras",
+        href: "/inventario/compras",
+        permissions: [
+            'productos.ver',
+            'inventario.ver'
+        ]
+    },
+    {
         title: "Descuentos",
         href: "/inventario/descuentos",
         permissions: [
@@ -1820,27 +1837,27 @@ function SidebarToggle() {
                 className: "block h-0.5 w-4 rounded-full bg-foreground transition-all"
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                lineNumber: 142,
+                lineNumber: 152,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                 className: "block h-0.5 w-4 rounded-full bg-foreground transition-all"
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                lineNumber: 143,
+                lineNumber: 153,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                 className: "block h-0.5 w-4 rounded-full bg-foreground transition-all"
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                lineNumber: 144,
+                lineNumber: 154,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-        lineNumber: 136,
+        lineNumber: 146,
         columnNumber: 5
     }, this);
 }
@@ -1924,13 +1941,13 @@ function AppSidebar() {
                                 className: "h-18 w-18 object-cover rounded-4xl shadow-md hover:shadow-lg transition-all duration-200"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                lineNumber: 197,
-                                columnNumber: 15
+                                lineNumber: 207,
+                                columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                            lineNumber: 196,
-                            columnNumber: 13
+                            lineNumber: 206,
+                            columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex-1 ml-2",
@@ -1940,22 +1957,22 @@ function AppSidebar() {
                                     children: "Valva Boutique"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 200,
-                                    columnNumber: 15
+                                    lineNumber: 210,
+                                    columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-xs text-sidebar-foreground/70",
                                     children: "Sistema POS"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 201,
-                                    columnNumber: 15
+                                    lineNumber: 211,
+                                    columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                            lineNumber: 199,
-                            columnNumber: 13
+                            lineNumber: 209,
+                            columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             type: "button",
@@ -1967,39 +1984,39 @@ function AppSidebar() {
                                     className: "block h-0.5 w-4 rounded-full bg-sidebar-foreground transition-all"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 209,
-                                    columnNumber: 15
+                                    lineNumber: 219,
+                                    columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "block h-0.5 w-4 rounded-full bg-sidebar-foreground transition-all"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 210,
-                                    columnNumber: 15
+                                    lineNumber: 220,
+                                    columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "block h-0.5 w-4 rounded-full bg-sidebar-foreground transition-all"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 211,
-                                    columnNumber: 15
+                                    lineNumber: 221,
+                                    columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                            lineNumber: 203,
-                            columnNumber: 13
+                            lineNumber: 213,
+                            columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                    lineNumber: 195,
-                    columnNumber: 11
+                    lineNumber: 205,
+                    columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                lineNumber: 194,
-                columnNumber: 9
+                lineNumber: 204,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarContent"], {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarGroup"], {
@@ -2008,8 +2025,8 @@ function AppSidebar() {
                             children: "Menú Principal"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                            lineNumber: 217,
-                            columnNumber: 13
+                            lineNumber: 227,
+                            columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarGroupContent"], {
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarMenu"], {
@@ -2025,31 +2042,31 @@ function AppSidebar() {
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                            lineNumber: 227,
-                                                            columnNumber: 25
+                                                            lineNumber: 237,
+                                                            columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             children: item.title
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                            lineNumber: 228,
-                                                            columnNumber: 25
+                                                            lineNumber: 238,
+                                                            columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                    lineNumber: 226,
-                                                    columnNumber: 23
+                                                    lineNumber: 236,
+                                                    columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                lineNumber: 222,
-                                                columnNumber: 21
+                                                lineNumber: 232,
+                                                columnNumber: 19
                                             }, this)
                                         }, item.title, false, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                            lineNumber: 221,
-                                            columnNumber: 19
+                                            lineNumber: 231,
+                                            columnNumber: 17
                                         }, this)),
                                     showInventorySection && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$collapsible$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Collapsible"], {
                                         className: "group/collapsible",
@@ -2064,33 +2081,33 @@ function AppSidebar() {
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 239,
-                                                                columnNumber: 27
+                                                                lineNumber: 249,
+                                                                columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: "Inventario"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 240,
-                                                                columnNumber: 27
+                                                                lineNumber: 250,
+                                                                columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$lucide$2d$react$40$0$2e$454$2e$0_react$40$19$2e$2$2e$0$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                                 className: "ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 241,
-                                                                columnNumber: 27
+                                                                lineNumber: 251,
+                                                                columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                        lineNumber: 238,
-                                                        columnNumber: 25
+                                                        lineNumber: 248,
+                                                        columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                    lineNumber: 237,
-                                                    columnNumber: 23
+                                                    lineNumber: 247,
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$collapsible$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CollapsibleContent"], {
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarMenuSub"], {
@@ -2104,44 +2121,44 @@ function AppSidebar() {
                                                                             children: subItem.title
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                            lineNumber: 253,
-                                                                            columnNumber: 35
+                                                                            lineNumber: 263,
+                                                                            columnNumber: 33
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                        lineNumber: 252,
-                                                                        columnNumber: 33
+                                                                        lineNumber: 262,
+                                                                        columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                    lineNumber: 248,
-                                                                    columnNumber: 31
+                                                                    lineNumber: 258,
+                                                                    columnNumber: 29
                                                                 }, this)
                                                             }, subItem.title, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 247,
-                                                                columnNumber: 29
+                                                                lineNumber: 257,
+                                                                columnNumber: 27
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                        lineNumber: 245,
-                                                        columnNumber: 25
+                                                        lineNumber: 255,
+                                                        columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                    lineNumber: 244,
-                                                    columnNumber: 23
+                                                    lineNumber: 254,
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                            lineNumber: 236,
-                                            columnNumber: 21
+                                            lineNumber: 246,
+                                            columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                        lineNumber: 235,
-                                        columnNumber: 19
+                                        lineNumber: 245,
+                                        columnNumber: 17
                                     }, this),
                                     showReportesSection && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$collapsible$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Collapsible"], {
                                         className: "group/collapsible",
@@ -2156,33 +2173,33 @@ function AppSidebar() {
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 269,
-                                                                columnNumber: 27
+                                                                lineNumber: 279,
+                                                                columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: "Reportes"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 270,
-                                                                columnNumber: 27
+                                                                lineNumber: 280,
+                                                                columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$lucide$2d$react$40$0$2e$454$2e$0_react$40$19$2e$2$2e$0$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                                 className: "ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 271,
-                                                                columnNumber: 27
+                                                                lineNumber: 281,
+                                                                columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                        lineNumber: 268,
-                                                        columnNumber: 25
+                                                        lineNumber: 278,
+                                                        columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                    lineNumber: 267,
-                                                    columnNumber: 23
+                                                    lineNumber: 277,
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$collapsible$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CollapsibleContent"], {
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarMenuSub"], {
@@ -2196,66 +2213,66 @@ function AppSidebar() {
                                                                             children: subItem.title
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                            lineNumber: 283,
-                                                                            columnNumber: 35
+                                                                            lineNumber: 293,
+                                                                            columnNumber: 33
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                        lineNumber: 282,
-                                                                        columnNumber: 33
+                                                                        lineNumber: 292,
+                                                                        columnNumber: 31
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                    lineNumber: 278,
-                                                                    columnNumber: 31
+                                                                    lineNumber: 288,
+                                                                    columnNumber: 29
                                                                 }, this)
                                                             }, subItem.title, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                                lineNumber: 277,
-                                                                columnNumber: 29
+                                                                lineNumber: 287,
+                                                                columnNumber: 27
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                        lineNumber: 275,
-                                                        columnNumber: 25
+                                                        lineNumber: 285,
+                                                        columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                                    lineNumber: 274,
-                                                    columnNumber: 23
+                                                    lineNumber: 284,
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                            lineNumber: 266,
-                                            columnNumber: 21
+                                            lineNumber: 276,
+                                            columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                        lineNumber: 265,
-                                        columnNumber: 19
+                                        lineNumber: 275,
+                                        columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                lineNumber: 219,
-                                columnNumber: 15
+                                lineNumber: 229,
+                                columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                            lineNumber: 218,
-                            columnNumber: 13
+                            lineNumber: 228,
+                            columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                    lineNumber: 216,
-                    columnNumber: 11
+                    lineNumber: 226,
+                    columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                lineNumber: 215,
-                columnNumber: 9
+                lineNumber: 225,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$sidebar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SidebarFooter"], {
                 className: "border-t border-sidebar-border p-4",
@@ -2271,13 +2288,13 @@ function AppSidebar() {
                                         className: "h-5 w-5 text-primary-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                        lineNumber: 303,
-                                        columnNumber: 17
+                                        lineNumber: 313,
+                                        columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 302,
-                                    columnNumber: 15
+                                    lineNumber: 312,
+                                    columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "flex-1 min-w-0",
@@ -2287,28 +2304,28 @@ function AppSidebar() {
                                             children: session?.user?.nombre || session?.user?.username || 'Usuario'
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                            lineNumber: 306,
-                                            columnNumber: 17
+                                            lineNumber: 316,
+                                            columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-xs text-sidebar-foreground/70 capitalize truncate",
                                             children: session?.user?.rol || 'Sin rol'
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                            lineNumber: 309,
-                                            columnNumber: 17
+                                            lineNumber: 319,
+                                            columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 305,
-                                    columnNumber: 15
+                                    lineNumber: 315,
+                                    columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                            lineNumber: 301,
-                            columnNumber: 13
+                            lineNumber: 311,
+                            columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                             variant: "ghost",
@@ -2319,31 +2336,31 @@ function AppSidebar() {
                                     className: "h-4 w-4 mr-2"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                                    lineNumber: 321,
-                                    columnNumber: 15
+                                    lineNumber: 331,
+                                    columnNumber: 13
                                 }, this),
                                 "Cerrar Sesión"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                            lineNumber: 316,
-                            columnNumber: 13
+                            lineNumber: 326,
+                            columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                    lineNumber: 299,
-                    columnNumber: 11
+                    lineNumber: 309,
+                    columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-                lineNumber: 298,
-                columnNumber: 9
+                lineNumber: 308,
+                columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/valva_boutique_pos/components/app-sidebar.tsx",
-        lineNumber: 193,
+        lineNumber: 203,
         columnNumber: 5
     }, this);
 }
@@ -4295,7 +4312,7 @@ function ClientesContent() {
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                     className: "hidden lg:table-cell text-sm",
-                                                    children: new Date(cuenta.fecha_venta).toLocaleDateString('es-EC')
+                                                    children: new Date(cuenta.fecha_venta).toLocaleDateString('es-CO')
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
                                                     lineNumber: 648,
@@ -5164,7 +5181,7 @@ function ClientesContent() {
                                                                                     children: cliente.nombre
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 960,
+                                                                                    lineNumber: 959,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5175,7 +5192,7 @@ function ClientesContent() {
                                                                                             children: "ID:"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 962,
+                                                                                            lineNumber: 961,
                                                                                             columnNumber: 35
                                                                                         }, this),
                                                                                         " ",
@@ -5188,7 +5205,7 @@ function ClientesContent() {
                                                                                                     children: "Tel:"
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                    lineNumber: 963,
+                                                                                                    lineNumber: 962,
                                                                                                     columnNumber: 61
                                                                                                 }, this),
                                                                                                 " ",
@@ -5198,13 +5215,13 @@ function ClientesContent() {
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 961,
+                                                                                    lineNumber: 960,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 959,
+                                                                            lineNumber: 958,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5222,12 +5239,12 @@ function ClientesContent() {
                                                                                         className: "h-4 w-4"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 976,
+                                                                                        lineNumber: 975,
                                                                                         columnNumber: 35
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 967,
+                                                                                    lineNumber: 966,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5241,7 +5258,7 @@ function ClientesContent() {
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 979,
+                                                                                            lineNumber: 978,
                                                                                             columnNumber: 35
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5253,25 +5270,25 @@ function ClientesContent() {
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 980,
+                                                                                            lineNumber: 979,
                                                                                             columnNumber: 35
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 978,
+                                                                                    lineNumber: 977,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 966,
+                                                                            lineNumber: 965,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                    lineNumber: 958,
+                                                                    lineNumber: 957,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, cliente.id, false, {
@@ -5306,7 +5323,7 @@ function ClientesContent() {
                                                                                 children: "Facturas Pendientes"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1000,
+                                                                                lineNumber: 999,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5314,13 +5331,13 @@ function ClientesContent() {
                                                                                 children: selectedCliente.cuentas_pendientes
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1001,
+                                                                                lineNumber: 1000,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 999,
+                                                                        lineNumber: 998,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5330,7 +5347,7 @@ function ClientesContent() {
                                                                                 children: "Total Deuda"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1004,
+                                                                                lineNumber: 1003,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5341,13 +5358,13 @@ function ClientesContent() {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1005,
+                                                                                lineNumber: 1004,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1003,
+                                                                        lineNumber: 1002,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5357,7 +5374,7 @@ function ClientesContent() {
                                                                                 children: "Cliente"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1008,
+                                                                                lineNumber: 1007,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5365,29 +5382,29 @@ function ClientesContent() {
                                                                                 children: selectedCliente.nombre
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1009,
+                                                                                lineNumber: 1008,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1007,
+                                                                        lineNumber: 1006,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 998,
+                                                                lineNumber: 997,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 997,
+                                                            lineNumber: 996,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 996,
+                                                        lineNumber: 995,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5398,7 +5415,7 @@ function ClientesContent() {
                                                                 children: "Monto del Abono *"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1016,
+                                                                lineNumber: 1015,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5440,7 +5457,7 @@ function ClientesContent() {
                                                                 required: true
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1017,
+                                                                lineNumber: 1016,
                                                                 columnNumber: 23
                                                             }, this),
                                                             abonoClienteData.monto && Number.parseFloat(abonoClienteData.monto) > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5451,13 +5468,13 @@ function ClientesContent() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1051,
+                                                                lineNumber: 1050,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1015,
+                                                        lineNumber: 1014,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5468,7 +5485,7 @@ function ClientesContent() {
                                                                 children: "Método de Pago *"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1058,
+                                                                lineNumber: 1057,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -5482,12 +5499,12 @@ function ClientesContent() {
                                                                         id: "metodoPagoCliente",
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1064,
+                                                                            lineNumber: 1063,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1063,
+                                                                        lineNumber: 1062,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -5497,7 +5514,7 @@ function ClientesContent() {
                                                                                 children: "Efectivo"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1067,
+                                                                                lineNumber: 1066,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -5505,25 +5522,25 @@ function ClientesContent() {
                                                                                 children: "Transferencia"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1068,
+                                                                                lineNumber: 1067,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1066,
+                                                                        lineNumber: 1065,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1059,
+                                                                lineNumber: 1058,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1057,
+                                                        lineNumber: 1056,
                                                         columnNumber: 21
                                                     }, this),
                                                     abonoClienteData.metodoPago === 'transferencia' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5534,7 +5551,7 @@ function ClientesContent() {
                                                                 children: "Referencia de Transferencia"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1075,
+                                                                lineNumber: 1074,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -5547,13 +5564,13 @@ function ClientesContent() {
                                                                 placeholder: "Número de referencia"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1076,
+                                                                lineNumber: 1075,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1074,
+                                                        lineNumber: 1073,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5564,7 +5581,7 @@ function ClientesContent() {
                                                                 children: "Notas (opcional)"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1086,
+                                                                lineNumber: 1085,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -5578,13 +5595,13 @@ function ClientesContent() {
                                                                 rows: 3
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1087,
+                                                                lineNumber: 1086,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1085,
+                                                        lineNumber: 1084,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
@@ -5604,7 +5621,7 @@ function ClientesContent() {
                                                 children: "Cancelar"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                lineNumber: 1099,
+                                                lineNumber: 1098,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -5613,13 +5630,13 @@ function ClientesContent() {
                                                 children: loading ? "Registrando..." : "Distribuir Abono"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                lineNumber: 1102,
+                                                lineNumber: 1101,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                        lineNumber: 1098,
+                                        lineNumber: 1097,
                                         columnNumber: 15
                                     }, this)
                                 ]
@@ -5664,7 +5681,7 @@ function ClientesContent() {
                                     children: "Historial de Abonos de Factura"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                    lineNumber: 1118,
+                                    lineNumber: 1117,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
@@ -5678,12 +5695,12 @@ function ClientesContent() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1120,
+                                            lineNumber: 1119,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1123,
+                                            lineNumber: 1122,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5695,25 +5712,25 @@ function ClientesContent() {
                                                     children: selectedCuenta?.cliente_nombre
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1125,
+                                                    lineNumber: 1124,
                                                     columnNumber: 26
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1124,
+                                            lineNumber: 1123,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                    lineNumber: 1119,
+                                    lineNumber: 1118,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                            lineNumber: 1117,
+                            lineNumber: 1116,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5736,7 +5753,7 @@ function ClientesContent() {
                                                                 children: "Monto Total"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1136,
+                                                                lineNumber: 1135,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5747,13 +5764,13 @@ function ClientesContent() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1137,
+                                                                lineNumber: 1136,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1135,
+                                                        lineNumber: 1134,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5764,7 +5781,7 @@ function ClientesContent() {
                                                                 children: "Total Abonado"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1142,
+                                                                lineNumber: 1141,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5775,7 +5792,7 @@ function ClientesContent() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1143,
+                                                                lineNumber: 1142,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5787,13 +5804,13 @@ function ClientesContent() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1146,
+                                                                lineNumber: 1145,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1141,
+                                                        lineNumber: 1140,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5804,7 +5821,7 @@ function ClientesContent() {
                                                                 children: "Saldo Pendiente"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1151,
+                                                                lineNumber: 1150,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5815,29 +5832,29 @@ function ClientesContent() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1152,
+                                                                lineNumber: 1151,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1150,
+                                                        lineNumber: 1149,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                lineNumber: 1134,
+                                                lineNumber: 1133,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1133,
+                                            lineNumber: 1132,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                        lineNumber: 1132,
+                                        lineNumber: 1131,
                                         columnNumber: 15
                                     }, this),
                                     abonos.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5849,19 +5866,19 @@ function ClientesContent() {
                                             className: "max-w-2xl"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1163,
+                                            lineNumber: 1162,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                        lineNumber: 1162,
+                                        lineNumber: 1161,
                                         columnNumber: 17
                                     }, this),
                                     (()=>{
                                         const filteredAbonos = abonos.filter((abono)=>{
                                             if (!abonoSearchTerm) return true;
                                             const searchNormalized = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abonoSearchTerm);
-                                            return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(new Date(abono.fecha).toLocaleString('es-EC')).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.monto.toString()).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.metodoPago).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.referencia || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.notas || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.usuario).includes(searchNormalized);
+                                            return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(new Date(abono.fecha).toLocaleString('es-CO')).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.monto.toString()).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.metodoPago).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.referencia || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.notas || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.usuario).includes(searchNormalized);
                                         });
                                         return filteredAbonos.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "text-center py-12 text-muted-foreground",
@@ -5870,7 +5887,7 @@ function ClientesContent() {
                                                     className: "h-12 w-12 mx-auto mb-3 opacity-50"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1188,
+                                                    lineNumber: 1187,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5878,7 +5895,7 @@ function ClientesContent() {
                                                     children: abonos.length === 0 ? 'No hay abonos registrados' : 'No se encontraron abonos'
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1189,
+                                                    lineNumber: 1188,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5886,13 +5903,13 @@ function ClientesContent() {
                                                     children: abonos.length === 0 ? 'Esta factura no tiene historial de pagos' : 'Intenta con otro término de búsqueda'
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1192,
+                                                    lineNumber: 1191,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1187,
+                                            lineNumber: 1186,
                                             columnNumber: 19
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                             children: [
@@ -5915,7 +5932,7 @@ function ClientesContent() {
                                                                                     children: "Fecha"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1205,
+                                                                                    lineNumber: 1204,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -5923,7 +5940,7 @@ function ClientesContent() {
                                                                                     children: "Monto"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1206,
+                                                                                    lineNumber: 1205,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -5931,7 +5948,7 @@ function ClientesContent() {
                                                                                     children: "Método"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1207,
+                                                                                    lineNumber: 1206,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -5939,7 +5956,7 @@ function ClientesContent() {
                                                                                     children: "Referencia"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1208,
+                                                                                    lineNumber: 1207,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -5947,7 +5964,7 @@ function ClientesContent() {
                                                                                     children: "Notas"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1209,
+                                                                                    lineNumber: 1208,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -5955,18 +5972,18 @@ function ClientesContent() {
                                                                                     children: "Usuario"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1210,
+                                                                                    lineNumber: 1209,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1204,
+                                                                            lineNumber: 1203,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1203,
+                                                                        lineNumber: 1202,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -5975,7 +5992,7 @@ function ClientesContent() {
                                                                                 children: [
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm whitespace-nowrap font-medium",
-                                                                                        children: new Date(abono.fecha).toLocaleString('es-EC', {
+                                                                                        children: new Date(abono.fecha).toLocaleString('es-CO', {
                                                                                             year: 'numeric',
                                                                                             month: '2-digit',
                                                                                             day: '2-digit',
@@ -5984,8 +6001,8 @@ function ClientesContent() {
                                                                                         })
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1216,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1215,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-base font-bold text-green-600 text-right whitespace-nowrap",
@@ -5995,8 +6012,8 @@ function ClientesContent() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1225,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1224,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -6005,13 +6022,13 @@ function ClientesContent() {
                                                                                             children: abono.metodoPago
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1229,
-                                                                                            columnNumber: 31
+                                                                                            lineNumber: 1228,
+                                                                                            columnNumber: 37
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1228,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1227,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm",
@@ -6020,20 +6037,20 @@ function ClientesContent() {
                                                                                             children: abono.referencia
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1235,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1234,
+                                                                                            columnNumber: 39
                                                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                             className: "text-muted-foreground",
                                                                                             children: "-"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1239,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1238,
+                                                                                            columnNumber: 39
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1233,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1232,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm",
@@ -6043,59 +6060,59 @@ function ClientesContent() {
                                                                                             children: abono.notas
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1244,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1243,
+                                                                                            columnNumber: 39
                                                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                             className: "text-muted-foreground",
                                                                                             children: "-"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1248,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1247,
+                                                                                            columnNumber: 39
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1242,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1241,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm font-medium",
                                                                                         children: abono.usuario
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1251,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1250,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, abono.id, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1215,
-                                                                                columnNumber: 27
+                                                                                lineNumber: 1214,
+                                                                                columnNumber: 33
                                                                             }, this))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1213,
+                                                                        lineNumber: 1212,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1202,
+                                                                lineNumber: 1201,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 1201,
+                                                            lineNumber: 1200,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1200,
+                                                        lineNumber: 1199,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1199,
+                                                    lineNumber: 1198,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6114,7 +6131,7 @@ function ClientesContent() {
                                                                                     className: "flex-1",
                                                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                         className: "text-xs text-muted-foreground font-medium mb-1",
-                                                                                        children: new Date(abono.fecha).toLocaleString('es-EC', {
+                                                                                        children: new Date(abono.fecha).toLocaleString('es-CO', {
                                                                                             year: 'numeric',
                                                                                             month: '2-digit',
                                                                                             day: '2-digit',
@@ -6123,13 +6140,13 @@ function ClientesContent() {
                                                                                         })
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1271,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1270,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1270,
-                                                                                    columnNumber: 31
+                                                                                    lineNumber: 1269,
+                                                                                    columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                     className: "text-right",
@@ -6141,24 +6158,24 @@ function ClientesContent() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1282,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1281,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1281,
-                                                                                    columnNumber: 31
+                                                                                    lineNumber: 1280,
+                                                                                    columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1269,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1268,
+                                                                            columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1268,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 1267,
+                                                                        columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                         className: "p-4 space-y-3",
@@ -6173,8 +6190,8 @@ function ClientesContent() {
                                                                                                 children: "Método de Pago"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1293,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1292,
+                                                                                                columnNumber: 35
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                                                                 variant: "secondary",
@@ -6182,14 +6199,14 @@ function ClientesContent() {
                                                                                                 children: abono.metodoPago
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1294,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1293,
+                                                                                                columnNumber: 35
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1292,
-                                                                                        columnNumber: 31
+                                                                                        lineNumber: 1291,
+                                                                                        columnNumber: 33
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                         children: [
@@ -6198,28 +6215,28 @@ function ClientesContent() {
                                                                                                 children: "Usuario"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1299,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1298,
+                                                                                                columnNumber: 35
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                                 className: "text-sm font-medium",
                                                                                                 children: abono.usuario
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1300,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1299,
+                                                                                                columnNumber: 35
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1298,
-                                                                                        columnNumber: 31
+                                                                                        lineNumber: 1297,
+                                                                                        columnNumber: 33
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1291,
-                                                                                columnNumber: 29
+                                                                                lineNumber: 1290,
+                                                                                columnNumber: 31
                                                                             }, this),
                                                                             abono.referencia && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                 children: [
@@ -6228,22 +6245,22 @@ function ClientesContent() {
                                                                                         children: "Referencia"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1306,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1305,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                         className: "text-sm font-mono bg-muted px-2 py-1 rounded break-all",
                                                                                         children: abono.referencia
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1307,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1306,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1305,
-                                                                                columnNumber: 31
+                                                                                lineNumber: 1304,
+                                                                                columnNumber: 33
                                                                             }, this),
                                                                             abono.notas && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                 children: [
@@ -6252,43 +6269,43 @@ function ClientesContent() {
                                                                                         children: "Notas"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1315,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1314,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                         className: "text-sm bg-muted/50 px-3 py-2 rounded",
                                                                                         children: abono.notas
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1316,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1315,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1314,
-                                                                                columnNumber: 31
+                                                                                lineNumber: 1313,
+                                                                                columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1290,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 1289,
+                                                                        columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1266,
-                                                                columnNumber: 25
+                                                                lineNumber: 1265,
+                                                                columnNumber: 27
                                                             }, this)
                                                         }, abono.id, false, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 1265,
-                                                            columnNumber: 23
+                                                            lineNumber: 1264,
+                                                            columnNumber: 25
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1263,
+                                                    lineNumber: 1262,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
@@ -6297,23 +6314,23 @@ function ClientesContent() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                lineNumber: 1130,
+                                lineNumber: 1129,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                            lineNumber: 1129,
+                            lineNumber: 1128,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                    lineNumber: 1116,
+                    lineNumber: 1115,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                lineNumber: 1112,
+                lineNumber: 1111,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -6341,7 +6358,7 @@ function ClientesContent() {
                                     children: "Historial General de Abonos"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                    lineNumber: 1346,
+                                    lineNumber: 1345,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
@@ -6355,12 +6372,12 @@ function ClientesContent() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1348,
+                                            lineNumber: 1347,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1351,
+                                            lineNumber: 1350,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6380,7 +6397,7 @@ function ClientesContent() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 1356,
+                                                            lineNumber: 1355,
                                                             columnNumber: 44
                                                         }, this),
                                                         " ",
@@ -6393,7 +6410,7 @@ function ClientesContent() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 1357,
+                                                            lineNumber: 1356,
                                                             columnNumber: 46
                                                         }, this)
                                                     ]
@@ -6401,19 +6418,19 @@ function ClientesContent() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1352,
+                                            lineNumber: 1351,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                    lineNumber: 1347,
+                                    lineNumber: 1346,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                            lineNumber: 1345,
+                            lineNumber: 1344,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6434,7 +6451,7 @@ function ClientesContent() {
                                                         className: "flex-1"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1369,
+                                                        lineNumber: 1368,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -6445,13 +6462,13 @@ function ClientesContent() {
                                                         children: showDateFilters ? "Ocultar Fechas" : "Buscar por Fechas"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1375,
+                                                        lineNumber: 1374,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                lineNumber: 1368,
+                                                lineNumber: 1367,
                                                 columnNumber: 19
                                             }, this),
                                             showDateFilters && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6465,7 +6482,7 @@ function ClientesContent() {
                                                                 children: "Fecha Inicio"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1388,
+                                                                lineNumber: 1387,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -6475,13 +6492,13 @@ function ClientesContent() {
                                                                 onChange: (e)=>setFechaInicio(e.target.value)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1389,
+                                                                lineNumber: 1388,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1387,
+                                                        lineNumber: 1386,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6492,7 +6509,7 @@ function ClientesContent() {
                                                                 children: "Fecha Fin"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1397,
+                                                                lineNumber: 1396,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -6502,13 +6519,13 @@ function ClientesContent() {
                                                                 onChange: (e)=>setFechaFin(e.target.value)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1398,
+                                                                lineNumber: 1397,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1396,
+                                                        lineNumber: 1395,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6527,7 +6544,7 @@ function ClientesContent() {
                                                                 children: "Limpiar Filtros"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1406,
+                                                                lineNumber: 1405,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -6540,32 +6557,32 @@ function ClientesContent() {
                                                                 children: "Aplicar Filtro"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1419,
+                                                                lineNumber: 1418,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1405,
+                                                        lineNumber: 1404,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                lineNumber: 1386,
+                                                lineNumber: 1385,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                        lineNumber: 1367,
+                                        lineNumber: 1366,
                                         columnNumber: 17
                                     }, this),
                                     (()=>{
                                         const filteredAbonos = abonos.filter((abono)=>{
                                             if (!abonoSearchTerm) return true;
                                             const searchNormalized = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abonoSearchTerm);
-                                            return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(new Date(abono.fecha).toLocaleString('es-EC')).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.numero_venta?.toString() || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.monto.toString()).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.metodoPago).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.referencia || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.notas || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.usuario).includes(searchNormalized);
+                                            return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(new Date(abono.fecha).toLocaleString('es-CO')).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.numero_venta?.toString() || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.monto.toString()).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.metodoPago).includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.referencia || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.notas || '').includes(searchNormalized) || (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeText"])(abono.usuario).includes(searchNormalized);
                                         });
                                         return filteredAbonos.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "text-center py-12 text-muted-foreground",
@@ -6574,7 +6591,7 @@ function ClientesContent() {
                                                     className: "h-12 w-12 mx-auto mb-3 opacity-50"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1452,
+                                                    lineNumber: 1451,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -6582,7 +6599,7 @@ function ClientesContent() {
                                                     children: abonos.length === 0 ? 'No hay abonos registrados' : 'No se encontraron abonos'
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1453,
+                                                    lineNumber: 1452,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -6590,13 +6607,13 @@ function ClientesContent() {
                                                     children: abonos.length === 0 ? 'Este cliente no tiene historial de pagos' : 'Intenta con otro término de búsqueda'
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1456,
+                                                    lineNumber: 1455,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                            lineNumber: 1451,
+                                            lineNumber: 1450,
                                             columnNumber: 19
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                             children: [
@@ -6615,8 +6632,8 @@ function ClientesContent() {
                                                                             children: "Total Abonado"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1468,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1467,
+                                                                            columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                             className: "text-3xl font-bold text-green-600",
@@ -6626,14 +6643,14 @@ function ClientesContent() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1469,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1468,
+                                                                            columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                    lineNumber: 1467,
-                                                                    columnNumber: 27
+                                                                    lineNumber: 1466,
+                                                                    columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                     className: "text-center sm:text-left",
@@ -6643,30 +6660,30 @@ function ClientesContent() {
                                                                             children: "Cantidad de Abonos"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1474,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1473,
+                                                                            columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                             className: "text-3xl font-bold text-primary",
                                                                             children: historialResumen.cantidad_abonos
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1475,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1474,
+                                                                            columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                             className: "text-xs text-muted-foreground mt-1",
                                                                             children: "pagos registrados"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1478,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1477,
+                                                                            columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                    lineNumber: 1473,
-                                                                    columnNumber: 27
+                                                                    lineNumber: 1472,
+                                                                    columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                     className: "text-center sm:text-left",
@@ -6676,8 +6693,8 @@ function ClientesContent() {
                                                                             children: "Saldo Pendiente"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1483,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1482,
+                                                                            columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                             className: "text-3xl font-bold text-[#D4AF37]",
@@ -6687,30 +6704,30 @@ function ClientesContent() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1484,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1483,
+                                                                            columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                    lineNumber: 1482,
-                                                                    columnNumber: 27
+                                                                    lineNumber: 1481,
+                                                                    columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 1466,
-                                                            columnNumber: 25
+                                                            lineNumber: 1465,
+                                                            columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1465,
-                                                        columnNumber: 23
+                                                        lineNumber: 1464,
+                                                        columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1464,
-                                                    columnNumber: 21
+                                                    lineNumber: 1463,
+                                                    columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "hidden md:block border rounded-lg",
@@ -6731,7 +6748,7 @@ function ClientesContent() {
                                                                                     children: "Fecha"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1500,
+                                                                                    lineNumber: 1499,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -6739,7 +6756,7 @@ function ClientesContent() {
                                                                                     children: "Factura"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1501,
+                                                                                    lineNumber: 1500,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -6747,7 +6764,7 @@ function ClientesContent() {
                                                                                     children: "Monto"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1502,
+                                                                                    lineNumber: 1501,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -6755,7 +6772,7 @@ function ClientesContent() {
                                                                                     children: "Método"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1503,
+                                                                                    lineNumber: 1502,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -6763,7 +6780,7 @@ function ClientesContent() {
                                                                                     children: "Referencia"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1504,
+                                                                                    lineNumber: 1503,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -6771,7 +6788,7 @@ function ClientesContent() {
                                                                                     children: "Notas"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1505,
+                                                                                    lineNumber: 1504,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableHead"], {
@@ -6779,18 +6796,18 @@ function ClientesContent() {
                                                                                     children: "Usuario"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1506,
+                                                                                    lineNumber: 1505,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1499,
+                                                                            lineNumber: 1498,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1498,
+                                                                        lineNumber: 1497,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -6799,7 +6816,7 @@ function ClientesContent() {
                                                                                 children: [
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm whitespace-nowrap font-medium",
-                                                                                        children: new Date(abono.fecha).toLocaleString('es-EC', {
+                                                                                        children: new Date(abono.fecha).toLocaleString('es-CO', {
                                                                                             year: 'numeric',
                                                                                             month: '2-digit',
                                                                                             day: '2-digit',
@@ -6808,8 +6825,8 @@ function ClientesContent() {
                                                                                         })
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1512,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1511,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         children: abono.numero_venta ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -6821,20 +6838,20 @@ function ClientesContent() {
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1523,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1522,
+                                                                                            columnNumber: 39
                                                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                             className: "text-muted-foreground",
                                                                                             children: "-"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1527,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1526,
+                                                                                            columnNumber: 39
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1521,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1520,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-base font-bold text-green-600 text-right whitespace-nowrap",
@@ -6844,8 +6861,8 @@ function ClientesContent() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1530,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1529,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -6854,13 +6871,13 @@ function ClientesContent() {
                                                                                             children: abono.metodoPago
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1534,
-                                                                                            columnNumber: 31
+                                                                                            lineNumber: 1533,
+                                                                                            columnNumber: 37
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1533,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1532,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm",
@@ -6869,20 +6886,20 @@ function ClientesContent() {
                                                                                             children: abono.referencia
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1540,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1539,
+                                                                                            columnNumber: 39
                                                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                             className: "text-muted-foreground",
                                                                                             children: "-"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1544,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1543,
+                                                                                            columnNumber: 39
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1538,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1537,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm",
@@ -6892,59 +6909,59 @@ function ClientesContent() {
                                                                                             children: abono.notas
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1549,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1548,
+                                                                                            columnNumber: 39
                                                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                             className: "text-muted-foreground",
                                                                                             children: "-"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1553,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1552,
+                                                                                            columnNumber: 39
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1547,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1546,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                                                         className: "text-sm font-medium",
                                                                                         children: abono.usuario
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1556,
-                                                                                        columnNumber: 29
+                                                                                        lineNumber: 1555,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, abono.id, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1511,
-                                                                                columnNumber: 27
+                                                                                lineNumber: 1510,
+                                                                                columnNumber: 33
                                                                             }, this))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1509,
+                                                                        lineNumber: 1508,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1497,
+                                                                lineNumber: 1496,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 1496,
+                                                            lineNumber: 1495,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                        lineNumber: 1495,
+                                                        lineNumber: 1494,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1494,
+                                                    lineNumber: 1493,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6964,7 +6981,7 @@ function ClientesContent() {
                                                                                     children: [
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                             className: "text-xs text-muted-foreground font-medium mb-1",
-                                                                                            children: new Date(abono.fecha).toLocaleString('es-EC', {
+                                                                                            children: new Date(abono.fecha).toLocaleString('es-CO', {
                                                                                                 year: 'numeric',
                                                                                                 month: '2-digit',
                                                                                                 day: '2-digit',
@@ -6973,8 +6990,8 @@ function ClientesContent() {
                                                                                             })
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1576,
-                                                                                            columnNumber: 33
+                                                                                            lineNumber: 1575,
+                                                                                            columnNumber: 35
                                                                                         }, this),
                                                                                         abono.numero_venta && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                                                             variant: "outline",
@@ -6985,14 +7002,14 @@ function ClientesContent() {
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                            lineNumber: 1586,
-                                                                                            columnNumber: 35
+                                                                                            lineNumber: 1585,
+                                                                                            columnNumber: 37
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1575,
-                                                                                    columnNumber: 31
+                                                                                    lineNumber: 1574,
+                                                                                    columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                     className: "text-right",
@@ -7004,24 +7021,24 @@ function ClientesContent() {
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1592,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1591,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                    lineNumber: 1591,
-                                                                                    columnNumber: 31
+                                                                                    lineNumber: 1590,
+                                                                                    columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                            lineNumber: 1574,
-                                                                            columnNumber: 29
+                                                                            lineNumber: 1573,
+                                                                            columnNumber: 31
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1573,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 1572,
+                                                                        columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                         className: "p-4 space-y-3",
@@ -7036,8 +7053,8 @@ function ClientesContent() {
                                                                                                 children: "Método de Pago"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1603,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1602,
+                                                                                                columnNumber: 35
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
                                                                                                 variant: "secondary",
@@ -7045,14 +7062,14 @@ function ClientesContent() {
                                                                                                 children: abono.metodoPago
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1604,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1603,
+                                                                                                columnNumber: 35
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1602,
-                                                                                        columnNumber: 31
+                                                                                        lineNumber: 1601,
+                                                                                        columnNumber: 33
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                         children: [
@@ -7061,28 +7078,28 @@ function ClientesContent() {
                                                                                                 children: "Usuario"
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1609,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1608,
+                                                                                                columnNumber: 35
                                                                                             }, this),
                                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                                 className: "text-sm font-medium",
                                                                                                 children: abono.usuario
                                                                                             }, void 0, false, {
                                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                                lineNumber: 1610,
-                                                                                                columnNumber: 33
+                                                                                                lineNumber: 1609,
+                                                                                                columnNumber: 35
                                                                                             }, this)
                                                                                         ]
                                                                                     }, void 0, true, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1608,
-                                                                                        columnNumber: 31
+                                                                                        lineNumber: 1607,
+                                                                                        columnNumber: 33
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1601,
-                                                                                columnNumber: 29
+                                                                                lineNumber: 1600,
+                                                                                columnNumber: 31
                                                                             }, this),
                                                                             abono.referencia && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                 children: [
@@ -7091,22 +7108,22 @@ function ClientesContent() {
                                                                                         children: "Referencia"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1616,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1615,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                         className: "text-sm font-mono bg-muted px-2 py-1 rounded break-all",
                                                                                         children: abono.referencia
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1617,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1616,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1615,
-                                                                                columnNumber: 31
+                                                                                lineNumber: 1614,
+                                                                                columnNumber: 33
                                                                             }, this),
                                                                             abono.notas && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                 children: [
@@ -7115,43 +7132,43 @@ function ClientesContent() {
                                                                                         children: "Notas"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1625,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1624,
+                                                                                        columnNumber: 35
                                                                                     }, this),
                                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$valva_boutique_pos$2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                                         className: "text-sm bg-muted/50 px-3 py-2 rounded",
                                                                                         children: abono.notas
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                        lineNumber: 1626,
-                                                                                        columnNumber: 33
+                                                                                        lineNumber: 1625,
+                                                                                        columnNumber: 35
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                                lineNumber: 1624,
-                                                                                columnNumber: 31
+                                                                                lineNumber: 1623,
+                                                                                columnNumber: 33
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                        lineNumber: 1600,
-                                                                        columnNumber: 27
+                                                                        lineNumber: 1599,
+                                                                        columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                                lineNumber: 1571,
-                                                                columnNumber: 25
+                                                                lineNumber: 1570,
+                                                                columnNumber: 27
                                                             }, this)
                                                         }, abono.id, false, {
                                                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                            lineNumber: 1570,
-                                                            columnNumber: 23
+                                                            lineNumber: 1569,
+                                                            columnNumber: 25
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                                    lineNumber: 1568,
+                                                    lineNumber: 1567,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
@@ -7160,23 +7177,23 @@ function ClientesContent() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                                lineNumber: 1364,
+                                lineNumber: 1363,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                            lineNumber: 1363,
+                            lineNumber: 1362,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                    lineNumber: 1344,
+                    lineNumber: 1343,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Desktop/valva_boutique_pos/components/clientes-content.tsx",
-                lineNumber: 1335,
+                lineNumber: 1334,
                 columnNumber: 7
             }, this)
         ]
