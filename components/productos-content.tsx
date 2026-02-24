@@ -55,6 +55,19 @@ export function ProductosContent() {
   const [proveedores, setProveedores] = useState<any[]>([])
   const [esCategoriaConTallaUnica, setEsCategoriaConTallaUnica] = useState(false)
 
+  // Estados para mini-modales de creación inline
+  const [crearCategoriaOpen, setCrearCategoriaOpen] = useState(false)
+  const [crearCategoriaName, setCrearCategoriaName] = useState("")
+  const [crearCategoriaLoading, setCrearCategoriaLoading] = useState(false)
+
+  const [crearTipoPrendaOpen, setCrearTipoPrendaOpen] = useState(false)
+  const [crearTipoPrendaName, setCrearTipoPrendaName] = useState("")
+  const [crearTipoPrendaLoading, setCrearTipoPrendaLoading] = useState(false)
+
+  const [crearProveedorOpen, setCrearProveedorOpen] = useState(false)
+  const [crearProveedorData, setCrearProveedorData] = useState({ razonSocial: "", ruc: "", telefono: "" })
+  const [crearProveedorLoading, setCrearProveedorLoading] = useState(false)
+
   const [formData, setFormData] = useState({
     sku: "",
     codigo_barras: "",
@@ -235,6 +248,88 @@ export function ProductosContent() {
     }
   }
 
+  // ── Funciones de creación inline ──────────────────────────────────────────
+
+  const handleCrearCategoria = async () => {
+    if (!crearCategoriaName.trim()) return
+    setCrearCategoriaLoading(true)
+    try {
+      const res = await fetch('/api/categorias-padre', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: crearCategoriaName.trim() })
+      })
+      const json = await res.json()
+      if (!res.ok) { toast.error(json.error || 'Error al crear categoría'); return }
+      await loadCategoriasPadre()
+      setFormData(prev => ({ ...prev, categoria_padre_id: json.data.id.toString(), tipo_prenda_id: '', talla_id: '' }))
+      toast.success(`Categoría "${json.data.nombre}" creada`)
+      setCrearCategoriaOpen(false)
+      setCrearCategoriaName("")
+    } catch {
+      toast.error('Error al crear categoría')
+    } finally {
+      setCrearCategoriaLoading(false)
+    }
+  }
+
+  const handleCrearTipoPrenda = async () => {
+    if (!crearTipoPrendaName.trim() || !formData.categoria_padre_id) return
+    setCrearTipoPrendaLoading(true)
+    try {
+      const res = await fetch('/api/tipos-prenda', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: crearTipoPrendaName.trim(), categoria_padre_id: parseInt(formData.categoria_padre_id) })
+      })
+      const json = await res.json()
+      if (!res.ok) { toast.error(json.error || 'Error al crear tipo de prenda'); return }
+      await loadTiposPrenda()
+      // Actualizar filtrados también
+      const tiposFiltrados = [...tiposPrenda, json.data].filter(
+        (t) => t.categoria_padre_id === parseInt(formData.categoria_padre_id)
+      )
+      setTiposPrendaFiltrados(tiposFiltrados)
+      setFormData(prev => ({ ...prev, tipo_prenda_id: json.data.id.toString(), talla_id: '' }))
+      toast.success(`Tipo de prenda "${json.data.nombre}" creado`)
+      setCrearTipoPrendaOpen(false)
+      setCrearTipoPrendaName("")
+    } catch {
+      toast.error('Error al crear tipo de prenda')
+    } finally {
+      setCrearTipoPrendaLoading(false)
+    }
+  }
+
+  const handleCrearProveedor = async () => {
+    const { razonSocial, ruc, telefono } = crearProveedorData
+    if (!razonSocial.trim() || !ruc.trim() || !telefono.trim()) {
+      toast.error('Razón social, RUC y teléfono son obligatorios')
+      return
+    }
+    setCrearProveedorLoading(true)
+    try {
+      const res = await fetch('/api/proveedores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ razonSocial: razonSocial.trim(), ruc: ruc.trim(), telefono: telefono.trim() })
+      })
+      const json = await res.json()
+      if (!res.ok) { toast.error(json.error || 'Error al crear proveedor'); return }
+      await loadProveedores()
+      setFormData(prev => ({ ...prev, proveedor_id: json.id.toString() }))
+      toast.success(`Proveedor "${json.razon_social}" creado`)
+      setCrearProveedorOpen(false)
+      setCrearProveedorData({ razonSocial: '', ruc: '', telefono: '' })
+    } catch {
+      toast.error('Error al crear proveedor')
+    } finally {
+      setCrearProveedorLoading(false)
+    }
+  }
+
+  // ────────────────────────────────────────────────────────────────────────────
+
   const loadProductos = async () => {
     try {
       const response = await fetch('/api/productos')
@@ -340,12 +435,12 @@ export function ProductosContent() {
       const categoriaOriginal = (editingProduct as any).categoria_padre_id?.toString() || ""
       const tipoOriginal = (editingProduct as any).tipo_prenda_id?.toString() || ""
       const tallaOriginal = (editingProduct as any).talla_id?.toString() || ""
-      
+
       // Verificar si cambió alguno de los factores que afectan el SKU
       const cambioCategoria = categoriaOriginal !== formData.categoria_padre_id
       const cambioTipo = tipoOriginal !== formData.tipo_prenda_id
       const cambioTalla = tallaOriginal !== formData.talla_id
-      
+
       if (cambioCategoria || cambioTipo || cambioTalla) {
         // Regenerar SKU pero mantener código de barras
         regenerateSKUAndSubmit()
@@ -404,10 +499,10 @@ export function ProductosContent() {
 
       const data = await response.json()
       const { sku } = data
-      
+
       setFormData(prev => ({ ...prev, sku }))
       await submitProduct(sku, formData.codigo_barras) // Mantener código de barras original
-      
+
       toast.success('Producto actualizado con nuevo SKU')
     } catch (error) {
       console.error('Error:', error)
@@ -506,7 +601,7 @@ export function ProductosContent() {
         console.error('Error del servidor:', result)
         console.error('Detalles:', result.details)
         console.error('Código:', result.code)
-        
+
         // Mensaje personalizado para código duplicado
         if (result.code === 'ER_DUP_ENTRY') {
           if (result.details?.includes('codigo_barras')) {
@@ -523,8 +618,8 @@ export function ProductosContent() {
       }
 
       // Obtener talla para las etiquetas
-      const talla = tallasFiltradas.find(t => t.id === parseInt(formData.talla_id)) || 
-                    tallas.find(t => t.id === parseInt(formData.talla_id))
+      const talla = tallasFiltradas.find(t => t.id === parseInt(formData.talla_id)) ||
+        tallas.find(t => t.id === parseInt(formData.talla_id))
 
       // También guardar en localStorage para mantener compatibilidad
       const categoria = categoriasPadre.find(c => c.id === parseInt(formData.categoria_padre_id))
@@ -552,14 +647,14 @@ export function ProductosContent() {
 
       saveProduct(product)
       loadProductos()
-      
+
       handleCloseDialog()
-      
+
       // Generar PDF de etiquetas directamente
       toast.success('¡Producto registrado exitosamente!', {
         description: `SKU: ${generatedSku || formData.sku} - Generando etiquetas...`
       })
-      
+
       setTimeout(() => {
         generateLabelPDF({
           sku: generatedSku || formData.sku,
@@ -579,17 +674,17 @@ export function ProductosContent() {
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product)
-    
+
     // Usar IDs guardados directamente o buscar como fallback
-    const categoriaId = (product as any).categoria_padre_id?.toString() || 
-                       categoriasPadre.find(c => c.nombre === product.categoria)?.id?.toString() || ""
-    const tipoPrendaId = (product as any).tipo_prenda_id?.toString() || 
-                        tiposPrenda.find(t => t.nombre === product.tipoPrenda)?.id?.toString() || ""
-    const tallaId = (product as any).talla_id?.toString() || 
-                   tallas.find(t => t.valor === product.talla)?.id?.toString() || ""
-    const proveedorId = (product as any).proveedor_id?.toString() || 
-                       proveedores.find(p => p.razon_social === product.proveedor)?.id?.toString() || ""
-    
+    const categoriaId = (product as any).categoria_padre_id?.toString() ||
+      categoriasPadre.find(c => c.nombre === product.categoria)?.id?.toString() || ""
+    const tipoPrendaId = (product as any).tipo_prenda_id?.toString() ||
+      tiposPrenda.find(t => t.nombre === product.tipoPrenda)?.id?.toString() || ""
+    const tallaId = (product as any).talla_id?.toString() ||
+      tallas.find(t => t.valor === product.talla)?.id?.toString() || ""
+    const proveedorId = (product as any).proveedor_id?.toString() ||
+      proveedores.find(p => p.razon_social === product.proveedor)?.id?.toString() || ""
+
     setFormData({
       sku: product.referencia || "",
       codigo_barras: product.codigo || "",
@@ -665,7 +760,7 @@ export function ProductosContent() {
   const generateLabelPDF = (labelData: any) => {
     const cantidad = labelData.cantidad || 1
     let labelsHTML = ''
-    
+
     for (let i = 0; i < cantidad; i++) {
       labelsHTML += `
         <div class="label-item">
@@ -852,14 +947,14 @@ export function ProductosContent() {
       </body>
       </html>
     `
-    
+
     // Crear un Blob con el contenido HTML
     const blob = new Blob([htmlContent], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
-    
+
     // Abrir en una nueva pestaña del navegador de forma no bloqueante
     window.open(url, '_blank', 'noopener,noreferrer')
-    
+
     // Liberar la URL después de un tiempo
     setTimeout(() => {
       URL.revokeObjectURL(url)
@@ -954,11 +1049,11 @@ export function ProductosContent() {
             <div className="text-2xl font-bold">
               {productos.length > 0
                 ? String((
-                    productos.reduce(
-                      (sum, p) => sum + Number.parseFloat(calcularMargen(p.precioCosto, p.precioVentaPublico)),
-                      0,
-                    ) / productos.length
-                  ).toFixed(1))
+                  productos.reduce(
+                    (sum, p) => sum + Number.parseFloat(calcularMargen(p.precioCosto, p.precioVentaPublico)),
+                    0,
+                  ) / productos.length
+                ).toFixed(1))
                 : "0"}
               %
             </div>
@@ -1075,10 +1170,10 @@ export function ProductosContent() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-8 w-8" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
                         onClick={() => handlePrintLabel(producto)}
                         title="Imprimir etiqueta"
                       >
@@ -1150,7 +1245,7 @@ export function ProductosContent() {
               {/* Categorización */}
               <div className="border-t pt-4">
                 <h4 className="font-semibold mb-3 text-[#D4AF37]">Categorización</h4>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="categoria_padre_id">Categoría Principal *</Label>
@@ -1164,6 +1259,8 @@ export function ProductosContent() {
                       placeholder="Seleccionar categoría"
                       searchPlaceholder="Buscar categoría..."
                       emptyMessage="No se encontraron categorías"
+                      onCreateNew={(term) => { setCrearCategoriaName(term); setCrearCategoriaOpen(true) }}
+                      createNewLabel="Crear categoría"
                     />
                   </div>
 
@@ -1178,12 +1275,14 @@ export function ProductosContent() {
                         label: tipo.nombre
                       }))}
                       placeholder={
-                        formData.categoria_padre_id 
-                          ? "Seleccionar tipo" 
+                        formData.categoria_padre_id
+                          ? "Seleccionar tipo"
                           : "Primero seleccione categoría"
                       }
                       searchPlaceholder="Buscar tipo de prenda..."
                       emptyMessage="No se encontraron tipos de prenda"
+                      onCreateNew={(term) => { setCrearTipoPrendaName(term); setCrearTipoPrendaOpen(true) }}
+                      createNewLabel="Crear tipo de prenda"
                     />
                   </div>
                 </div>
@@ -1203,8 +1302,8 @@ export function ProductosContent() {
                         label: talla.valor
                       }))}
                       placeholder={
-                        formData.tipo_prenda_id 
-                          ? "Seleccionar talla" 
+                        formData.tipo_prenda_id
+                          ? "Seleccionar talla"
                           : "Primero seleccione tipo"
                       }
                       searchPlaceholder="Buscar talla..."
@@ -1223,7 +1322,7 @@ export function ProductosContent() {
                   />
                 </div>
               </div>
-              
+
               {esCategoriaConTallaUnica && (
                 <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
                   <p className="text-sm text-blue-700">
@@ -1247,6 +1346,8 @@ export function ProductosContent() {
                   placeholder="Seleccionar proveedor"
                   searchPlaceholder="Buscar proveedor..."
                   emptyMessage="No se encontraron proveedores"
+                  onCreateNew={(term) => { setCrearProveedorData(d => ({ ...d, razonSocial: term })); setCrearProveedorOpen(true) }}
+                  createNewLabel="Crear proveedor"
                 />
               </div>
 
@@ -1385,6 +1486,107 @@ export function ProductosContent() {
         cancelText="Cancelar"
         variant="destructive"
       />
+
+      {/* Mini-modal: Crear Categoría */}
+      <Dialog open={crearCategoriaOpen} onOpenChange={setCrearCategoriaOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Nueva Categoría</DialogTitle>
+            <DialogDescription>Ingresa el nombre de la nueva categoría principal.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label>Nombre *</Label>
+            <Input
+              value={crearCategoriaName}
+              onChange={(e) => setCrearCategoriaName(e.target.value.toUpperCase())}
+              placeholder="Ej: VESTIDOS"
+              className="uppercase"
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCrearCategoria() } }}
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCrearCategoriaOpen(false)}>Cancelar</Button>
+            <Button onClick={handleCrearCategoria} disabled={crearCategoriaLoading || !crearCategoriaName.trim()}>
+              {crearCategoriaLoading ? 'Creando...' : 'Crear Categoría'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mini-modal: Crear Tipo de Prenda */}
+      <Dialog open={crearTipoPrendaOpen} onOpenChange={setCrearTipoPrendaOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Nuevo Tipo de Prenda</DialogTitle>
+            <DialogDescription>
+              Se creará dentro de la categoría seleccionada.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label>Nombre *</Label>
+            <Input
+              value={crearTipoPrendaName}
+              onChange={(e) => setCrearTipoPrendaName(e.target.value.toUpperCase())}
+              placeholder="Ej: BLUSA MANGA CORTA"
+              className="uppercase"
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCrearTipoPrenda() } }}
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCrearTipoPrendaOpen(false)}>Cancelar</Button>
+            <Button onClick={handleCrearTipoPrenda} disabled={crearTipoPrendaLoading || !crearTipoPrendaName.trim()}>
+              {crearTipoPrendaLoading ? 'Creando...' : 'Crear Tipo'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mini-modal: Crear Proveedor */}
+      <Dialog open={crearProveedorOpen} onOpenChange={setCrearProveedorOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Nuevo Proveedor</DialogTitle>
+            <DialogDescription>Completa los datos mínimos del proveedor.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <div className="space-y-1">
+              <Label>Razón Social *</Label>
+              <Input
+                value={crearProveedorData.razonSocial}
+                onChange={(e) => setCrearProveedorData(d => ({ ...d, razonSocial: e.target.value }))}
+                placeholder="Nombre de la empresa o persona"
+                autoFocus
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>RUC *</Label>
+              <Input
+                value={crearProveedorData.ruc}
+                onChange={(e) => setCrearProveedorData(d => ({ ...d, ruc: e.target.value }))}
+                placeholder="Número de RUC"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Teléfono *</Label>
+              <Input
+                value={crearProveedorData.telefono}
+                onChange={(e) => setCrearProveedorData(d => ({ ...d, telefono: e.target.value }))}
+                placeholder="Teléfono de contacto"
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCrearProveedor() } }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setCrearProveedorOpen(false); setCrearProveedorData({ razonSocial: '', ruc: '', telefono: '' }) }}>Cancelar</Button>
+            <Button onClick={handleCrearProveedor} disabled={crearProveedorLoading || !crearProveedorData.razonSocial.trim() || !crearProveedorData.ruc.trim() || !crearProveedorData.telefono.trim()}>
+              {crearProveedorLoading ? 'Creando...' : 'Crear Proveedor'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   )
 }

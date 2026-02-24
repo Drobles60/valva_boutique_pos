@@ -1,0 +1,188 @@
+﻿On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .next/dev/build-manifest.json
+	modified:   .next/dev/build/chunks/[turbopack]_runtime.js
+	modified:   .next/dev/build/chunks/[turbopack]_runtime.js.map
+	modified:   .next/dev/build/postcss.js
+	modified:   .next/dev/build/postcss.js.map
+	modified:   .next/dev/fallback-build-manifest.json
+	modified:   .next/dev/logs/next-development.log
+	modified:   .next/dev/package.json
+	modified:   .next/dev/prerender-manifest.json
+	modified:   .next/dev/server/app-paths-manifest.json
+	modified:   .next/dev/server/app/caja/page.js
+	modified:   .next/dev/server/app/caja/page.js.map
+	modified:   .next/dev/server/app/caja/page/app-paths-manifest.json
+	modified:   .next/dev/server/app/caja/page/build-manifest.json
+	modified:   .next/dev/server/app/caja/page/next-font-manifest.json
+	modified:   .next/dev/server/app/caja/page/server-reference-manifest.json
+	modified:   .next/dev/server/app/caja/page_client-reference-manifest.js
+	modified:   .next/dev/server/app/inventario/productos/page.js
+	modified:   .next/dev/server/app/inventario/productos/page.js.map
+	modified:   .next/dev/server/app/inventario/productos/page/app-paths-manifest.json
+	modified:   .next/dev/server/app/inventario/productos/page/build-manifest.json
+	modified:   .next/dev/server/app/inventario/productos/page/next-font-manifest.json
+	modified:   .next/dev/server/app/inventario/productos/page/server-reference-manifest.json
+	modified:   .next/dev/server/app/inventario/productos/page_client-reference-manifest.js
+	modified:   .next/dev/server/app/page.js
+	modified:   .next/dev/server/app/page.js.map
+	modified:   .next/dev/server/app/page/app-paths-manifest.json
+	modified:   .next/dev/server/app/page/build-manifest.json
+	modified:   .next/dev/server/app/page/next-font-manifest.json
+	modified:   .next/dev/server/app/page/server-reference-manifest.json
+	modified:   .next/dev/server/app/page_client-reference-manifest.js
+	modified:   .next/dev/server/app/ventas/page.js
+	modified:   .next/dev/server/app/ventas/page.js.map
+	modified:   .next/dev/server/app/ventas/page/app-paths-manifest.json
+	modified:   .next/dev/server/app/ventas/page/build-manifest.json
+	modified:   .next/dev/server/app/ventas/page/next-font-manifest.json
+	modified:   .next/dev/server/app/ventas/page/server-reference-manifest.json
+	modified:   .next/dev/server/app/ventas/page_client-reference-manifest.js
+	modified:   .next/dev/server/chunks/ssr/[root-of-the-server]__1aaf5479._.js
+	modified:   .next/dev/server/chunks/ssr/[root-of-the-server]__1aaf5479._.js.map
+	modified:   .next/dev/server/chunks/ssr/[root-of-the-server]__7f148858._.js
+	modified:   .next/dev/server/chunks/ssr/[root-of-the-server]__7f148858._.js.map
+	modified:   .next/dev/server/chunks/ssr/[turbopack]_runtime.js
+	modified:   .next/dev/server/chunks/ssr/[turbopack]_runtime.js.map
+	modified:   .next/dev/server/middleware-build-manifest.js
+	modified:   .next/dev/server/middleware-manifest.json
+	modified:   .next/dev/server/next-font-manifest.js
+	modified:   .next/dev/server/next-font-manifest.json
+	modified:   .next/dev/server/server-reference-manifest.json
+	modified:   .next/dev/static/chunks/[next]_internal_font_google_geist_a7695b8e_module_css_bad6b30c._.single.css
+	modified:   .next/dev/static/chunks/[next]_internal_font_google_geist_a7695b8e_module_css_bad6b30c._.single.css.map
+	modified:   .next/dev/static/chunks/[next]_internal_font_google_geist_mono_354fc78_module_css_bad6b30c._.single.css
+	modified:   .next/dev/static/chunks/[next]_internal_font_google_geist_mono_354fc78_module_css_bad6b30c._.single.css.map
+	modified:   .next/dev/static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js
+	modified:   .next/dev/static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js.map
+	modified:   .next/dev/static/development/_buildManifest.js
+	modified:   .next/dev/trace
+	modified:   .next/dev/types/cache-life.d.ts
+	modified:   .next/dev/types/routes.d.ts
+	modified:   .next/dev/types/validator.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.next/dev/build/chunks/02f59__pnpm_42050250._.js
+	.next/dev/build/chunks/02f59__pnpm_42050250._.js.map
+	.next/dev/build/chunks/[root-of-the-server]__0c1bb49d._.js
+	.next/dev/build/chunks/[root-of-the-server]__0c1bb49d._.js.map
+	.next/dev/build/chunks/[root-of-the-server]__3b8150fa._.js
+	.next/dev/build/chunks/[root-of-the-server]__3b8150fa._.js.map
+	.next/dev/build/chunks/[turbopack-node]_transforms_postcss_ts_656245de._.js
+	.next/dev/build/chunks/[turbopack-node]_transforms_postcss_ts_656245de._.js.map
+	.next/dev/server/chunks/ssr/02f59__pnpm_41c92718._.js
+	.next/dev/server/chunks/ssr/02f59__pnpm_41c92718._.js.map
+	.next/dev/server/chunks/ssr/02f59__pnpm_5a406e6d._.js
+	.next/dev/server/chunks/ssr/02f59__pnpm_5a406e6d._.js.map
+	.next/dev/server/chunks/ssr/02f59__pnpm_9b96970c._.js
+	.next/dev/server/chunks/ssr/02f59__pnpm_9b96970c._.js.map
+	.next/dev/server/chunks/ssr/02f59__pnpm_a6c04c9e._.js
+	.next/dev/server/chunks/ssr/02f59__pnpm_a6c04c9e._.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_146878c5._.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_146878c5._.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_14ad4c90._.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_14ad4c90._.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_1504efa6._.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_1504efa6._.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_6c6c05a7._.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_6c6c05a7._.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_9e61d68c._.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_9e61d68c._.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_bcc12c5c._.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_bcc12c5c._.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_builtin_forbidden_8f8428e7.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_builtin_forbidden_8f8428e7.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_builtin_global-error_75934e4b.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_builtin_global-error_75934e4b.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_builtin_unauthorized_f08aa2dd.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_client_components_builtin_unauthorized_f08aa2dd.js.map
+	.next/dev/server/chunks/ssr/04f03_next_dist_f77440d4._.js
+	.next/dev/server/chunks/ssr/04f03_next_dist_f77440d4._.js.map
+	.next/dev/server/chunks/ssr/3d860_valva_boutique_pos__next-internal_server_app_ventas_page_actions_2a98d96c.js
+	.next/dev/server/chunks/ssr/3d860_valva_boutique_pos__next-internal_server_app_ventas_page_actions_2a98d96c.js.map
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_006a4b1e._.js
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_006a4b1e._.js.map
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_898b8d9f._.js
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_898b8d9f._.js.map
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_8e04dc62._.js
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_8e04dc62._.js.map
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_90b009ab._.js
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos_90b009ab._.js.map
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos__next-internal_server_app_caja_page_actions_09dcafd7.js
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos__next-internal_server_app_caja_page_actions_09dcafd7.js.map
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos__next-internal_server_app_page_actions_4ed441b8.js
+	.next/dev/server/chunks/ssr/Desktop_valva_boutique_pos__next-internal_server_app_page_actions_4ed441b8.js.map
+	.next/dev/server/chunks/ssr/[root-of-the-server]__2474f3df._.js
+	.next/dev/server/chunks/ssr/[root-of-the-server]__2474f3df._.js.map
+	.next/dev/server/chunks/ssr/[root-of-the-server]__5b20127a._.js
+	.next/dev/server/chunks/ssr/[root-of-the-server]__5b20127a._.js.map
+	.next/dev/server/chunks/ssr/[root-of-the-server]__9622c036._.js
+	.next/dev/server/chunks/ssr/[root-of-the-server]__9622c036._.js.map
+	.next/dev/server/chunks/ssr/[root-of-the-server]__a9943883._.js
+	.next/dev/server/chunks/ssr/[root-of-the-server]__a9943883._.js.map
+	.next/dev/server/chunks/ssr/[root-of-the-server]__e07f240d._.js
+	.next/dev/server/chunks/ssr/[root-of-the-server]__e07f240d._.js.map
+	.next/dev/server/chunks/ssr/[root-of-the-server]__e13680ea._.js
+	.next/dev/server/chunks/ssr/[root-of-the-server]__e13680ea._.js.map
+	.next/dev/server/chunks/ssr/a4a12_pos__next-internal_server_app_inventario_productos_page_actions_b359fde2.js
+	.next/dev/server/chunks/ssr/a4a12_pos__next-internal_server_app_inventario_productos_page_actions_b359fde2.js.map
+	.next/dev/static/chunks/02f59__pnpm_324cf2fc._.js
+	.next/dev/static/chunks/02f59__pnpm_324cf2fc._.js.map
+	.next/dev/static/chunks/02f59__pnpm_7363c68b._.js
+	.next/dev/static/chunks/02f59__pnpm_7363c68b._.js.map
+	.next/dev/static/chunks/02f59__pnpm_ac96c4db._.js
+	.next/dev/static/chunks/02f59__pnpm_ac96c4db._.js.map
+	.next/dev/static/chunks/02f59__pnpm_b469b19b._.js
+	.next/dev/static/chunks/02f59__pnpm_b469b19b._.js.map
+	.next/dev/static/chunks/02f59__pnpm_f447f898._.js
+	.next/dev/static/chunks/02f59__pnpm_f447f898._.js.map
+	.next/dev/static/chunks/04f03_next_dist_09cedc29._.js
+	.next/dev/static/chunks/04f03_next_dist_09cedc29._.js.map
+	.next/dev/static/chunks/04f03_next_dist_build_polyfills_polyfill-nomodule.js
+	.next/dev/static/chunks/04f03_next_dist_client_ced82037._.js
+	.next/dev/static/chunks/04f03_next_dist_client_ced82037._.js.map
+	.next/dev/static/chunks/04f03_next_dist_client_components_builtin_global-error_af1c5326.js
+	.next/dev/static/chunks/04f03_next_dist_compiled_29862dc2._.js
+	.next/dev/static/chunks/04f03_next_dist_compiled_29862dc2._.js.map
+	.next/dev/static/chunks/04f03_next_dist_compiled_next-devtools_index_f3efbe62.js
+	.next/dev/static/chunks/04f03_next_dist_compiled_next-devtools_index_f3efbe62.js.map
+	.next/dev/static/chunks/04f03_next_dist_compiled_react-dom_59a712ac._.js
+	.next/dev/static/chunks/04f03_next_dist_compiled_react-dom_59a712ac._.js.map
+	.next/dev/static/chunks/04f03_next_dist_compiled_react-server-dom-turbopack_d820c7cf._.js
+	.next/dev/static/chunks/04f03_next_dist_compiled_react-server-dom-turbopack_d820c7cf._.js.map
+	.next/dev/static/chunks/04f03_next_dist_dfb5307a._.js
+	.next/dev/static/chunks/04f03_next_dist_dfb5307a._.js.map
+	.next/dev/static/chunks/9d79a_@swc_helpers_cjs_ce2f5a64._.js
+	.next/dev/static/chunks/9d79a_@swc_helpers_cjs_ce2f5a64._.js.map
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_426c7fc2._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_426c7fc2._.js.map
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_9fb9f95c._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_9fb9f95c._.js.map
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_a0ff3932._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_a2046783._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_a2046783._.js.map
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_app_caja_page_tsx_0dd576ce._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_app_globals_css_bad6b30c._.single.css
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_app_globals_css_bad6b30c._.single.css.map
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_app_inventario_productos_page_tsx_0dd576ce._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_app_layout_tsx_af1c5326._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_app_page_tsx_0dd576ce._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_app_ventas_page_tsx_0dd576ce._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_b553ca16._.js.map
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_d643a559._.js
+	.next/dev/static/chunks/Desktop_valva_boutique_pos_d643a559._.js.map
+	.next/dev/static/chunks/[root-of-the-server]__9af8ee90._.css
+	.next/dev/static/chunks/[root-of-the-server]__9af8ee90._.css.map
+	.next/dev/static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_4ff6a1be._.js
+	.next/dev/static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_4ff6a1be._.js.map
+	.next/dev/static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_f7a60072._.js
+	.next/dev/static/chunks/turbopack-Desktop_valva_boutique_pos_b553ca16._.js
+	branches.txt
+	status.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

@@ -1,0 +1,7 @@
+﻿origin
+origin/develop
+origin/features/DARR
+origin/features/NCL
+origin/features/OJLP
+origin/main
+origin/v0/daroblesr-7933-9ef16580
