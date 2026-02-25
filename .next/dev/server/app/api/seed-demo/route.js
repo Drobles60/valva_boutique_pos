@@ -1,0 +1,10 @@
+var R=require("../../../chunks/[turbopack]_runtime.js")("server/app/api/seed-demo/route.js")
+R.c("server/chunks/04f03_next_4148ce3c._.js")
+R.c("server/chunks/e8cd7_mysql2_9bf751c3._.js")
+R.c("server/chunks/21398_iconv-lite_ec803f89._.js")
+R.c("server/chunks/377f1_aws-ssl-profiles_lib_6b0161ed._.js")
+R.c("server/chunks/02f59__pnpm_f97a2d09._.js")
+R.c("server/chunks/[root-of-the-server]__f5ca7a21._.js")
+R.c("server/chunks/886df_boutique_pos__next-internal_server_app_api_seed-demo_route_actions_aca996d9.js")
+R.m("[project]/Desktop/valva_boutique_pos/node_modules/.pnpm/next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/valva_boutique_pos/app/api/seed-demo/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/Desktop/valva_boutique_pos/node_modules/.pnpm/next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/Desktop/valva_boutique_pos/app/api/seed-demo/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports
