@@ -1,166 +1,126 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import type { ReporteDiario } from '@/types/reportes'
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const fecha = searchParams.get('fecha')
-    const sesionId = searchParams.get('sesionId')
+    const fecha = searchParams.get('fecha') || new Date().toISOString().split('T')[0]
 
-    if (!fecha && !sesionId) {
-      return NextResponse.json(
-        { error: 'Se requiere fecha o ID de sesión' },
-        { status: 400 }
-      )
-    }
+    // Ventas del día por método de pago
+    const ventasEfectivo = await query<any[]>(`
+      SELECT COALESCE(SUM(total), 0) as total, COUNT(*) as n FROM ventas
+      WHERE DATE(fecha_venta) = ? AND estado != 'anulada' AND metodo_pago = 'efectivo'
+    `, [fecha])
 
-    // Obtener información de la sesión de caja
-    let sesion
-    if (sesionId) {
-      const sesionResult = await query<any[]>(`
-        SELECT 
-          sc.*,
-          u.nombre as usuario
-        FROM sesiones_caja sc
-        INNER JOIN usuarios u ON sc.usuario_id = u.id
-        WHERE sc.id = ?
-      `, [sesionId])
-      sesion = sesionResult[0]
-    } else {
-      const sesionResult = await query<any[]>(`
-        SELECT 
-          sc.*,
-          u.nombre as usuario
-        FROM sesiones_caja sc
-        INNER JOIN usuarios u ON sc.usuario_id = u.id
-        WHERE DATE(sc.fecha_apertura) = ?
-        ORDER BY sc.fecha_apertura DESC
-        LIMIT 1
-      `, [fecha])
-      sesion = sesionResult[0]
-    }
+    const ventasTransferencia = await query<any[]>(`
+      SELECT COALESCE(SUM(total), 0) as total, COUNT(*) as n FROM ventas
+      WHERE DATE(fecha_venta) = ? AND estado != 'anulada' AND metodo_pago = 'transferencia'
+    `, [fecha])
 
-    if (!sesion) {
-      return NextResponse.json(
-        { error: 'No se encontró sesión de caja para esta fecha' },
-        { status: 404 }
-      )
-    }
+    const ventasMixto = await query<any[]>(`
+      SELECT COALESCE(SUM(total), 0) as total, COUNT(*) as n FROM ventas
+      WHERE DATE(fecha_venta) = ? AND estado != 'anulada' AND metodo_pago = 'mixto'
+    `, [fecha])
 
-    const fechaInicio = sesion.fecha_apertura
-    const fechaFin = sesion.fecha_cierre || new Date().toISOString()
+    // Ventas a crédito
+    const ventasCredito = await query<any[]>(`
+      SELECT COALESCE(SUM(total), 0) as total, COUNT(*) as n FROM ventas
+      WHERE DATE(fecha_venta) = ? AND estado != 'anulada' AND tipo_venta = 'credito'
+    `, [fecha])
 
-    // Ventas en efectivo
-    const ventasEfectivoResult = await query<any[]>(`
-      SELECT COALESCE(SUM(v.total), 0) as total
+    // Abonos del día
+    const abonosEfectivo = await query<any[]>(`
+      SELECT COALESCE(SUM(monto), 0) as total FROM abonos
+      WHERE DATE(fecha_abono) = ? AND metodo_pago = 'efectivo'
+    `, [fecha])
+
+    const abonosTransferencia = await query<any[]>(`
+      SELECT COALESCE(SUM(monto), 0) as total FROM abonos
+      WHERE DATE(fecha_abono) = ? AND metodo_pago = 'transferencia'
+    `, [fecha])
+
+    // Gastos del día
+    const gastosR = await query<any[]>(`
+      SELECT COALESCE(SUM(monto), 0) as total, COUNT(*) as n FROM gastos WHERE DATE(fecha_gasto) = ?
+    `, [fecha])
+
+    // Detalle de gastos
+    const detalleGastos = await query<any[]>(`
+      SELECT descripcion, categoria, monto FROM gastos WHERE DATE(fecha_gasto) = ? ORDER BY id
+    `, [fecha])
+
+    // Total transacciones
+    const transR = await query<any[]>(`
+      SELECT COUNT(*) as total FROM ventas WHERE DATE(fecha_venta) = ? AND estado != 'anulada'
+    `, [fecha])
+
+    // Detalle de ventas del día
+    const detalleVentas = await query<any[]>(`
+      SELECT v.numero_venta, v.total, v.metodo_pago, v.tipo_venta,
+        COALESCE(c.nombre, 'Público general') as cliente, u.nombre as vendedor
       FROM ventas v
-      WHERE v.fecha_venta BETWEEN ? AND ?
-        AND v.estado = 'completada'
-        AND v.metodo_pago = 'efectivo'
-    `, [fechaInicio, fechaFin])
+      LEFT JOIN clientes c ON v.cliente_id = c.id
+      INNER JOIN usuarios u ON v.usuario_id = u.id
+      WHERE DATE(v.fecha_venta) = ? AND v.estado != 'anulada'
+      ORDER BY v.fecha_venta DESC
+    `, [fecha])
 
-    // Ventas con tarjeta
-    const ventasTarjetaResult = await query<any[]>(`
-      SELECT COALESCE(SUM(v.total), 0) as total
-      FROM ventas v
-      WHERE v.fecha_venta BETWEEN ? AND ?
-        AND v.estado = 'completada'
-        AND v.metodo_pago = 'tarjeta'
-    `, [fechaInicio, fechaFin])
+    // Sesión de caja (si aplica)
+    const sesiones = await query<any[]>(`
+      SELECT sc.*, u.nombre as usuario FROM sesiones_caja sc
+      INNER JOIN usuarios u ON sc.usuario_id = u.id
+      WHERE DATE(sc.fecha_apertura) = ? ORDER BY sc.fecha_apertura DESC LIMIT 1
+    `, [fecha])
 
-    // Ventas con transferencia
-    const ventasTransferenciaResult = await query<any[]>(`
-      SELECT COALESCE(SUM(v.total), 0) as total
-      FROM ventas v
-      WHERE v.fecha_venta BETWEEN ? AND ?
-        AND v.estado = 'completada'
-        AND v.metodo_pago = 'transferencia'
-    `, [fechaInicio, fechaFin])
+    const ef = Number(ventasEfectivo[0]?.total || 0)
+    const tr = Number(ventasTransferencia[0]?.total || 0)
+    const mx = Number(ventasMixto[0]?.total || 0)
+    const abEf = Number(abonosEfectivo[0]?.total || 0)
+    const abTr = Number(abonosTransferencia[0]?.total || 0)
+    const gs = Number(gastosR[0]?.total || 0)
 
-    // Abonos en efectivo
-    const abonosEfectivoResult = await query<any[]>(`
-      SELECT COALESCE(SUM(a.monto), 0) as total
-      FROM abonos a
-      WHERE a.fecha_abono BETWEEN ? AND ?
-        AND a.metodo_pago = 'efectivo'
-    `, [fechaInicio, fechaFin])
+    const totalIngresos = ef + tr + mx + abEf + abTr
+    const sesion = sesiones[0] || null
+    const montoBase = sesion ? Number(sesion.monto_base || 0) : 0
+    const efectivoEsperado = montoBase + ef + abEf - gs
+    const efectivoContado = sesion ? Number(sesion.efectivo_contado || 0) : 0
 
-    // Abonos con tarjeta
-    const abonosTarjetaResult = await query<any[]>(`
-      SELECT COALESCE(SUM(a.monto), 0) as total
-      FROM abonos a
-      WHERE a.fecha_abono BETWEEN ? AND ?
-        AND a.metodo_pago = 'tarjeta'
-    `, [fechaInicio, fechaFin])
-
-    // Abonos con transferencia
-    const abonosTransferenciaResult = await query<any[]>(`
-      SELECT COALESCE(SUM(a.monto), 0) as total
-      FROM abonos a
-      WHERE a.fecha_abono BETWEEN ? AND ?
-        AND a.metodo_pago = 'transferencia'
-    `, [fechaInicio, fechaFin])
-
-    // Gastos
-    const gastosResult = await query<any[]>(`
-      SELECT COALESCE(SUM(monto), 0) as total
-      FROM gastos
-      WHERE fecha BETWEEN ? AND ?
-    `, [fechaInicio, fechaFin])
-
-    // Contar transacciones
-    const transaccionesResult = await query<any[]>(`
-      SELECT COUNT(*) as total
-      FROM ventas
-      WHERE fecha_venta BETWEEN ? AND ?
-    `, [fechaInicio, fechaFin])
-
-    const ventasEfectivo = Number(ventasEfectivoResult[0]?.total || 0)
-    const ventasTarjeta = Number(ventasTarjetaResult[0]?.total || 0)
-    const ventasTransferencia = Number(ventasTransferenciaResult[0]?.total || 0)
-    const abonosEfectivo = Number(abonosEfectivoResult[0]?.total || 0)
-    const abonosTarjeta = Number(abonosTarjetaResult[0]?.total || 0)
-    const abonosTransferencia = Number(abonosTransferenciaResult[0]?.total || 0)
-    const gastos = Number(gastosResult[0]?.total || 0)
-
-    const totalIngresos = ventasEfectivo + ventasTarjeta + ventasTransferencia + 
-                          abonosEfectivo + abonosTarjeta + abonosTransferencia
-    const totalEgresos = gastos
-    const efectivoEsperado = Number(sesion.monto_base || 0) + ventasEfectivo + abonosEfectivo - gastos
-    const efectivoContado = Number(sesion.efectivo_contado || 0)
-    const diferencia = efectivoContado - efectivoEsperado
-
-    const reporte: ReporteDiario = {
-      fecha: sesion.fecha_apertura,
-      aperturaBase: Number(sesion.monto_base || 0),
+    return NextResponse.json({
+      success: true,
+      fecha,
+      sesion: sesion ? {
+        usuario: sesion.usuario,
+        apertura: sesion.fecha_apertura,
+        cierre: sesion.fecha_cierre,
+        estado: sesion.estado,
+        montoBase,
+        efectivoContado,
+      } : null,
       ingresos: {
-        ventasEfectivo,
-        ventasTarjeta,
-        ventasTransferencia,
-        abonosEfectivo,
-        abonosTarjeta,
-        abonosTransferencia,
-        total: totalIngresos
+        ventasEfectivo: ef,
+        ventasTransferencia: tr,
+        ventasMixto: mx,
+        ventasCredito: Number(ventasCredito[0]?.total || 0),
+        abonosEfectivo: abEf,
+        abonosTransferencia: abTr,
+        total: totalIngresos,
       },
-      egresos: {
-        gastos,
-        retiros: 0,
-        total: totalEgresos
-      },
+      egresos: { gastos: gs, detalleGastos: detalleGastos.map(g => ({ descripcion: g.descripcion, categoria: g.categoria, monto: Number(g.monto) })) },
+      transacciones: Number(transR[0]?.total || 0),
       efectivoEsperado,
       efectivoContado,
-      diferencia,
-      transacciones: Number(transaccionesResult[0]?.total || 0),
-      usuario: sesion.usuario
-    }
-
-    return NextResponse.json(reporte)
+      diferencia: efectivoContado > 0 ? efectivoContado - efectivoEsperado : 0,
+      detalleVentas: detalleVentas.map(v => ({
+        numero: v.numero_venta,
+        total: Number(v.total),
+        metodoPago: v.metodo_pago,
+        tipoVenta: v.tipo_venta,
+        cliente: v.cliente,
+        vendedor: v.vendedor,
+      })),
+    })
   } catch (error) {
     console.error('Error generando reporte diario:', error)
-    return NextResponse.json(
-      { error: 'Error al generar el reporte' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Error: ' + (error instanceof Error ? error.message : String(error)) }, { status: 500 })
   }
 }

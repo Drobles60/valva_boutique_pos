@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { 
-  DollarSign, TrendingUp, ShoppingCart, Package, Users, 
-  FileText, Calendar, BarChart3, PieChart, Calculator,
-  CreditCard, Wallet, ClipboardList, AlertTriangle, FileCheck
+  DollarSign, TrendingUp, Package, 
+  FileText, BarChart3, PieChart, Calculator,
+  CreditCard, Wallet, ClipboardList, AlertTriangle, FileCheck,
+  Landmark, Scale, Receipt, BookOpen
 } from "lucide-react"
 import { SidebarToggle } from "./app-sidebar"
 
@@ -66,38 +67,56 @@ export function ReportesContablesContent() {
     {
       titulo: "Diario de Caja",
       descripcion: "Reporte detallado de sesión de caja",
-      icono: Calendar,
+      icono: BookOpen,
       ruta: "/reportes/financieros/diario",
       color: "text-purple-600",
       categoria: "financiero",
       recomendado: "diario"
     },
-
-    // Reportes de Ventas
     {
-      titulo: "Ventas Generales",
-      descripcion: "Análisis completo de ventas y transacciones",
-      icono: ShoppingCart,
-      ruta: "/reportes/ventas/general",
-      color: "text-blue-600",
-      categoria: "ventas",
-      recomendado: "semanal"
-    },
-    {
-      titulo: "Ventas por Producto",
-      descripcion: "Top productos vendidos y análisis de demanda",
-      icono: Package,
-      ruta: "/reportes/ventas/productos",
-      color: "text-indigo-600",
-      categoria: "ventas",
+      titulo: "Balance General",
+      descripcion: "Resumen de activos, pasivos y patrimonio del negocio",
+      icono: Scale,
+      ruta: "/reportes/financieros/balance",
+      color: "text-emerald-600",
+      categoria: "financiero",
       recomendado: "mensual"
     },
+    {
+      titulo: "Análisis de Márgenes",
+      descripcion: "Márgenes de ganancia por categoría, producto y período",
+      icono: TrendingUp,
+      ruta: "/reportes/financieros/margenes",
+      color: "text-amber-600",
+      categoria: "financiero",
+      recomendado: "mensual"
+    },
+
+    // Reportes de Ventas
     {
       titulo: "Formas de Pago",
       descripcion: "Distribución de ventas por método de pago",
       icono: CreditCard,
       ruta: "/reportes/ventas/formas-pago",
       color: "text-teal-600",
+      categoria: "ventas",
+      recomendado: "mensual"
+    },
+    {
+      titulo: "Conciliación de Pagos",
+      descripcion: "Cruce de efectivo, transferencias y cierres de caja",
+      icono: Receipt,
+      ruta: "/reportes/ventas/conciliacion",
+      color: "text-indigo-600",
+      categoria: "ventas",
+      recomendado: "semanal"
+    },
+    {
+      titulo: "Corte de Caja Mensual",
+      descripcion: "Resumen consolidado mensual de todas las sesiones de caja",
+      icono: Landmark,
+      ruta: "/reportes/ventas/corte-mensual",
+      color: "text-blue-600",
       categoria: "ventas",
       recomendado: "mensual"
     },
@@ -122,13 +141,13 @@ export function ReportesContablesContent() {
       recomendado: "mensual"
     },
     {
-      titulo: "Clientes",
-      descripcion: "Listado de clientes y análisis de compras",
-      icono: Users,
-      ruta: "/reportes/clientes/general",
-      color: "text-cyan-600",
+      titulo: "Cuentas por Pagar",
+      descripcion: "Deudas pendientes con proveedores y vencimientos",
+      icono: DollarSign,
+      ruta: "/reportes/clientes/cuentas-por-pagar",
+      color: "text-red-600",
       categoria: "clientes",
-      recomendado: "mensual"
+      recomendado: "semanal"
     },
 
     // Reportes de Inventario
@@ -151,15 +170,6 @@ export function ReportesContablesContent() {
       recomendado: "mensual"
     },
     {
-      titulo: "Productos Bajo Stock",
-      descripcion: "Alertas de productos con stock mínimo",
-      icono: AlertTriangle,
-      ruta: "/reportes/inventario/bajo-stock",
-      color: "text-red-600",
-      categoria: "inventario",
-      recomendado: "diario"
-    },
-    {
       titulo: "Rotación de Inventario",
       descripcion: "Análisis de rotación y productos sin movimiento",
       icono: PieChart,
@@ -178,15 +188,6 @@ export function ReportesContablesContent() {
       color: "text-red-600",
       categoria: "administrativo",
       recomendado: "semanal"
-    },
-    {
-      titulo: "Diarios por Usuario",
-      descripcion: "Ventas y desempeño por vendedor",
-      icono: Users,
-      ruta: "/reportes/administrativos/usuarios",
-      color: "text-gray-600",
-      categoria: "administrativo",
-      recomendado: "mensual"
     },
     {
       titulo: "Proveedores",

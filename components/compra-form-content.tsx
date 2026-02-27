@@ -100,10 +100,7 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
         precio_minimo: "", stock_actual: "0", proveedor_id: "",
     })
     const [tiposFiltrados, setTiposFiltrados] = useState<any[]>([])
-    // Creación inline
-    const [nuevaCat, setNuevaCat] = useState({ show: false, valor: "", saving: false })
-    const [nuevoTipo, setNuevoTipo] = useState({ show: false, valor: "", saving: false })
-    const [nuevaTalla, setNuevaTalla] = useState({ show: false, valor: "", saving: false })
+    const [tallasFiltradas, setTallasFiltradas] = useState<any[]>([])
 
     // Generar SKU automático
     const generarSku = useCallback((f: typeof npForm, cats: any[], tipos: any[], talls: any[]) => {
@@ -140,6 +137,24 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
         }
     }, [npForm.categoria_padre_id, tiposPrenda])
 
+    // Filtrar tallas por tipo de prenda
+    useEffect(() => {
+        if (npForm.tipo_prenda_id) {
+            fetch(`/api/tallas?tipo_prenda_id=${npForm.tipo_prenda_id}`)
+                .then(r => r.json())
+                .then(j => {
+                    if (j.success && Array.isArray(j.data)) {
+                        setTallasFiltradas(j.data)
+                    } else {
+                        setTallasFiltradas([])
+                    }
+                })
+                .catch(() => setTallasFiltradas([]))
+        } else {
+            setTallasFiltradas([])
+        }
+    }, [npForm.tipo_prenda_id])
+
     // Recalcular SKU automático cuando cambian los campos clave
     useEffect(() => {
         const sku = generarSku(npForm, categorias, tiposPrenda, tallas)
@@ -147,77 +162,78 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [npForm.categoria_padre_id, npForm.tipo_prenda_id, npForm.talla_id, npForm.color, categorias, tiposPrenda, tallas])
 
-    // Helpers de creación inline
-    const crearCategoria = async () => {
-        if (!nuevaCat.valor.trim()) return
-        setNuevaCat(s => ({ ...s, saving: true }))
-        const res = await fetch('/api/categorias-padre', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nombre: nuevaCat.valor }) })
-        const j = await res.json()
-        if (j.success) {
-            setCategorias(prev => [...prev, j.data])
-            setNpForm(f => ({ ...f, categoria_padre_id: j.data.id.toString(), tipo_prenda_id: '' }))
-            setNuevaCat({ show: false, valor: '', saving: false })
-            toast.success(`Categoría "${j.data.nombre}" creada`)
-        } else { toast.error(j.error); setNuevaCat(s => ({ ...s, saving: false })) }
-    }
-
-    const crearTipo = async () => {
-        if (!nuevoTipo.valor.trim() || !npForm.categoria_padre_id) return
-        setNuevoTipo(s => ({ ...s, saving: true }))
-        const res = await fetch('/api/tipos-prenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nombre: nuevoTipo.valor, categoria_padre_id: npForm.categoria_padre_id }) })
-        const j = await res.json()
-        if (j.success) {
-            setTiposPrenda(prev => [...prev, j.data])
-            setNpForm(f => ({ ...f, tipo_prenda_id: j.data.id.toString() }))
-            setNuevoTipo({ show: false, valor: '', saving: false })
-            toast.success(`Tipo "${j.data.nombre}" creado`)
-        } else { toast.error(j.error); setNuevoTipo(s => ({ ...s, saving: false })) }
-    }
-
-    const crearTalla = async () => {
-        if (!nuevaTalla.valor.trim()) return
-        setNuevaTalla(s => ({ ...s, saving: true }))
-        const res = await fetch('/api/tallas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: nuevaTalla.valor }) })
-        const j = await res.json()
-        if (j.success) {
-            setTallas(prev => [...prev, j.data])
-            setNpForm(f => ({ ...f, talla_id: j.data.id.toString() }))
-            setNuevaTalla({ show: false, valor: '', saving: false })
-            toast.success(`Talla "${j.data.valor}" creada`)
-        } else { toast.error(j.error); setNuevaTalla(s => ({ ...s, saving: false })) }
-    }
-
     // Crear nuevo producto rápido
     const handleCrearProducto = async () => {
-        const { nombre, sku, categoria_padre_id, tipo_prenda_id, precio_compra, precio_venta, proveedor_id } = npForm
-        if (!nombre || !sku || !categoria_padre_id || !tipo_prenda_id || !precio_compra || !precio_venta || !proveedor_id) {
-            toast.error("Completa: Nombre, SKU, Categoría, Tipo, Proveedor, Precio Compra y Precio Venta")
+        const { nombre, categoria_padre_id, tipo_prenda_id, precio_compra, precio_venta, proveedor_id } = npForm
+        if (!nombre || !categoria_padre_id || !tipo_prenda_id || !precio_compra || !precio_venta || !proveedor_id) {
+            toast.error("Completa: Nombre, Categoría, Tipo, Proveedor, Precio Compra y Precio Venta")
             return
         }
         setNuevoProductoSaving(true)
         try {
-            const payload = {
-                ...npForm,
-                proveedor_id: npForm.proveedor_id || undefined,
-                precio_minimo: npForm.precio_minimo || npForm.precio_venta,
-                stock_actual: Number(npForm.stock_actual) || 0,
-                estado: 'activo',
+            // Generar SKU y código de barras únicos desde la BD (igual que en productos)
+            let skuFinal = npForm.sku
+            let codigoBarrasFinal: string | undefined = undefined
+
+            if (npForm.talla_id) {
+                const codigosRes = await fetch("/api/productos/generar-codigos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        categoria_padre_id: parseInt(categoria_padre_id),
+                        tipo_prenda_id: parseInt(tipo_prenda_id),
+                        talla_id: parseInt(npForm.talla_id),
+                    }),
+                })
+                if (codigosRes.ok) {
+                    const codigosJson = await codigosRes.json()
+                    skuFinal = codigosJson.sku || skuFinal
+                    codigoBarrasFinal = codigosJson.codigo_barras
+                }
             }
+
+            const payload = {
+                codigo_barras: codigoBarrasFinal || undefined,
+                sku: skuFinal,
+                nombre: npForm.nombre,
+                descripcion: "",
+                categoria_padre_id: parseInt(categoria_padre_id),
+                tipo_prenda_id: parseInt(tipo_prenda_id),
+                talla_id: npForm.talla_id ? parseInt(npForm.talla_id) : null,
+                proveedor_id: parseInt(proveedor_id),
+                color: npForm.color || "",
+                precio_compra: parseFloat(precio_compra),
+                precio_venta: parseFloat(precio_venta),
+                precio_minimo: parseFloat(npForm.precio_minimo || precio_venta),
+                stock_actual: parseInt(npForm.stock_actual) || 0,
+                estado: "activo",
+            }
+
             const res = await fetch("/api/productos", {
-                method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             })
             const json = await res.json()
-            if (!json.success) { toast.error(json.error || "Error al crear producto"); return }
+            if (!res.ok || !json.success) {
+                if (json.code === "ER_DUP_ENTRY") {
+                    toast.error(json.details?.includes("sku") ? "El SKU ya existe en el sistema" : "Ya existe un producto con estos datos")
+                } else {
+                    toast.error(json.error || "Error al crear producto")
+                }
+                return
+            }
 
-            toast.success(`Producto "${nombre}" creado`)
+            toast.success(`Producto "${nombre}" creado exitosamente`)
+
             // Recargar lista de productos
             const prodRes = await fetch("/api/productos")
             const prodJson = await prodRes.json()
             if (prodJson.success) setProductos(prodJson.data || [])
 
-            // Agregar al grid automáticamente
-            const newProd = (prodJson.data || []).find((p: any) => p.sku === sku)
+            // Agregar al grid automáticamente usando el SKU final generado
+            const newProd = (prodJson.data || []).find((p: any) => p.sku === skuFinal) ||
+                (json.data?.id ? (prodJson.data || []).find((p: any) => p.id === json.data.id) : null)
             if (newProd) {
                 const nuevoItem: ItemCompra = {
                     _key: Math.random().toString(36).slice(2),
@@ -244,7 +260,12 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
             // Resetear y cerrar
             setNpForm({ nombre: "", sku: "", color: "", categoria_padre_id: "", tipo_prenda_id: "", talla_id: "", precio_compra: "", precio_venta: "", precio_minimo: "", stock_actual: "0", proveedor_id: form.proveedor_id })
             setNuevoProductoOpen(false)
-        } catch { toast.error("Error de conexión") } finally { setNuevoProductoSaving(false) }
+        } catch (err) {
+            console.error("Error creando producto:", err)
+            toast.error("Error de conexión al crear producto")
+        } finally {
+            setNuevoProductoSaving(false)
+        }
     }
 
     // Cargar compra existente si es edición
@@ -638,7 +659,7 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                                             <td className="py-1 px-2 text-right font-mono font-semibold">${formatCurrency(it.total)}</td>
                                             {!esConfirmada && (
                                                 <td className="py-1 px-1 text-center">
-                                                    <button onClick={() => removeItem(it._key)} className="text-muted-foreground hover:text-destructive transition-colors">
+                                                    <button onClick={() => removeItem(it._key)} className="text-muted-foreground hover:text-destructive transition-colors" title="Quitar fila">
                                                         <Trash2 className="h-3.5 w-3.5" />
                                                     </button>
                                                 </td>
@@ -729,9 +750,6 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                     setNpForm(f => ({ ...f, proveedor_id: form.proveedor_id }))
                 } else {
                     setNpForm({ nombre: '', sku: '', color: '', categoria_padre_id: '', tipo_prenda_id: '', talla_id: '', precio_compra: '', precio_venta: '', precio_minimo: '', stock_actual: '0', proveedor_id: '' })
-                    setNuevaCat({ show: false, valor: '', saving: false })
-                    setNuevoTipo({ show: false, valor: '', saving: false })
-                    setNuevaTalla({ show: false, valor: '', saving: false })
                 }
             }}>
                 <DialogContent className="max-w-lg">
@@ -752,65 +770,29 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
 
                         {/* Categoría */}
                         <div className="space-y-1">
-                            <Label className="text-xs flex items-center justify-between">
-                                Categoría *
-                                <button type="button" className="text-emerald-600 hover:underline text-[10px]" onClick={() => setNuevaCat(s => ({ ...s, show: !s.show, valor: '' }))}>
-                                    {nuevaCat.show ? '✕ Cancelar' : '+ Nueva'}
-                                </button>
-                            </Label>
-                            {nuevaCat.show ? (
-                                <div className="flex gap-1">
-                                    <Input className="h-8 text-xs flex-1" placeholder="Nombre categoría..." value={nuevaCat.valor} onChange={e => setNuevaCat(s => ({ ...s, valor: e.target.value.toUpperCase() }))} onKeyDown={e => e.key === 'Enter' && crearCategoria()} autoFocus />
-                                    <Button size="sm" className="h-8 px-2 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={crearCategoria} disabled={nuevaCat.saving}>{nuevaCat.saving ? '...' : '✓'}</Button>
-                                </div>
-                            ) : (
-                                <Select value={npForm.categoria_padre_id} onValueChange={v => setNpForm(f => ({ ...f, categoria_padre_id: v, tipo_prenda_id: '' }))}>
-                                    <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Seleccionar..." /></SelectTrigger>
-                                    <SelectContent>{categorias.map((c: any) => <SelectItem key={c.id} value={c.id.toString()}>{c.nombre}</SelectItem>)}</SelectContent>
-                                </Select>
-                            )}
+                            <Label className="text-xs">Categoría *</Label>
+                            <Select value={npForm.categoria_padre_id} onValueChange={v => setNpForm(f => ({ ...f, categoria_padre_id: v, tipo_prenda_id: '', talla_id: '' }))}>
+                                <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Seleccionar..." /></SelectTrigger>
+                                <SelectContent>{categorias.map((c: any) => <SelectItem key={c.id} value={c.id.toString()}>{c.nombre}</SelectItem>)}</SelectContent>
+                            </Select>
                         </div>
 
                         {/* Tipo de prenda */}
                         <div className="space-y-1">
-                            <Label className="text-xs flex items-center justify-between">
-                                Tipo de prenda *
-                                <button type="button" className={`text-emerald-600 hover:underline text-[10px] ${!npForm.categoria_padre_id ? 'opacity-30 pointer-events-none' : ''}`} onClick={() => setNuevoTipo(s => ({ ...s, show: !s.show, valor: '' }))}>
-                                    {nuevoTipo.show ? '✕ Cancelar' : '+ Nuevo'}
-                                </button>
-                            </Label>
-                            {nuevoTipo.show ? (
-                                <div className="flex gap-1">
-                                    <Input className="h-8 text-xs flex-1" placeholder="Nombre tipo..." value={nuevoTipo.valor} onChange={e => setNuevoTipo(s => ({ ...s, valor: e.target.value.toUpperCase() }))} onKeyDown={e => e.key === 'Enter' && crearTipo()} autoFocus />
-                                    <Button size="sm" className="h-8 px-2 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={crearTipo} disabled={nuevoTipo.saving}>{nuevoTipo.saving ? '...' : '✓'}</Button>
-                                </div>
-                            ) : (
-                                <Select value={npForm.tipo_prenda_id} onValueChange={v => setNpForm(f => ({ ...f, tipo_prenda_id: v }))} disabled={!npForm.categoria_padre_id}>
-                                    <SelectTrigger className="h-8 text-xs"><SelectValue placeholder={npForm.categoria_padre_id ? 'Seleccionar...' : 'Elige categoría primero'} /></SelectTrigger>
-                                    <SelectContent>{tiposFiltrados.map((t: any) => <SelectItem key={t.id} value={t.id.toString()}>{t.nombre}</SelectItem>)}</SelectContent>
-                                </Select>
-                            )}
+                            <Label className="text-xs">Tipo de prenda *</Label>
+                            <Select value={npForm.tipo_prenda_id} onValueChange={v => setNpForm(f => ({ ...f, tipo_prenda_id: v, talla_id: '' }))} disabled={!npForm.categoria_padre_id}>
+                                <SelectTrigger className="h-8 text-xs"><SelectValue placeholder={npForm.categoria_padre_id ? 'Seleccionar...' : 'Elige categoría primero'} /></SelectTrigger>
+                                <SelectContent>{tiposFiltrados.map((t: any) => <SelectItem key={t.id} value={t.id.toString()}>{t.nombre}</SelectItem>)}</SelectContent>
+                            </Select>
                         </div>
 
                         {/* Talla */}
                         <div className="space-y-1">
-                            <Label className="text-xs flex items-center justify-between">
-                                Talla
-                                <button type="button" className="text-emerald-600 hover:underline text-[10px]" onClick={() => setNuevaTalla(s => ({ ...s, show: !s.show, valor: '' }))}>
-                                    {nuevaTalla.show ? '✕ Cancelar' : '+ Nueva'}
-                                </button>
-                            </Label>
-                            {nuevaTalla.show ? (
-                                <div className="flex gap-1">
-                                    <Input className="h-8 text-xs flex-1" placeholder="XL, 38, 10-12..." value={nuevaTalla.valor} onChange={e => setNuevaTalla(s => ({ ...s, valor: e.target.value.toUpperCase() }))} onKeyDown={e => e.key === 'Enter' && crearTalla()} autoFocus />
-                                    <Button size="sm" className="h-8 px-2 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={crearTalla} disabled={nuevaTalla.saving}>{nuevaTalla.saving ? '...' : '✓'}</Button>
-                                </div>
-                            ) : (
-                                <Select value={npForm.talla_id} onValueChange={v => setNpForm(f => ({ ...f, talla_id: v }))}>
-                                    <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Seleccionar..." /></SelectTrigger>
-                                    <SelectContent>{tallas.map((t: any) => <SelectItem key={t.id} value={t.id.toString()}>{t.valor}</SelectItem>)}</SelectContent>
-                                </Select>
-                            )}
+                            <Label className="text-xs">Talla</Label>
+                            <Select value={npForm.talla_id} onValueChange={v => setNpForm(f => ({ ...f, talla_id: v }))} disabled={!npForm.tipo_prenda_id}>
+                                <SelectTrigger className="h-8 text-xs"><SelectValue placeholder={npForm.tipo_prenda_id ? 'Seleccionar...' : 'Elige tipo primero'} /></SelectTrigger>
+                                <SelectContent>{tallasFiltradas.map((t: any) => <SelectItem key={t.id} value={t.id.toString()}>{t.valor}</SelectItem>)}</SelectContent>
+                            </Select>
                         </div>
 
                         {/* Proveedor */}
@@ -841,13 +823,19 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                         {/* Precio compra */}
                         <div className="space-y-1">
                             <Label className="text-xs">Precio compra *</Label>
-                            <Input className="h-8 text-xs" type="number" min="0" step="0.01" value={npForm.precio_compra} onChange={e => setNpForm(f => ({ ...f, precio_compra: e.target.value }))} placeholder="0.00" />
+                            <Input className="h-8 text-xs" type="text" value={npForm.precio_compra ? formatCurrency(npForm.precio_compra) : ''} onChange={e => { const v = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, ''); setNpForm(f => ({ ...f, precio_compra: v })) }} onFocus={e => { if (npForm.precio_compra) e.target.value = npForm.precio_compra }} onBlur={e => { if (npForm.precio_compra) e.target.value = formatCurrency(npForm.precio_compra) }} placeholder="0" />
                         </div>
 
                         {/* Precio venta */}
                         <div className="space-y-1">
                             <Label className="text-xs">Precio venta *</Label>
-                            <Input className="h-8 text-xs" type="number" min="0" step="0.01" value={npForm.precio_venta} onChange={e => setNpForm(f => ({ ...f, precio_venta: e.target.value, precio_minimo: e.target.value }))} placeholder="0.00" />
+                            <Input className="h-8 text-xs" type="text" value={npForm.precio_venta ? formatCurrency(npForm.precio_venta) : ''} onChange={e => { const v = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, ''); setNpForm(f => ({ ...f, precio_venta: v })) }} onFocus={e => { if (npForm.precio_venta) e.target.value = npForm.precio_venta }} onBlur={e => { if (npForm.precio_venta) e.target.value = formatCurrency(npForm.precio_venta) }} placeholder="0" />
+                        </div>
+
+                        {/* Precio mínimo */}
+                        <div className="space-y-1">
+                            <Label className="text-xs">Precio mínimo</Label>
+                            <Input className="h-8 text-xs" type="text" value={npForm.precio_minimo ? formatCurrency(npForm.precio_minimo) : ''} onChange={e => { const v = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, ''); setNpForm(f => ({ ...f, precio_minimo: v })) }} onFocus={e => { if (npForm.precio_minimo) e.target.value = npForm.precio_minimo }} onBlur={e => { if (npForm.precio_minimo) e.target.value = formatCurrency(npForm.precio_minimo) }} placeholder="0" />
                         </div>
 
                     </div>

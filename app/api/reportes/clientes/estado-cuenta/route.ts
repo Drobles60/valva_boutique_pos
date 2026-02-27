@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import type { EstadoCuentaCliente } from '@/types/reportes'
 
 export async function GET(request: Request) {
   try {
@@ -10,133 +9,97 @@ export async function GET(request: Request) {
     const fechaFin = searchParams.get('fechaFin')
 
     if (!clienteId) {
-      return NextResponse.json(
-        { error: 'ID de cliente es requerido' },
-        { status: 400 }
-      )
+      // Si no hay clienteId, retornar lista de clientes con saldo
+      const clientes = await query<any[]>(`
+        SELECT c.id, c.nombre, c.telefono, c.email,
+          COUNT(DISTINCT cpc.id) as totalCuentas,
+          COALESCE(SUM(cpc.monto_total), 0) as totalCredito,
+          COALESCE(SUM(cpc.monto_total - cpc.saldo_pendiente), 0) as totalAbonado,
+          COALESCE(SUM(cpc.saldo_pendiente), 0) as saldoPendiente
+        FROM clientes c
+        LEFT JOIN cuentas_por_cobrar cpc ON c.id = cpc.cliente_id
+        GROUP BY c.id, c.nombre, c.telefono, c.email
+        HAVING totalCuentas > 0
+        ORDER BY saldoPendiente DESC
+      `)
+
+      return NextResponse.json({
+        success: true,
+        clientes: clientes.map(c => ({
+          id: c.id,
+          nombre: c.nombre,
+          telefono: c.telefono,
+          email: c.email,
+          totalCuentas: Number(c.totalCuentas),
+          totalCredito: Number(c.totalCredito),
+          totalAbonado: Number(c.totalAbonado),
+          saldoPendiente: Number(c.saldoPendiente),
+        })),
+      })
     }
 
     // Información del cliente
-    const clienteResult = await query<any[]>(`
-      SELECT id, nombre, telefono, email
-      FROM clientes
-      WHERE id = ?
-    `, [clienteId])
-
+    const clienteResult = await query<any[]>(`SELECT id, nombre, telefono, email FROM clientes WHERE id = ?`, [clienteId])
     if (clienteResult.length === 0) {
-      return NextResponse.json(
-        { error: 'Cliente no encontrado' },
-        { status: 404 }
-      )
+      return NextResponse.json({ success: false, error: 'Cliente no encontrado' }, { status: 404 })
     }
-
     const cliente = clienteResult[0]
 
-    // Saldo inicial (antes del período)
-    let saldoInicial = 0
-    if (fechaInicio) {
-      const saldoInicialResult = await query<any[]>(`
-        SELECT COALESCE(SUM(
-          CASE 
-            WHEN v.estado = 'credito' THEN v.total
-            ELSE 0
-          END
-        ), 0) - COALESCE(SUM(a.monto), 0) as saldoInicial
-        FROM ventas v
-        LEFT JOIN cuentas_por_cobrar cpc ON v.id = cpc.venta_id
-        LEFT JOIN abonos a ON cpc.id = a.cuenta_id
-        WHERE v.cliente_id = ?
-          AND DATE(v.fecha_venta) < ?
-      `, [clienteId, fechaInicio])
-      saldoInicial = Number(saldoInicialResult[0]?.saldoInicial || 0)
-    }
+    // Ventas a crédito del cliente
+    const params: any[] = [clienteId]
+    let fechaWhere = ''
+    if (fechaInicio) { fechaWhere += ' AND DATE(v.fecha_venta) >= ?'; params.push(fechaInicio) }
+    if (fechaFin) { fechaWhere += ' AND DATE(v.fecha_venta) <= ?'; params.push(fechaFin) }
 
-    // Movimientos del período
-    const movimientos: any[] = []
-    let saldoAcumulado = saldoInicial
-
-    // Obtener ventas a crédito
     const ventas = await query<any[]>(`
-      SELECT 
-        v.id,
-        v.fecha_venta as fecha,
-        'venta' as tipo,
-        CONCAT('Venta #', v.id) as referencia,
-        CONCAT('Productos varios') as descripcion,
-        v.total as monto
+      SELECT v.id, v.fecha_venta as fecha, 'cargo' as tipo,
+        CONCAT('Venta #', v.numero_venta) as referencia,
+        'Venta a crédito' as descripcion, v.total as monto
       FROM ventas v
-      WHERE v.cliente_id = ?
-        AND v.estado = 'credito'
-        ${fechaInicio ? 'AND DATE(v.fecha_venta) >= ?' : ''}
-        ${fechaFin ? 'AND DATE(v.fecha_venta) <= ?' : ''}
+      WHERE v.cliente_id = ? AND v.tipo_venta = 'credito' ${fechaWhere}
       ORDER BY v.fecha_venta
-    `, [clienteId, fechaInicio, fechaFin].filter(Boolean))
+    `, params)
 
-    // Obtener abonos
+    // Abonos del cliente
+    const params2: any[] = [clienteId]
+    let fechaWhere2 = ''
+    if (fechaInicio) { fechaWhere2 += ' AND DATE(a.fecha_abono) >= ?'; params2.push(fechaInicio) }
+    if (fechaFin) { fechaWhere2 += ' AND DATE(a.fecha_abono) <= ?'; params2.push(fechaFin) }
+
     const abonos = await query<any[]>(`
-      SELECT 
-        a.id,
-        a.fecha_abono as fecha,
-        'abono' as tipo,
+      SELECT a.id, a.fecha_abono as fecha, 'abono' as tipo,
         CONCAT('Abono #', a.id) as referencia,
-        CONCAT('Pago - ', a.metodo_pago) as descripcion,
-        a.monto
+        CONCAT('Pago ', a.metodo_pago) as descripcion, a.monto
       FROM abonos a
-      INNER JOIN cuentas_por_cobrar cpc ON a.cuenta_id = cpc.id
-      WHERE cpc.cliente_id = ?
-        ${fechaInicio ? 'AND DATE(a.fecha_abono) >= ?' : ''}
-        ${fechaFin ? 'AND DATE(a.fecha_abono) <= ?' : ''}
+      INNER JOIN cuentas_por_cobrar cpc ON a.cuenta_por_cobrar_id = cpc.id
+      WHERE cpc.cliente_id = ? ${fechaWhere2}
       ORDER BY a.fecha_abono
-    `, [clienteId, fechaInicio, fechaFin].filter(Boolean))
+    `, params2)
 
-    // Combinar y ordenar movimientos
-    const todosMovimientos = [...ventas, ...abonos].sort((a, b) => 
-      new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
-    )
+    // Combine + sort
+    const todos = [...ventas, ...abonos].sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
 
+    let saldo = 0
     let totalCargos = 0
     let totalAbonos = 0
-
-    todosMovimientos.forEach(mov => {
-      const cargo = mov.tipo === 'venta' ? Number(mov.monto) : 0
-      const abono = mov.tipo === 'abono' ? Number(mov.monto) : 0
-
-      saldoAcumulado += cargo - abono
-      totalCargos += cargo
-      totalAbonos += abono
-
-      movimientos.push({
-        fecha: mov.fecha,
-        tipo: mov.tipo,
-        referencia: mov.referencia,
-        descripcion: mov.descripcion,
-        cargo,
-        abono,
-        saldo: saldoAcumulado
-      })
+    const movimientos = todos.map(m => {
+      const monto = Number(m.monto)
+      if (m.tipo === 'cargo') { saldo += monto; totalCargos += monto }
+      else { saldo -= monto; totalAbonos += monto }
+      return { fecha: m.fecha, tipo: m.tipo, referencia: m.referencia, descripcion: m.descripcion, monto, saldo }
     })
 
-    const estadoCuenta: EstadoCuentaCliente = {
-      cliente: {
-        id: cliente.id,
-        nombre: cliente.nombre,
-        telefono: cliente.telefono,
-        email: cliente.email
-      },
-      periodo: fechaInicio && fechaFin ? `${fechaInicio} a ${fechaFin}` : 'Histórico',
-      saldoInicial,
-      cargos: totalCargos,
-      abonos: totalAbonos,
-      saldoFinal: saldoAcumulado,
-      movimientos
-    }
-
-    return NextResponse.json(estadoCuenta)
+    return NextResponse.json({
+      success: true,
+      cliente: { id: cliente.id, nombre: cliente.nombre, telefono: cliente.telefono, email: cliente.email },
+      periodo: fechaInicio && fechaFin ? `${fechaInicio} al ${fechaFin}` : 'Histórico',
+      totalCargos,
+      totalAbonos,
+      saldoFinal: saldo,
+      movimientos,
+    })
   } catch (error) {
     console.error('Error generando estado de cuenta:', error)
-    return NextResponse.json(
-      { error: 'Error al generar el reporte' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Error: ' + (error instanceof Error ? error.message : String(error)) }, { status: 500 })
   }
 }

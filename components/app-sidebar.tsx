@@ -94,10 +94,10 @@ const menuItems = [
     permissions: ['usuarios.ver'] as Permission[]
   },
   {
-    title: "Webhooks",
+    title: "Configuraciones",
     icon: Settings,
-    href: "/configuracion/webhooks",
-    permissions: ['config.webhooks'] as Permission[]
+    href: "/configuracion",
+    permissions: ['config.ver', 'config.editar', 'config.webhooks'] as Permission[]
   },
 ]
 
@@ -126,14 +126,24 @@ const inventorySubmenu = [
 
 const reportesSubmenu = [
   {
-    title: "Reportes Generales",
+    title: "Resumen Reportes",
     href: "/reportes",
+    permissions: ['reportes.ventas', 'reportes.inventario'] as Permission[]
+  },
+  {
+    title: "Reportes Generales",
+    href: "/reportes/generales",
     permissions: ['reportes.ventas', 'reportes.inventario'] as Permission[]
   },
   {
     title: "Reportes Contables",
     href: "/reportes/contables",
     permissions: ['reportes.financieros', 'reportes.ventas'] as Permission[]
+  },
+  {
+    title: "Estadísticas Avanzadas",
+    href: "/reportes/estadisticas",
+    permissions: ['reportes.ventas', 'reportes.inventario'] as Permission[]
   },
 ]
 

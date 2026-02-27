@@ -42,7 +42,7 @@ export async function GET(request: Request) {
           COALESCE((
             SELECT SUM(g.monto)
             FROM gastos g
-            WHERE g.fecha BETWEEN sc.fecha_apertura AND sc.fecha_cierre
+            WHERE g.fecha_gasto BETWEEN sc.fecha_apertura AND sc.fecha_cierre
           ), 0)
         ) as efectivoEsperado
       FROM sesiones_caja sc

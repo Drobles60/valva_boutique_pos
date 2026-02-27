@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import type { ReporteGanancias } from '@/types/reportes'
 
 export async function GET(request: Request) {
   try {
@@ -9,56 +8,44 @@ export async function GET(request: Request) {
     const fechaFin = searchParams.get('fechaFin')
 
     if (!fechaInicio || !fechaFin) {
-      return NextResponse.json(
-        { error: 'Fechas de inicio y fin son requeridas' },
-        { status: 400 }
-      )
+      return NextResponse.json({ success: false, error: 'Fechas requeridas' }, { status: 400 })
     }
 
-    // Calcular ganancias por producto
-    const ventasPorProducto = await query<any[]>(`
-      SELECT 
-        p.id as producto_id,
-        p.nombre,
-        p.codigo,
-        tp.nombre as categoria,
+    // Ganancias por producto
+    const productos = await query<any[]>(`
+      SELECT p.id as producto_id, p.nombre, p.sku,
+        COALESCE(cp.nombre, 'Sin categoría') as categoria,
         SUM(dv.cantidad) as cantidad,
-        SUM(dv.cantidad * dv.precio_unitario) as ventas,
-        SUM(dv.cantidad * p.precio_costo) as costo,
-        SUM(dv.cantidad * (dv.precio_unitario - p.precio_costo)) as utilidad,
-        CASE 
-          WHEN SUM(dv.cantidad * dv.precio_unitario) > 0 
-          THEN (SUM(dv.cantidad * (dv.precio_unitario - p.precio_costo)) / SUM(dv.cantidad * dv.precio_unitario)) * 100
-          ELSE 0 
-        END as margen
+        SUM(dv.subtotal) as ventas,
+        SUM(dv.cantidad * p.precio_compra) as costo,
+        SUM(dv.subtotal - (dv.cantidad * p.precio_compra)) as utilidad,
+        CASE WHEN SUM(dv.subtotal) > 0 
+          THEN (SUM(dv.subtotal - (dv.cantidad * p.precio_compra)) / SUM(dv.subtotal)) * 100 ELSE 0 END as margen
       FROM detalle_ventas dv
       INNER JOIN ventas v ON dv.venta_id = v.id
       INNER JOIN productos p ON dv.producto_id = p.id
-      INNER JOIN tipos_prenda tp ON p.tipo_prenda_id = tp.id
-      WHERE DATE(v.fecha_venta) BETWEEN ? AND ?
-      GROUP BY p.id, p.nombre, p.codigo, tp.nombre
+      LEFT JOIN categorias_padre cp ON p.categoria_padre_id = cp.id
+      WHERE v.estado != 'anulada' AND DATE(v.fecha_venta) BETWEEN ? AND ?
+      GROUP BY p.id, p.nombre, p.sku, cp.nombre
       ORDER BY utilidad DESC
     `, [fechaInicio, fechaFin])
 
-    // Calcular totales
-    const totalVentas = ventasPorProducto.reduce((sum, p) => sum + Number(p.ventas), 0)
-    const totalCostos = ventasPorProducto.reduce((sum, p) => sum + Number(p.costo), 0)
+    const totalVentas = productos.reduce((s: number, p: any) => s + Number(p.ventas), 0)
+    const totalCostos = productos.reduce((s: number, p: any) => s + Number(p.costo), 0)
     const utilidadBruta = totalVentas - totalCostos
 
-    // Obtener gastos del período
-    const gastosResult = await query<any[]>(`
-      SELECT COALESCE(SUM(monto), 0) as gastos
-      FROM gastos
-      WHERE DATE(fecha) BETWEEN ? AND ?
+    // Gastos del período
+    const [gastosR] = await query<any[]>(`
+      SELECT COALESCE(SUM(monto), 0) as gastos FROM gastos WHERE DATE(fecha_gasto) BETWEEN ? AND ?
     `, [fechaInicio, fechaFin])
 
-    const gastos = gastosResult[0]?.gastos || 0
+    const gastos = Number(gastosR.gastos || 0)
     const utilidadNeta = utilidadBruta - gastos
     const margenBruto = totalVentas > 0 ? (utilidadBruta / totalVentas) * 100 : 0
     const margenNeto = totalVentas > 0 ? (utilidadNeta / totalVentas) * 100 : 0
 
-    const reporte: ReporteGanancias = {
-      periodo: `${fechaInicio} a ${fechaFin}`,
+    return NextResponse.json({
+      success: true,
       totalVentas,
       totalCostos,
       utilidadBruta,
@@ -66,23 +53,20 @@ export async function GET(request: Request) {
       utilidadNeta,
       margenBruto,
       margenNeto,
-      ventasPorProducto: ventasPorProducto.map(p => ({
-        producto_id: p.producto_id,
-        nombre: `${p.codigo} - ${p.nombre}`,
+      productos: productos.map((p: any) => ({
+        producto_id: Number(p.producto_id),
+        nombre: p.nombre,
+        sku: p.sku,
+        categoria: p.categoria,
         cantidad: Number(p.cantidad),
         ventas: Number(p.ventas),
         costo: Number(p.costo),
         utilidad: Number(p.utilidad),
-        margen: Number(p.margen)
-      }))
-    }
-
-    return NextResponse.json(reporte)
+        margen: Number(p.margen),
+      })),
+    })
   } catch (error) {
     console.error('Error generando reporte de ganancias:', error)
-    return NextResponse.json(
-      { error: 'Error al generar el reporte' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Error: ' + (error instanceof Error ? error.message : String(error)) }, { status: 500 })
   }
 }

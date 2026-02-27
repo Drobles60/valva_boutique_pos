@@ -31,21 +31,9 @@ interface Gasto {
   updated_at: string
 }
 
-const CATEGORIAS_GASTOS = [
-  { value: "servicios", label: "Servicios (luz, agua, internet)" },
-  { value: "arriendo", label: "Arriendo/Alquiler" },
-  { value: "transporte", label: "Transporte/Domicilios" },
-  { value: "compras_suministros", label: "Compras y Suministros" },
-  { value: "nomina", label: "Nómina/Salarios" },
-  { value: "publicidad", label: "Publicidad y Marketing" },
-  { value: "mantenimiento", label: "Mantenimiento" },
-  { value: "impuestos", label: "Impuestos" },
-  { value: "servicios_profesionales", label: "Servicios Profesionales" },
-  { value: "otros", label: "Otros" }
-]
-
 export function GastosContent() {
   const [gastos, setGastos] = useState<Gasto[]>([])
+  const [categoriasGastos, setCategoriasGastos] = useState<{value: string; label: string}[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingGasto, setEditingGasto] = useState<Gasto | null>(null)
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
@@ -70,7 +58,18 @@ export function GastosContent() {
 
   useEffect(() => {
     loadGastos()
+    loadTiposGastos()
   }, [])
+
+  const loadTiposGastos = async () => {
+    try {
+      const res = await fetch('/api/tipos-gastos')
+      const json = await res.json()
+      if (json.success) {
+        setCategoriasGastos(json.data.map((t: any) => ({ value: t.nombre, label: t.label })))
+      }
+    } catch (e) { console.error('Error loading tipos gastos:', e) }
+  }
 
   const loadGastos = async (fechaInicioParam?: string, fechaFinParam?: string) => {
     try {
@@ -212,7 +211,7 @@ export function GastosContent() {
   }
 
   const getCategoriaLabel = (categoria: string) => {
-    return CATEGORIAS_GASTOS.find(c => c.value === categoria)?.label || categoria
+    return categoriasGastos.find(c => c.value === categoria)?.label || categoria
   }
 
   const filteredGastos = gastos.filter(g => {
@@ -484,7 +483,7 @@ export function GastosContent() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {CATEGORIAS_GASTOS.map((cat) => (
+                      {categoriasGastos.map((cat) => (
                         <SelectItem key={cat.value} value={cat.value}>
                           {cat.label}
                         </SelectItem>
