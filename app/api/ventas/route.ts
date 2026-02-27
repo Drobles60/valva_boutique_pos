@@ -198,11 +198,15 @@ export async function POST(request: NextRequest) {
     for (const item of productos) {
       // Obtener stock actual antes de actualizar
       const productoActual = await queryOne<any>(
-        'SELECT stock_actual FROM productos WHERE id = ?',
+        'SELECT stock_actual, precio_compra, precio_venta, precio_minimo FROM productos WHERE id = ?',
         [item.producto_id]
       );
       const stock_anterior = productoActual?.stock_actual || 0;
       const stock_nuevo = stock_anterior - item.cantidad;
+      const precioCompra = Number(productoActual?.precio_compra) || 0;
+      const precioVenta = Number(productoActual?.precio_venta) || 0;
+      const precioMinimo = Number(productoActual?.precio_minimo) || 0;
+      const costoTotal = item.cantidad * precioCompra;
 
       // Insertar detalle
       await query(
@@ -225,13 +229,41 @@ export async function POST(request: NextRequest) {
         [item.cantidad, item.producto_id]
       );
 
-      // Registrar movimiento de inventario
+      // Registrar movimiento de inventario (compatibilidad)
       await query(
         `INSERT INTO movimientos_inventario (
           producto_id, tipo_movimiento, cantidad, stock_anterior, 
           stock_nuevo, motivo, venta_id, usuario_id, fecha_movimiento
         ) VALUES (?, 'salida_venta', ?, ?, ?, 'Venta', ?, ?, NOW())`,
         [item.producto_id, -item.cantidad, stock_anterior, stock_nuevo, venta_id, usuario_id]
+      );
+
+      // Registrar en kardex (tabla nueva - registro completo)
+      await query(
+        `INSERT INTO kardex (
+          producto_id, tipo_movimiento,
+          cantidad, stock_anterior, stock_nuevo,
+          precio_compra, precio_venta, precio_minimo, costo_total,
+          saldo_cantidad, saldo_costo,
+          venta_id, referencia_doc,
+          usuario_id, motivo
+        ) VALUES (?, 'salida_venta', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          item.producto_id,
+          -item.cantidad,
+          stock_anterior,
+          stock_nuevo,
+          precioCompra,
+          precioVenta,
+          precioMinimo,
+          costoTotal,
+          stock_nuevo,
+          stock_nuevo * precioCompra,
+          venta_id,
+          numero_venta,
+          usuario_id,
+          `Venta ${numero_venta}`
+        ]
       );
     }
 

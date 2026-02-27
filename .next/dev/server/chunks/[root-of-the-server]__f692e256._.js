@@ -212,10 +212,14 @@ async function checkConnection() {
 "use strict";
 
 __turbopack_context__.s([
+    "DELETE",
+    ()=>DELETE,
     "GET",
     ()=>GET,
     "POST",
-    ()=>POST
+    ()=>POST,
+    "PUT",
+    ()=>PUT
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/server.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/db.ts [app-route] (ecmascript)");
@@ -286,6 +290,105 @@ async function POST(request) {
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: false,
             error: 'Error al crear tipo de prenda'
+        }, {
+            status: 500
+        });
+    }
+}
+async function PUT(request) {
+    try {
+        const body = await request.json();
+        const { id, nombre, categoria_padre_id, descripcion, sistemas_talla_ids } = body;
+        if (!id) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                success: false,
+                error: 'El ID es obligatorio'
+            }, {
+                status: 400
+            });
+        }
+        if (!nombre || !nombre.trim()) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                success: false,
+                error: 'El nombre del tipo de prenda es obligatorio'
+            }, {
+                status: 400
+            });
+        }
+        await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('UPDATE tipos_prenda SET nombre = ?, categoria_padre_id = ?, descripcion = ? WHERE id = ?', [
+            nombre.trim().toUpperCase(),
+            categoria_padre_id ? parseInt(categoria_padre_id) : null,
+            descripcion || null,
+            id
+        ]);
+        // Actualizar sistemas de tallas asociados si se envían
+        if (Array.isArray(sistemas_talla_ids)) {
+            await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('DELETE FROM tipo_prenda_sistema_talla WHERE tipo_prenda_id = ?', [
+                id
+            ]);
+            for (const stId of sistemas_talla_ids){
+                await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('INSERT INTO tipo_prenda_sistema_talla (tipo_prenda_id, sistema_talla_id) VALUES (?, ?)', [
+                    id,
+                    stId
+                ]);
+            }
+        }
+        const updated = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('SELECT id, nombre, categoria_padre_id, descripcion FROM tipos_prenda WHERE id = ?', [
+            id
+        ]);
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            success: true,
+            data: updated[0]
+        });
+    } catch (error) {
+        console.error('Error al actualizar tipo de prenda:', error);
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            success: false,
+            error: 'Error al actualizar tipo de prenda'
+        }, {
+            status: 500
+        });
+    }
+}
+async function DELETE(request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
+        if (!id) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                success: false,
+                error: 'El ID es obligatorio'
+            }, {
+                status: 400
+            });
+        }
+        // Verificar que no tenga productos asociados activos
+        const asociados = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])("SELECT COUNT(*) as total FROM productos WHERE tipo_prenda_id = ? AND estado = 'activo'", [
+            id
+        ]);
+        if (asociados[0]?.total > 0) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                success: false,
+                error: `No se puede eliminar: tiene ${asociados[0].total} producto(s) asociado(s)`
+            }, {
+                status: 400
+            });
+        }
+        // Eliminar asignaciones de tallas
+        await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('DELETE FROM tipo_prenda_sistema_talla WHERE tipo_prenda_id = ?', [
+            id
+        ]);
+        await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])("UPDATE tipos_prenda SET estado = 'inactivo' WHERE id = ?", [
+            id
+        ]);
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            success: true
+        });
+    } catch (error) {
+        console.error('Error al eliminar tipo de prenda:', error);
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            success: false,
+            error: 'Error al eliminar tipo de prenda'
         }, {
             status: 500
         });

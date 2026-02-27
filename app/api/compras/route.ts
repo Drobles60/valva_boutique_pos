@@ -82,10 +82,11 @@ export async function POST(request: NextRequest) {
             `INSERT INTO compras 
        (numero_compra, proveedor_id, factura_numero, fecha, fecha_vencimiento, tipo_pago,
         subtotal, descuento_total, iva_total, otros_costos, total, abono_inicial, estado, usuario_id, observaciones)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,'borrador',?,?)`,
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'borrador',?,?)`,
             [numero_compra, proveedor_id, factura_numero || null, fecha, fecha_vencimiento || null,
                 tipo_pago || 'contado', subtotal.toFixed(2), descuento_total.toFixed(2),
                 iva_total.toFixed(2), Number(otros_costos).toFixed(2), total.toFixed(2),
+                Number(abono_inicial).toFixed(2),
                 usuario_id || null, observaciones || null]
         )
         const compra_id = result.insertId

@@ -1,0 +1,3 @@
+{
+  "/api/reportes/inventario/bajo-stock/route": "app/api/reportes/inventario/bajo-stock/route.js"
+}

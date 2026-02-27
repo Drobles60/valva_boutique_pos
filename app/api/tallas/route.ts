@@ -46,3 +46,55 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { id, valor, sistema_talla_id } = body
+
+    if (!id) {
+      return NextResponse.json({ success: false, error: 'El ID es obligatorio' }, { status: 400 })
+    }
+    if (!valor?.trim()) {
+      return NextResponse.json({ success: false, error: 'El valor de la talla es obligatorio' }, { status: 400 })
+    }
+
+    await query(
+      'UPDATE tallas SET valor = ?, sistema_talla_id = ? WHERE id = ?',
+      [valor.trim().toUpperCase(), sistema_talla_id || 1, id]
+    )
+
+    const [updated]: any = await query('SELECT id, valor, sistema_talla_id FROM tallas WHERE id = ?', [id])
+    return NextResponse.json({ success: true, data: updated })
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json({ success: false, error: 'El ID es obligatorio' }, { status: 400 })
+    }
+
+    // Verificar que no esté en uso en productos activos
+    const asociados: any = await query(
+      "SELECT COUNT(*) as total FROM productos WHERE talla_id = ? AND estado = 'activo'",
+      [id]
+    )
+    if (asociados[0]?.total > 0) {
+      return NextResponse.json(
+        { success: false, error: `No se puede eliminar: tiene ${asociados[0].total} producto(s) con esta talla` },
+        { status: 400 }
+      )
+    }
+
+    await query("UPDATE tallas SET estado = 'inactivo' WHERE id = ?", [id])
+    return NextResponse.json({ success: true })
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  }
+}

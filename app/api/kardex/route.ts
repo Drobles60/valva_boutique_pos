@@ -204,24 +204,73 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { producto_id, tipo_movimiento, cantidad, motivo } = body;
+        const { producto_id, tipo_movimiento, cantidad, motivo, usuario_id } = body;
         if (!producto_id || !tipo_movimiento || !cantidad)
             return NextResponse.json({ success: false, error: 'Faltan campos obligatorios' }, { status: 400 });
 
-        const prod = await query<any[]>('SELECT id, stock_actual FROM productos WHERE id = ?', [producto_id]);
+        const prod = await query<any[]>('SELECT id, stock_actual, precio_compra, precio_venta, precio_minimo FROM productos WHERE id = ?', [producto_id]);
         if (!prod.length) return NextResponse.json({ success: false, error: 'Producto no encontrado' }, { status: 404 });
 
         const stockAnterior = Number(prod[0].stock_actual);
         const cantNum = Number(cantidad);
-        const esEntrada = tipo_movimiento === 'ajuste_entrada' || tipo_movimiento === 'devolucion_entrada' || tipo_movimiento === 'traslado_entrada';
+        const precioCompra = Number(prod[0].precio_compra) || 0;
+        const precioVenta = Number(prod[0].precio_venta) || 0;
+        const precioMinimo = Number(prod[0].precio_minimo) || 0;
+        const esEntrada = ['ajuste_entrada', 'devolucion_entrada', 'traslado_entrada', 'entrada_inicial', 'entrada_devolucion', 'entrada_compra', 'entrada_ajuste'].includes(tipo_movimiento);
         const stockNuevo = esEntrada ? stockAnterior + cantNum : stockAnterior - cantNum;
         if (stockNuevo < 0) return NextResponse.json({ success: false, error: `Stock insuficiente. Actual: ${stockAnterior}` }, { status: 400 });
 
+        const cantFinal = esEntrada ? cantNum : -cantNum;
+        const costoTotal = Math.abs(cantNum) * precioCompra;
+
+        // Registrar en movimientos_inventario (compatibilidad)
         await query(
-            `INSERT INTO movimientos_inventario (producto_id, tipo_movimiento, cantidad, stock_anterior, stock_nuevo, motivo, fecha_movimiento)
-       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
-            [producto_id, tipo_movimiento, esEntrada ? cantNum : -cantNum, stockAnterior, stockNuevo, motivo || 'Ajuste manual']
+            `INSERT INTO movimientos_inventario (producto_id, tipo_movimiento, cantidad, stock_anterior, stock_nuevo, motivo, usuario_id, fecha_movimiento)
+       VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
+            [producto_id, tipo_movimiento, cantFinal, stockAnterior, stockNuevo, motivo || 'Ajuste manual', usuario_id || null]
         );
+
+        // Mapear tipo para kardex
+        const mapaKardex: Record<string, string> = {
+            'ajuste_manual': 'ajuste_manual',
+            'entrada_inicial': 'entrada_compra',
+            'entrada_compra': 'entrada_compra',
+            'entrada_devolucion': 'entrada_devolucion',
+            'entrada_ajuste': 'entrada_ajuste',
+            'ajuste_entrada': 'entrada_ajuste',
+            'salida_merma': 'salida_merma',
+            'salida_venta': 'salida_venta',
+            'salida_ajuste': 'salida_ajuste',
+            'ajuste_salida': 'salida_ajuste',
+        };
+        const tipoKardex = mapaKardex[tipo_movimiento] || (esEntrada ? 'entrada_ajuste' : 'salida_ajuste');
+
+        // Registrar en kardex (tabla nueva - registro completo)
+        await query(
+            `INSERT INTO kardex (
+        producto_id, tipo_movimiento,
+        cantidad, stock_anterior, stock_nuevo,
+        precio_compra, precio_venta, precio_minimo, costo_total,
+        saldo_cantidad, saldo_costo,
+        usuario_id, motivo
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                producto_id,
+                tipoKardex,
+                cantFinal,
+                stockAnterior,
+                stockNuevo,
+                precioCompra,
+                precioVenta,
+                precioMinimo,
+                costoTotal,
+                stockNuevo,
+                stockNuevo * precioCompra,
+                usuario_id || null,
+                motivo || 'Ajuste manual'
+            ]
+        );
+
         await query('UPDATE productos SET stock_actual = ? WHERE id = ?', [stockNuevo, producto_id]);
 
         return NextResponse.json({ success: true, stock_nuevo: stockNuevo }, { status: 201 });

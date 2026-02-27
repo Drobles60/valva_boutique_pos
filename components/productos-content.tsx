@@ -20,11 +20,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Package, Plus, Search, Edit, Trash2, TrendingUp, DollarSign, Printer, X } from "lucide-react"
+import { Package, Plus, Search, Edit, TrendingUp, DollarSign, Printer, X } from "lucide-react"
 import type { Product } from "@/lib/types"
-import { getProducts, saveProduct, deleteProduct, getCurrentUser } from "@/lib/storage"
+import { getProducts, saveProduct, getCurrentUser } from "@/lib/storage"
 import { SidebarToggle } from "@/components/app-sidebar"
-import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+
 import { toast } from "sonner"
 import { formatCurrency, normalizeText } from "@/lib/utils"
 import {
@@ -43,8 +43,7 @@ export function ProductosContent() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [currentUser, setCurrentUser] = useState<ReturnType<typeof getCurrentUser>>(null)
   const [mounted, setMounted] = useState(false)
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
-  const [productToDelete, setProductToDelete] = useState<string | null>(null)
+
 
   // Estados para los datos del servidor
   const [categoriasPadre, setCategoriasPadre] = useState<any[]>([])
@@ -248,7 +247,7 @@ export function ProductosContent() {
     }
   }
 
-  // ── Funciones de creación inline ──────────────────────────────────────────
+  // â”€â”€ Funciones de creación inline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const handleCrearCategoria = async () => {
     if (!crearCategoriaName.trim()) return
@@ -328,7 +327,7 @@ export function ProductosContent() {
     }
   }
 
-  // ────────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const loadProductos = async () => {
     try {
@@ -729,46 +728,6 @@ export function ProductosContent() {
     setDialogOpen(true)
   }
 
-  const handleDelete = (id: string) => {
-    setProductToDelete(id)
-    setConfirmDeleteOpen(true)
-  }
-
-  const confirmDelete = async () => {
-    if (productToDelete) {
-      try {
-        const response = await fetch(`/api/productos/${productToDelete}`, {
-          method: 'DELETE'
-        })
-
-        const result = await response.json()
-
-        if (response.ok) {
-          // Si cargó exitosamente en la DB, también eliminamos de localStorage para consistencia
-          deleteProduct(productToDelete)
-          loadProductos()
-          toast.success("Producto eliminado", {
-            description: "El producto ha sido eliminado del inventario correctamente"
-          })
-          setConfirmDeleteOpen(false)
-          setProductToDelete(null)
-        } else {
-          // Manejo detallado de errores (ej: Llaves foráneas)
-          toast.error("No se pudo eliminar", {
-            description: result.error || "El producto tiene historial de ventas o compras y no puede ser borrado físicamente."
-          })
-          setConfirmDeleteOpen(false)
-          setProductToDelete(null)
-        }
-      } catch (error) {
-        console.error("Error eliminando producto:", error)
-        toast.error("Error de conexión", {
-          description: "No se pudo comunicar con el servidor para eliminar el producto"
-        })
-      }
-    }
-  }
-
   const handlePrintLabel = (product: Product) => {
     // Generar PDF directamente con la cantidad del stock
     generateLabelPDF({
@@ -937,7 +896,7 @@ export function ProductosContent() {
           ${labelsHTML}
         </div>
         <script>
-          // Esperar a que JsBarcode esté disponible
+          // Esperar a que JsBarcode esté© disponible
           function generateBarcodes() {
             if (typeof JsBarcode === 'undefined') {
               setTimeout(generateBarcodes, 100);
@@ -1110,12 +1069,6 @@ export function ProductosContent() {
             </Button>
           )}
         </div>
-        {mounted && canEditPrices && (
-          <Button onClick={handleOpenNewProduct} className="w-full md:w-auto">
-            <Plus className="mr-2 h-4 w-4" />
-            Nuevo Producto
-          </Button>
-        )}
       </div>
 
       {/* Products Table */}
@@ -1209,9 +1162,7 @@ export function ProductosContent() {
                           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(producto)}>
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDelete(producto.id)}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+
                         </>
                       )}
                     </div>
@@ -1223,26 +1174,16 @@ export function ProductosContent() {
         </CardContent>
       </Card>
 
-      {/* Add/Edit Dialog */}
+
+      {/* Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingProduct ? "Editar Producto" : "Nuevo Producto"}</DialogTitle>
-            <DialogDescription>Complete la información del producto según la base de datos</DialogDescription>
+            <DialogTitle>Editar Producto</DialogTitle>
+            <DialogDescription>Modifica la información del producto</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
-              {/* Información Automática */}
-              <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
-                <p className="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">
-                  ℹ️ Generación Automática
-                </p>
-                <p className="text-xs text-blue-600 dark:text-blue-300">
-                  El código de barras y SKU se generarán automáticamente al guardar el producto.
-                  Después podrás imprimir las etiquetas con el código de barras, SKU y precio.
-                </p>
-              </div>
-
               {/* Nombre y Descripción */}
               <div className="space-y-2">
                 <Label htmlFor="nombre">Nombre del Producto *</Label>
@@ -1270,17 +1211,13 @@ export function ProductosContent() {
               {/* Categorización */}
               <div className="border-t pt-4">
                 <h4 className="font-semibold mb-3 text-[#D4AF37]">Categorización</h4>
-
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="categoria_padre_id">Categoría Principal *</Label>
                     <SearchableSelect
                       value={formData.categoria_padre_id}
                       onValueChange={(value) => setFormData({ ...formData, categoria_padre_id: value })}
-                      items={categoriasPadre.map((cat) => ({
-                        value: cat.id.toString(),
-                        label: cat.nombre
-                      }))}
+                      items={categoriasPadre.map((cat) => ({ value: cat.id.toString(), label: cat.nombre }))}
                       placeholder="Seleccionar categoría"
                       searchPlaceholder="Buscar categoría..."
                       emptyMessage="No se encontraron categorías"
@@ -1288,22 +1225,14 @@ export function ProductosContent() {
                       createNewLabel="Crear categoría"
                     />
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="tipo_prenda_id">Tipo Específico de Prenda *</Label>
                     <SearchableSelect
                       value={formData.tipo_prenda_id}
                       onValueChange={(value) => setFormData({ ...formData, tipo_prenda_id: value })}
                       disabled={!formData.categoria_padre_id}
-                      items={tiposPrendaFiltrados.map((tipo) => ({
-                        value: tipo.id.toString(),
-                        label: tipo.nombre
-                      }))}
-                      placeholder={
-                        formData.categoria_padre_id
-                          ? "Seleccionar tipo"
-                          : "Primero seleccione categoría"
-                      }
+                      items={tiposPrendaFiltrados.map((tipo) => ({ value: tipo.id.toString(), label: tipo.nombre }))}
+                      placeholder={formData.categoria_padre_id ? "Seleccionar tipo" : "Primero seleccione categoría"}
                       searchPlaceholder="Buscar tipo de prenda..."
                       emptyMessage="No se encontraron tipos de prenda"
                       onCreateNew={(term) => { setCrearTipoPrendaName(term); setCrearTipoPrendaOpen(true) }}
@@ -1322,21 +1251,13 @@ export function ProductosContent() {
                       value={formData.talla_id}
                       onValueChange={(value) => setFormData({ ...formData, talla_id: value })}
                       disabled={!formData.tipo_prenda_id}
-                      items={tallasFiltradas.map((talla) => ({
-                        value: talla.id.toString(),
-                        label: talla.valor
-                      }))}
-                      placeholder={
-                        formData.tipo_prenda_id
-                          ? "Seleccionar talla"
-                          : "Primero seleccione tipo"
-                      }
+                      items={tallasFiltradas.map((talla) => ({ value: talla.id.toString(), label: talla.valor }))}
+                      placeholder={formData.tipo_prenda_id ? "Seleccionar talla" : "Primero seleccione tipo"}
                       searchPlaceholder="Buscar talla..."
                       emptyMessage="No se encontraron tallas"
                     />
                   </div>
                 )}
-
                 <div className="space-y-2">
                   <Label htmlFor="color">Color</Label>
                   <Input
@@ -1364,10 +1285,7 @@ export function ProductosContent() {
                   onValueChange={(value) => setFormData({ ...formData, proveedor_id: value })}
                   items={proveedores
                     .filter(prov => prov.estado === 'activo')
-                    .map((prov) => ({
-                      value: prov.id.toString(),
-                      label: `${prov.razon_social} (${prov.ruc})`
-                    }))}
+                    .map((prov) => ({ value: prov.id.toString(), label: `${prov.razon_social} (${prov.ruc})` }))}
                   placeholder="Seleccionar proveedor"
                   searchPlaceholder="Buscar proveedor..."
                   emptyMessage="No se encontraron proveedores"
@@ -1379,7 +1297,6 @@ export function ProductosContent() {
               {/* Precios */}
               <div className="border-t pt-4">
                 <h4 className="font-semibold mb-3 text-[#D4AF37]">Precios y Stock</h4>
-
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="space-y-2">
                     <Label htmlFor="precio_compra">Precio Compra *</Label>
@@ -1387,130 +1304,62 @@ export function ProductosContent() {
                       id="precio_compra"
                       type="text"
                       value={formData.precio_compra ? formatCurrency(formData.precio_compra) : ''}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
-                        setFormData({ ...formData, precio_compra: value })
-                      }}
-                      onFocus={(e) => {
-                        if (formData.precio_compra) {
-                          e.target.value = formData.precio_compra
-                        }
-                      }}
-                      onBlur={(e) => {
-                        if (formData.precio_compra) {
-                          e.target.value = formatCurrency(formData.precio_compra)
-                        }
-                      }}
+                      onChange={(e) => { const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, ''); setFormData({ ...formData, precio_compra: value }) }}
+                      onFocus={(e) => { if (formData.precio_compra) e.target.value = formData.precio_compra }}
+                      onBlur={(e) => { if (formData.precio_compra) e.target.value = formatCurrency(formData.precio_compra) }}
                       required
                     />
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="precio_venta">Precio Venta *</Label>
                     <Input
                       id="precio_venta"
                       type="text"
                       value={formData.precio_venta ? formatCurrency(formData.precio_venta) : ''}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
-                        setFormData({ ...formData, precio_venta: value })
-                      }}
-                      onFocus={(e) => {
-                        if (formData.precio_venta) {
-                          e.target.value = formData.precio_venta
-                        }
-                      }}
-                      onBlur={(e) => {
-                        if (formData.precio_venta) {
-                          e.target.value = formatCurrency(formData.precio_venta)
-                        }
-                      }}
+                      onChange={(e) => { const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, ''); setFormData({ ...formData, precio_venta: value }) }}
+                      onFocus={(e) => { if (formData.precio_venta) e.target.value = formData.precio_venta }}
+                      onBlur={(e) => { if (formData.precio_venta) e.target.value = formatCurrency(formData.precio_venta) }}
                       required
                     />
                     {formData.precio_compra && formData.precio_venta && (
                       <p className="text-xs text-muted-foreground">
-                        Margen:{" "}
-                        {calcularMargen(
-                          Number.parseFloat(formData.precio_compra),
-                          Number.parseFloat(formData.precio_venta),
-                        )}
-                        %
+                        Margen: {calcularMargen(Number.parseFloat(formData.precio_compra), Number.parseFloat(formData.precio_venta))}%
                       </p>
                     )}
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="precio_minimo">Precio Mínimo</Label>
                     <Input
                       id="precio_minimo"
                       type="text"
                       value={formData.precio_minimo ? formatCurrency(formData.precio_minimo) : ''}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
-                        setFormData({ ...formData, precio_minimo: value })
-                      }}
-                      onFocus={(e) => {
-                        if (formData.precio_minimo) {
-                          e.target.value = formData.precio_minimo
-                        }
-                      }}
-                      onBlur={(e) => {
-                        if (formData.precio_minimo) {
-                          e.target.value = formatCurrency(formData.precio_minimo)
-                        }
-                      }}
+                      onChange={(e) => { const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, ''); setFormData({ ...formData, precio_minimo: value }) }}
+                      onFocus={(e) => { if (formData.precio_minimo) e.target.value = formData.precio_minimo }}
+                      onBlur={(e) => { if (formData.precio_minimo) e.target.value = formatCurrency(formData.precio_minimo) }}
                     />
                   </div>
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="stock_actual">Cantidad en Stock *</Label>
                   <Input
                     id="stock_actual"
                     type="text"
                     value={formData.stock_actual ? formatCurrency(formData.stock_actual) : ''}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, '')
-                      setFormData({ ...formData, stock_actual: value })
-                    }}
-                    onFocus={(e) => {
-                      if (formData.stock_actual) {
-                        e.target.value = formData.stock_actual
-                      }
-                    }}
-                    onBlur={(e) => {
-                      if (formData.stock_actual) {
-                        e.target.value = formatCurrency(formData.stock_actual)
-                      }
-                    }}
+                    onChange={(e) => { const value = e.target.value.replace(/\./g, '').replace(/[^0-9]/g, ''); setFormData({ ...formData, stock_actual: value }) }}
+                    onFocus={(e) => { if (formData.stock_actual) e.target.value = formData.stock_actual }}
+                    onBlur={(e) => { if (formData.stock_actual) e.target.value = formatCurrency(formData.stock_actual) }}
                     required
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Esta cantidad se registrará en el inventario inicial
-                  </p>
                 </div>
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={handleCloseDialog}>
-                Cancelar
-              </Button>
-              <Button type="submit">{editingProduct ? "Guardar Cambios" : "Agregar Producto"}</Button>
+              <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancelar</Button>
+              <Button type="submit">Guardar Cambios</Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
-
-      <ConfirmDialog
-        open={confirmDeleteOpen}
-        onOpenChange={setConfirmDeleteOpen}
-        onConfirm={confirmDelete}
-        title="¿Eliminar producto?"
-        description="Esta acción eliminará permanentemente este producto del inventario. Esta acción no se puede deshacer."
-        confirmText="Eliminar"
-        cancelText="Cancelar"
-        variant="destructive"
-      />
 
       {/* Mini-modal: Crear Categoría */}
       <Dialog open={crearCategoriaOpen} onOpenChange={setCrearCategoriaOpen}>
@@ -1562,7 +1411,7 @@ export function ProductosContent() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setCrearTipoPrendaOpen(false)}>Cancelar</Button>
             <Button onClick={handleCrearTipoPrenda} disabled={crearTipoPrendaLoading || !crearTipoPrendaName.trim()}>
-              {crearTipoPrendaLoading ? 'Creando...' : 'Crear Tipo'}
+              {crearTipoPrendaLoading ? 'Creando...' : 'Crear Tipo de Prenda'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1577,7 +1426,7 @@ export function ProductosContent() {
           </DialogHeader>
           <div className="space-y-3 py-2">
             <div className="space-y-1">
-              <Label>Razón Social *</Label>
+              <Label>Razon Social *</Label>
               <Input
                 value={crearProveedorData.razonSocial}
                 onChange={(e) => setCrearProveedorData(d => ({ ...d, razonSocial: e.target.value }))}

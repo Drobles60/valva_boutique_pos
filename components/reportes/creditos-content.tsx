@@ -1,99 +1,122 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Download, FileText, ArrowLeft, AlertTriangle, Clock, CheckCircle } from "lucide-react"
+import { Download, FileDown, FileText, ArrowLeft, AlertTriangle, Clock, CheckCircle, Loader2 } from "lucide-react"
 import { SidebarToggle } from "@/components/app-sidebar"
-import { exportToPDF, exportToExcel, formatCurrency, type TableData, type PDFConfig } from "@/lib/export-utils"
-import type { ReporteCreditos } from "@/types/reportes"
+import { formatCurrency } from "@/lib/utils"
+import { generateReportPDF } from "@/lib/pdf-export"
+import { toast } from "sonner"
+import Link from "next/link"
+
+interface CreditoCliente {
+  cliente: { nombre: string; telefono: string | null }
+  totalCredito: number
+  totalAbonado: number
+  saldoPendiente: number
+  diasVencido: number
+  estado: string
+  facturas: number
+}
+
+interface ReporteData {
+  creditos: CreditoCliente[]
+  totalPorCobrar: number
+  totalAbonado: number
+  saldoPendiente: number
+  creditosVencidos: number
+}
 
 export function CreditosContent() {
-  const router = useRouter()
-  const [fechaCorte, setFechaCorte] = useState("")
-  const [reporte, setReporte] = useState<ReporteCreditos | null>(null)
+  const [reporte, setReporte] = useState<ReporteData | null>(null)
   const [loading, setLoading] = useState(false)
+  const [exportingPdf, setExportingPdf] = useState(false)
 
   useEffect(() => {
-    // Establecer fecha actual como fecha de corte
-    const hoy = new Date()
-    setFechaCorte(hoy.toISOString().split('T')[0])
+    cargarReporte()
   }, [])
 
   const cargarReporte = async () => {
-    if (!fechaCorte) return
-
     setLoading(true)
     try {
-      const response = await fetch(
-        `/api/reportes/clientes/creditos?fechaCorte=${fechaCorte}`
-      )
+      const response = await fetch(`/api/reportes/clientes/creditos`)
       const data = await response.json()
+      if (!response.ok || !data.success) {
+        toast.error(data.error || "Error al cargar el reporte")
+        return
+      }
       setReporte(data)
     } catch (error) {
       console.error('Error cargando reporte:', error)
-      alert('Error al cargar el reporte')
+      toast.error('Error de conexión')
     } finally {
       setLoading(false)
     }
   }
 
-  const exportarPDF = () => {
-    if (!reporte) return
-
-    const tableData: TableData = {
-      headers: ['Cliente', 'Total Crédito', 'Abonado', 'Saldo Pendiente', 'Días Vencidos', 'Estado'],
-      rows: reporte.creditos.map(credito => [
-        credito.cliente.nombre,
-        formatCurrency(credito.totalCredito),
-        formatCurrency(credito.totalAbonado),
-        formatCurrency(credito.saldoPendiente),
-        credito.diasVencido.toString(),
-        credito.estado
-      ])
-    }
-
-    const config: PDFConfig = {
-      title: 'Cartera de Créditos',
-      subtitle: 'Cuentas por Cobrar',
-      period: `Corte al ${fechaCorte}`,
-      orientation: 'landscape',
-      companyInfo: {
-        name: 'Valva Boutique',
-        address: 'Sistema POS',
-        phone: 'Reporte de Clientes'
-      }
-    }
-
-    exportToPDF(tableData, config)
+  const exportarCSV = () => {
+    if (!reporte || !reporte.creditos.length) { toast.error("No hay datos"); return }
+    const headers = ["#", "Cliente", "Teléfono", "Total Crédito", "Abonado", "Saldo Pendiente", "Días Vencidos", "Estado"]
+    const rows = reporte.creditos.map((c, i) => [
+      i + 1,
+      c.cliente.nombre,
+      c.cliente.telefono || "N/A",
+      c.totalCredito.toFixed(2),
+      c.totalAbonado.toFixed(2),
+      c.saldoPendiente.toFixed(2),
+      c.diasVencido,
+      c.estado,
+    ])
+    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n")
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" })
+    const a = document.createElement("a")
+    a.href = URL.createObjectURL(blob)
+    a.download = `cartera_creditos_${new Date().toISOString().split("T")[0]}.csv`
+    a.click()
+    toast.success("CSV exportado correctamente")
   }
 
-  const exportarExcel = () => {
-    if (!reporte) return
-
-    const tableData: TableData = {
-      headers: ['Cliente', 'Teléfono', 'Total Crédito', 'Abonado', 'Saldo Pendiente', 'Días Vencidos', 'Estado'],
-      rows: reporte.creditos.map(credito => [
-        credito.cliente.nombre,
-        credito.cliente.telefono || 'N/A',
-        credito.totalCredito,
-        credito.totalAbonado,
-        credito.saldoPendiente,
-        credito.diasVencido,
-        credito.estado
-      ])
+  const exportarPDF = async () => {
+    if (!reporte || !reporte.creditos.length) { toast.error("No hay datos"); return }
+    setExportingPdf(true)
+    try {
+      generateReportPDF({
+        title: "Cartera de Créditos",
+        subtitle: "Estado de cuentas por cobrar",
+        dateRange: `Corte: ${new Date().toLocaleDateString("es-CO", { day: "2-digit", month: "long", year: "numeric" })}`,
+        kpis: [
+          { label: "Total Crédito", value: `$${formatCurrency(reporte.totalPorCobrar)}`, detail: `${reporte.creditos.length} clientes` },
+          { label: "Abonado", value: `$${formatCurrency(reporte.totalAbonado)}`, detail: reporte.totalPorCobrar > 0 ? `${((reporte.totalAbonado / reporte.totalPorCobrar) * 100).toFixed(1)}% recuperado` : "0%" },
+          { label: "Saldo Pendiente", value: `$${formatCurrency(reporte.saldoPendiente)}`, detail: "Por cobrar" },
+          { label: "Vencidos", value: String(reporte.creditosVencidos), detail: "Requieren atención" },
+        ],
+        tables: [{
+          title: "Detalle de Cartera",
+          headers: ["#", "Cliente", "Total Crédito", "Abonado", "Saldo Pend.", "Días Venc.", "Estado"],
+          rows: reporte.creditos.map((c, i) => [
+            String(i + 1),
+            c.cliente.nombre,
+            `$${formatCurrency(c.totalCredito)}`,
+            `$${formatCurrency(c.totalAbonado)}`,
+            `$${formatCurrency(c.saldoPendiente)}`,
+            String(c.diasVencido),
+            c.estado === "vencido" ? "VENCIDO" : c.estado === "por_vencer" ? "Por Vencer" : "Al Día",
+          ]),
+          columnStyles: { 0: { halign: "center" as const }, 2: { halign: "right" as const }, 3: { halign: "right" as const }, 4: { halign: "right" as const }, 5: { halign: "center" as const }, 6: { halign: "center" as const } },
+        }],
+        orientation: "landscape",
+        filename: `cartera_creditos_${new Date().toISOString().split("T")[0]}.pdf`,
+      })
+      toast.success("PDF exportado correctamente")
+    } catch (error) {
+      console.error("Error al generar PDF:", error)
+      toast.error("Error al generar PDF")
+    } finally {
+      setExportingPdf(false)
     }
-
-    exportToExcel(tableData, {
-      title: 'Cartera de Créditos',
-      period: `Corte al ${fechaCorte}`,
-      sheetName: 'Cartera de Créditos'
-    })
   }
 
   const getEstadoBadge = (estado: string) => {
@@ -118,13 +141,11 @@ export function CreditosContent() {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.back()}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <Link href="/reportes/contables">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
           <SidebarToggle />
           <div>
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Cartera de Créditos</h1>
@@ -135,57 +156,24 @@ export function CreditosContent() {
         </div>
         
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={exportarPDF}
-            disabled={!reporte}
-          >
-            <Download className="mr-2 h-4 w-4" />
-            PDF
+          <Button variant="outline" size="sm" onClick={exportarCSV} disabled={!reporte || loading}>
+            <FileDown className="mr-2 h-4 w-4" />
+            CSV
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={exportarExcel}
-            disabled={!reporte}
-          >
-            <Download className="mr-2 h-4 w-4" />
-            Excel
+          <Button variant="outline" size="sm" onClick={exportarPDF} disabled={!reporte || loading || exportingPdf}>
+            {exportingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+            PDF
           </Button>
         </div>
       </div>
 
-      {/* Filtros */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Fecha de Corte</CardTitle>
-          <CardDescription>Seleccione la fecha para el análisis de la cartera</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-2">
-              <Label htmlFor="fecha-corte">Fecha de Corte</Label>
-              <Input
-                id="fecha-corte"
-                type="date"
-                value={fechaCorte}
-                onChange={(e) => setFechaCorte(e.target.value)}
-              />
-            </div>
-            <div className="flex items-end md:col-span-2">
-              <Button
-                className="w-full"
-                onClick={cargarReporte}
-                disabled={loading}
-              >
-                <FileText className="mr-2 h-4 w-4" />
-                {loading ? 'Generando...' : 'Generar Reporte'}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Loading */}
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <span className="ml-2 text-muted-foreground">Cargando cartera...</span>
+        </div>
+      )}
 
       {/* Resumen en Cards */}
       {reporte && (
@@ -401,9 +389,9 @@ export function CreditosContent() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Genere el reporte</h3>
+            <h3 className="text-lg font-semibold mb-2">Sin datos de cartera</h3>
             <p className="text-muted-foreground text-center">
-              Seleccione la fecha de corte y haga clic en "Generar Reporte"
+              No se encontraron cuentas por cobrar activas
             </p>
           </CardContent>
         </Card>
