@@ -1,48 +1,75 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Package, TrendingUp, Users, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SidebarToggle } from "@/components/app-sidebar"
+import { formatCurrency } from "@/lib/utils"
 
 export function DashboardContent() {
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        const response = await fetch('/api/dashboard')
+        const result = await response.json()
+        if (result.success) {
+          setData(result.data)
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchDashboardData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Dashboard</h1>
+        <p className="text-sm text-muted-foreground md:text-base">Cargando métricas de hoy...</p>
+      </div>
+    )
+  }
+
   const stats = [
     {
       title: "Ventas Hoy",
-      value: "$2,450,000",
-      description: "15 transacciones",
+      value: `$${formatCurrency(data?.ventas?.ventasHoy || 0)}`,
+      description: `${data?.ventas?.transacciones || 0} transacciones`,
       icon: DollarSign,
-      trend: "+12.5%",
+      trend: "+0%", // Puede calcularse dinámicamente futuro vs ayer
     },
     {
       title: "Productos Vendidos",
-      value: "42",
-      description: "Unidades totales",
+      value: (data?.productosVendidos || 0).toString(),
+      description: "Unidades totales de hoy",
       icon: Package,
-      trend: "+8.2%",
+      trend: "+0%",
     },
     {
       title: "Clientes Atendidos",
-      value: "18",
-      description: "Clientes únicos",
+      value: (data?.ventas?.clientesAtendidos || 0).toString(),
+      description: "Clientes únicos hoy",
       icon: Users,
-      trend: "+5.1%",
+      trend: "+0%",
     },
     {
       title: "Cuentas por Cobrar",
-      value: "$850,000",
-      description: "8 clientes pendientes",
+      value: `$${formatCurrency(data?.cxc?.deudaTotal || 0)}`,
+      description: `${data?.cxc?.clientesMorosos || 0} clientes pendientes`,
       icon: CreditCard,
-      trend: "-3.2%",
+      trend: "Total",
     },
   ]
 
-  const recentSales = [
-    { id: "001", cliente: "María González", total: 125000, tipo: "Contado" },
-    { id: "002", cliente: "Juan Pérez", total: 89000, tipo: "Crédito" },
-    { id: "003", cliente: "Ana Martínez", total: 215000, tipo: "Contado" },
-    { id: "004", cliente: "Carlos López", total: 156000, tipo: "Contado" },
-  ]
+  const recentSales = data?.ventasRecientes || []
+  const cajaInfo = data?.caja || { estado: 'Cerrada', base: 0, ventasTurno: 0, totalEnCaja: 0 }
 
   return (
     <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
@@ -92,18 +119,22 @@ export function DashboardContent() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentSales.map((sale) => (
-                <div key={sale.id} className="flex items-center justify-between border-b pb-3 last:border-0">
-                  <div>
-                    <p className="font-medium">{sale.cliente}</p>
-                    <p className="text-sm text-muted-foreground">Venta #{sale.id}</p>
+              {recentSales.length > 0 ? (
+                recentSales.map((sale: any) => (
+                  <div key={sale.id} className="flex items-center justify-between border-b pb-3 last:border-0">
+                    <div>
+                      <p className="font-medium">{sale.cliente}</p>
+                      <p className="text-sm text-muted-foreground">Venta #{sale.numero_venta || sale.id}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold">${formatCurrency(sale.total)}</p>
+                      <p className="text-sm text-muted-foreground capitalize">{sale.tipo}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold">${sale.total.toLocaleString("es-CO")}</p>
-                    <p className="text-sm text-muted-foreground">{sale.tipo}</p>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No hay ventas registradas.</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -117,23 +148,27 @@ export function DashboardContent() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Estado:</span>
-                <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">Abierta</span>
+                <span className={`rounded-full px-3 py-1 text-sm font-medium ${cajaInfo.estado === 'Abierta' ? 'bg-primary/10 text-primary' : 'bg-red-500/10 text-red-500'}`}>
+                  {cajaInfo.estado}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Base Inicial:</span>
-                <span className="font-medium">$500,000</span>
+                <span className="font-medium">${formatCurrency(cajaInfo.base)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Ventas del Turno:</span>
-                <span className="font-medium">$2,450,000</span>
+                <span className="text-sm text-muted-foreground">Ventas del Turno (Efectivo):</span>
+                <span className="font-medium">${formatCurrency(cajaInfo.ventasTurno)}</span>
               </div>
               <div className="flex items-center justify-between border-t pt-4">
-                <span className="text-sm font-medium">Total en Caja:</span>
-                <span className="text-xl font-bold text-primary">$2,950,000</span>
+                <span className="text-sm font-medium">Total en Caja Fuerte:</span>
+                <span className="text-xl font-bold text-primary">${formatCurrency(cajaInfo.totalEnCaja)}</span>
               </div>
-              <Button className="w-full bg-transparent" variant="outline">
-                Cerrar Caja
-              </Button>
+              {cajaInfo.estado === 'Abierta' && (
+                <Button className="w-full bg-transparent" variant="outline" asChild>
+                  <a href="/caja">Ir a Caja</a>
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>

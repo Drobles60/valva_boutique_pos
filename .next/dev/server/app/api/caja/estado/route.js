@@ -1,0 +1,10 @@
+var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/caja/estado/route.js")
+R.c("server/chunks/1dff6_next_72478266._.js")
+R.c("server/chunks/557b4_mysql2_381024e7._.js")
+R.c("server/chunks/ac8c2_iconv-lite_91825155._.js")
+R.c("server/chunks/89097_aws-ssl-profiles_lib_2064fe54._.js")
+R.c("server/chunks/node_modules__pnpm_caed2317._.js")
+R.c("server/chunks/[root-of-the-server]__5f008e0f._.js")
+R.c("server/chunks/_next-internal_server_app_api_caja_estado_route_actions_d22689b0.js")
+R.m("[project]/node_modules/.pnpm/next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/app/api/caja/estado/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/node_modules/.pnpm/next@16.0.10_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/app/api/caja/estado/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

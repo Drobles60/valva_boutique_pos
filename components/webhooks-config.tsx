@@ -1,24 +1,25 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import * as React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Webhook, Check, X, AlertCircle } from "lucide-react"
 import { getWebhookConfig, saveWebhookConfig } from "@/lib/webhooks"
-import { SidebarToggle } from "@/components/app-sidebar"
+import { toast } from "sonner"
 
 export function WebhooksConfig() {
-  const [config, setConfig] = useState({
+  const [config, setConfig] = React.useState({
     url: "",
     eventos: [] as string[],
     activo: false,
   })
 
-  const [testStatus, setTestStatus] = useState<"idle" | "testing" | "success" | "error">("idle")
+  const [testStatus, setTestStatus] = React.useState<"idle" | "testing" | "success" | "error">("idle")
 
   const eventosDisponibles = [
     { id: "nueva_venta", label: "Nueva Venta", description: "Se dispara al completar una venta" },
@@ -27,7 +28,7 @@ export function WebhooksConfig() {
     { id: "pago_recibido", label: "Pago Recibido", description: "Se dispara al registrar un abono" },
   ]
 
-  useEffect(() => {
+  React.useEffect(() => {
     setConfig(getWebhookConfig())
   }, [])
 
@@ -43,7 +44,9 @@ export function WebhooksConfig() {
 
   const handleSaveUrl = () => {
     saveWebhookConfig(config)
-    alert("Configuración guardada")
+    toast.success("Configuración guardada", {
+      description: "Los cambios se han guardado correctamente"
+    })
   }
 
   const handleToggleActivo = (activo: boolean) => {
@@ -54,7 +57,9 @@ export function WebhooksConfig() {
 
   const handleTestWebhook = async () => {
     if (!config.url) {
-      alert("Por favor ingrese una URL de webhook")
+      toast.error("URL requerida", {
+        description: "Por favor ingrese una URL de webhook válida"
+      })
       return
     }
 
@@ -92,7 +97,7 @@ export function WebhooksConfig() {
   return (
     <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
       <div className="flex items-center gap-3">
-        <SidebarToggle />
+        <SidebarTrigger />
         <div>
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Configuración de Webhooks</h1>
           <p className="text-sm text-muted-foreground md:text-base">Integración con n8n y otros servicios</p>
