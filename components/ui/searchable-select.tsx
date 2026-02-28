@@ -102,7 +102,7 @@ export function SearchableSelect({
             </Button>
           )}
         </div>
-        <ScrollArea className="max-h-[300px]">
+        <ScrollArea className="h-[280px]">
           <div className="p-1">
             {filteredItems.length === 0 ? (
               <div className="py-3 px-2 text-center">

@@ -199,15 +199,18 @@ export function CorteMensualContent() {
             <CardContent>
               <div className="grid gap-3 md:grid-cols-2">
                 <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Por Método de Pago</p>
                   <div className="flex justify-between py-2 border-b"><span>Efectivo</span><span className="font-medium">{formatCurrency(data.ventas.efectivo)}</span></div>
                   <div className="flex justify-between py-2 border-b"><span>Transferencia</span><span className="font-medium">{formatCurrency(data.ventas.transferencia)}</span></div>
                   <div className="flex justify-between py-2 border-b"><span>Mixto</span><span className="font-medium">{formatCurrency(data.ventas.mixto)}</span></div>
-                  <div className="flex justify-between py-2 border-b"><span>Crédito</span><span className="font-medium">{formatCurrency(data.ventas.credito)}</span></div>
+                  <div className="flex justify-between py-2 bg-muted/50 px-2 rounded"><span className="font-bold">Total Ventas</span><span className="font-bold">{formatCurrency(data.ventas.total)}</span></div>
                 </div>
                 <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Otros Movimientos</p>
+                  <div className="flex justify-between py-2 border-b"><span>Ventas a crédito</span><span className="font-medium text-amber-600">{formatCurrency(data.ventas.credito)}</span></div>
                   <div className="flex justify-between py-2 border-b"><span>Descuentos otorgados</span><span className="font-medium text-red-600">-{formatCurrency(data.ventas.descuentos)}</span></div>
                   <div className="flex justify-between py-2 border-b"><span>Abonos recibidos</span><span className="font-medium text-green-600">+{formatCurrency(data.abonos.total)}</span></div>
-                  <div className="flex justify-between py-2 bg-muted/50 px-2 rounded"><span className="font-bold">Total del mes</span><span className="font-bold">{formatCurrency(data.ventas.total)}</span></div>
+                  <div className="flex justify-between py-2 bg-muted/50 px-2 rounded"><span className="font-bold">Flujo Neto</span><span className="font-bold">{formatCurrency(data.flujoNeto)}</span></div>
                 </div>
               </div>
             </CardContent>

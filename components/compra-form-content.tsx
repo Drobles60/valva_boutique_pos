@@ -14,11 +14,12 @@ import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog"
 import { SidebarToggle } from "@/components/app-sidebar"
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import { formatCurrency } from "@/lib/utils"
 import {
     ShoppingCart, Plus, Trash2, Save, CheckCircle, Printer,
-    Package, Calculator, AlertTriangle, ChevronDown, ChevronUp, PackagePlus,
+    Package, Calculator, AlertTriangle, PackagePlus,
 } from "lucide-react"
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -61,6 +62,7 @@ interface CompraFormProps {
 
 export function CompraFormContent({ compraId }: CompraFormProps) {
     const router = useRouter()
+    const { data: session } = useSession()
     const skuInputRef = useRef<HTMLInputElement>(null)
 
     // Datos de referencia
@@ -89,7 +91,6 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
     // UX
     const [ivaGlobal, setIvaGlobal] = useState("15")
     const [descGlobal, setDescGlobal] = useState("0")
-    const [seccionAbierta, setSeccionAbierta] = useState<"encabezado" | "resumen" | null>(null)
 
     // Modal nuevo producto
     const [nuevoProductoOpen, setNuevoProductoOpen] = useState(false)
@@ -386,6 +387,7 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
     // ─── Payload helper ───────────────────────────────────────────────────────
     const buildPayload = () => ({
         ...form,
+        usuario_id: (session?.user as any)?.id || null,
         otros_costos: otrosCostos,
         abono_inicial: abonoInicial,
         items: validItems.map(i => ({
@@ -485,11 +487,10 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                 {/* ── Columna principal ───────────────────────────────────────────── */}
                 <div className="flex flex-col gap-3 flex-1 min-w-0">
 
-                    {/* Encabezado de la compra (colapsable) */}
+                    {/* Encabezado de la compra (siempre visible) */}
                     <Card>
                         <div
-                            className="flex items-center justify-between px-3 py-2 cursor-pointer border-b"
-                            onClick={() => setSeccionAbierta(s => s === "encabezado" ? null : "encabezado")}
+                            className="flex items-center justify-between px-3 py-2 border-b"
                         >
                             <span className="text-xs font-semibold flex items-center gap-1.5">
                                 📋 Datos de la Factura
@@ -497,11 +498,9 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                                     <Badge variant="outline" className="text-[10px] ml-1">{form.factura_numero}</Badge>
                                 )}
                             </span>
-                            {seccionAbierta === "encabezado" ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                         </div>
-                        {seccionAbierta === "encabezado" && (
-                            <CardContent className="pt-3 pb-3">
-                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                        <CardContent className="pt-3 pb-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                                     <div className="space-y-1 col-span-2 sm:col-span-2">
                                         <Label className="text-xs">Proveedor *</Label>
                                         <SearchableSelect
@@ -543,15 +542,6 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                                     </div>
                                 </div>
                             </CardContent>
-                        )}
-                        {seccionAbierta !== "encabezado" && (
-                            <div className="px-3 py-2 grid grid-cols-4 gap-4 text-xs text-muted-foreground">
-                                <span><strong>Proveedor:</strong> {proveedores.find(p => p.id.toString() === form.proveedor_id)?.razon_social || "—"}</span>
-                                <span><strong>Factura:</strong> {form.factura_numero || "—"}</span>
-                                <span><strong>Fecha:</strong> {form.fecha || "—"}</span>
-                                <span><strong>Pago:</strong> {form.tipo_pago}</span>
-                            </div>
-                        )}
                     </Card>
 
                     {/* Grid de productos */}
@@ -637,12 +627,13 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                                             <td className="py-1 px-1 text-muted-foreground truncate max-w-[80px]">{it.color || "—"}</td>
                                             <td className="py-1 px-2">
                                                 <Input className="h-6 text-xs text-right px-1 w-full" type="number" min="1"
-                                                    value={it.cantidad} onChange={e => updateItem(it._key, "cantidad", Number(e.target.value))}
+                                                    value={it.cantidad || ''} onChange={e => { const v = e.target.value.replace(/^0+/, ''); updateItem(it._key, "cantidad", v === '' ? 0 : Number(v)) }}
+                                                    onBlur={() => { if (!it.cantidad) updateItem(it._key, "cantidad", 1) }}
                                                     disabled={esConfirmada} />
                                             </td>
                                             <td className="py-1 px-2">
                                                 <Input className="h-6 text-xs text-right px-1 w-full" type="number" min="0" step="0.01"
-                                                    value={it.costo_unitario} onChange={e => updateItem(it._key, "costo_unitario", Number(e.target.value))}
+                                                    value={it.costo_unitario || ''} onChange={e => { const v = e.target.value.replace(/^0+(?=\d)/, ''); updateItem(it._key, "costo_unitario", v === '' ? 0 : Number(v)) }}
                                                     disabled={esConfirmada} />
                                             </td>
                                             <td className="py-1 px-1">
@@ -712,8 +703,9 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                                 <>
                                     <div className="border-t pt-2 flex justify-between items-center gap-1">
                                         <span className="text-muted-foreground">Abono inicial</span>
-                                        <Input className="h-6 text-xs text-right px-1 w-24 font-mono" type="number" min="0" step="0.01"
-                                            value={form.abono_inicial} onChange={e => setForm(f => ({ ...f, abono_inicial: e.target.value }))}
+                                        <Input className="h-6 text-xs text-right px-1 w-24 font-mono" type="text" inputMode="decimal"
+                                            value={form.abono_inicial} onChange={e => { const v = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.').replace(/(\..*?)\..*/g, '$1'); setForm(f => ({ ...f, abono_inicial: v })) }}
+                                            onBlur={() => { if (!form.abono_inicial || isNaN(Number(form.abono_inicial))) setForm(f => ({ ...f, abono_inicial: "0" })) }}
                                             disabled={esConfirmada} />
                                     </div>
                                     <div className="flex justify-between font-semibold text-red-600">
@@ -765,7 +757,7 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                         {/* Nombre */}
                         <div className="space-y-1 col-span-2">
                             <Label className="text-xs">Nombre *</Label>
-                            <Input className="h-8 text-xs" value={npForm.nombre} onChange={e => setNpForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Blusa floral manga larga..." />
+                            <Input className="h-8 text-xs uppercase" value={npForm.nombre} onChange={e => { const v = e.target.value.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, ''); setNpForm(f => ({ ...f, nombre: v.toUpperCase() })) }} placeholder="BLUSA FLORAL MANGA LARGA..." />
                         </div>
 
                         {/* Categoría */}
@@ -809,7 +801,7 @@ export function CompraFormContent({ compraId }: CompraFormProps) {
                         {/* Color */}
                         <div className="space-y-1">
                             <Label className="text-xs">Color</Label>
-                            <Input className="h-8 text-xs" value={npForm.color} onChange={e => setNpForm(f => ({ ...f, color: e.target.value.toUpperCase() }))} placeholder="NEGRO, ROJO..." />
+                            <Input className="h-8 text-xs" value={npForm.color} onChange={e => { const v = e.target.value.replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]/g, ''); setNpForm(f => ({ ...f, color: v.toUpperCase() })) }} placeholder="NEGRO, ROJO..." />
                         </div>
 
                         {/* SKU auto */}

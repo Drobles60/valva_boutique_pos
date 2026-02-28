@@ -322,11 +322,21 @@ async function GET(request) {
                     usuario: s.usuario,
                     estado: s.estado
                 })),
-            ventasPorDia: ventasPorDia.map((d)=>({
-                    fecha: d.fecha,
+            ventasPorDia: ventasPorDia.map((d)=>{
+                // DATE() returns a JS Date object, convert to YYYY-MM-DD string
+                const fechaRaw = d.fecha;
+                let fechaStr;
+                if (fechaRaw instanceof Date) {
+                    fechaStr = fechaRaw.getFullYear() + '-' + String(fechaRaw.getMonth() + 1).padStart(2, '0') + '-' + String(fechaRaw.getDate()).padStart(2, '0');
+                } else {
+                    fechaStr = String(fechaRaw).split('T')[0];
+                }
+                return {
+                    fecha: fechaStr,
                     transacciones: Number(d.transacciones),
                     total: Number(d.total)
-                }))
+                };
+            })
         });
     } catch (error) {
         console.error("Error en corte mensual:", error);

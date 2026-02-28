@@ -22,7 +22,14 @@ export async function GET(request: NextRequest) {
        ORDER BY t.sistema_talla_id, t.orden`,
       [parseInt(tipo_prenda_id)]
     )
-    return NextResponse.json({ success: true, data: Array.isArray(result) ? result : [] })
+    // Deduplicate by valor (e.g. "U" can appear from multiple sistemas)
+    const seen = new Set()
+    const deduplicated = (Array.isArray(result) ? result : []).filter((t: any) => {
+      if (seen.has(t.valor)) return false
+      seen.add(t.valor)
+      return true
+    })
+    return NextResponse.json({ success: true, data: deduplicated })
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Error al obtener tallas' }, { status: 500 })
   }

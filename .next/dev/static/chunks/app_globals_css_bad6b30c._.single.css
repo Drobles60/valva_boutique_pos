@@ -218,6 +218,7 @@
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --tracking-tight: -.025em;
+    --tracking-wide: .025em;
     --leading-tight: 1.25;
     --leading-relaxed: 1.625;
     --radius-xs: .125rem;
@@ -1079,6 +1080,10 @@
 
   .h-\[250px\] {
     height: 250px;
+  }
+
+  .h-\[280px\] {
+    height: 280px;
   }
 
   .h-\[300px\] {
@@ -2798,6 +2803,11 @@
   .tracking-tight {
     --tw-tracking: var(--tracking-tight);
     letter-spacing: var(--tracking-tight);
+  }
+
+  .tracking-wide {
+    --tw-tracking: var(--tracking-wide);
+    letter-spacing: var(--tracking-wide);
   }
 
   .text-balance {
