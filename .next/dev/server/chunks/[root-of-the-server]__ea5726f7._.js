@@ -243,9 +243,16 @@ async function GET(request) {
        ORDER BY t.sistema_talla_id, t.orden`, [
             parseInt(tipo_prenda_id)
         ]);
+        // Deduplicate by valor (e.g. "U" can appear from multiple sistemas)
+        const seen = new Set();
+        const deduplicated = (Array.isArray(result) ? result : []).filter((t)=>{
+            if (seen.has(t.valor)) return false;
+            seen.add(t.valor);
+            return true;
+        });
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
-            data: Array.isArray(result) ? result : []
+            data: deduplicated
         });
     } catch (error) {
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({

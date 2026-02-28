@@ -2834,6 +2834,39 @@ function generateReportPDF(options) {
         });
         y += kpiHeight + 8;
     }
+    // === Chart Images ===
+    if (options.chartImages && options.chartImages.length > 0) {
+        for (const chart of options.chartImages){
+            // Check if we need a new page
+            if (y > pdf.internal.pageSize.getHeight() - 60) {
+                pdf.addPage();
+                y = margin;
+            }
+            // Chart title
+            if (chart.title) {
+                pdf.setTextColor(...COLORS.foreground);
+                pdf.setFontSize(11);
+                pdf.setFont("helvetica", "bold");
+                pdf.text(chart.title, margin, y);
+                y += 6;
+            }
+            try {
+                const imgProps = pdf.getImageProperties(chart.dataUrl);
+                const imgAspect = imgProps.width / imgProps.height;
+                const imgW = chart.width || contentWidth;
+                const imgH = chart.height || imgW / imgAspect;
+                // If image would overflow page, start new page
+                if (y + imgH > pdf.internal.pageSize.getHeight() - 15) {
+                    pdf.addPage();
+                    y = margin;
+                }
+                pdf.addImage(chart.dataUrl, "PNG", margin, y, imgW, imgH);
+                y += imgH + 8;
+            } catch (e) {
+                console.error("Error adding chart image to PDF:", e);
+            }
+        }
+    }
     // === Tables ===
     tables.forEach((table)=>{
         // Check if we need a new page

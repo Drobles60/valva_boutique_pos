@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
 // GET: obtener compra con su detalle
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = params.id
+        const { id } = await params
         const [compra] = await query<any[]>(
             `SELECT c.*, p.razon_social AS proveedor_nombre, u.nombre AS usuario_nombre
        FROM compras c
@@ -34,9 +34,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT: actualizar compra borrador
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = params.id
+        const { id } = await params
         const body = await request.json()
         const {
             proveedor_id, factura_numero, fecha, fecha_vencimiento,
@@ -87,9 +87,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE: anulaR compra
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const id = params.id
+        const { id } = await params
         const [comp] = await query<any[]>('SELECT estado FROM compras WHERE id=?', [id])
         if (!comp) return NextResponse.json({ success: false, error: 'No encontrada' }, { status: 404 })
         if (comp.estado === 'confirmada') return NextResponse.json({ success: false, error: 'No se puede anular una compra confirmada' }, { status: 400 })
