@@ -228,7 +228,7 @@ async function GET() {
         const pedidos = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
               LEAST(p.total_abonado, p.costo_total) as total_abonado,
               GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
-              p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
+              p.tipo_pago, p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
        LEFT JOIN proveedores pr ON p.proveedor_id = pr.id
@@ -255,7 +255,7 @@ async function GET() {
 async function POST(request) {
     try {
         const body = await request.json();
-        const { proveedorId, fechaPedido, costoTotal, detalles, notas, usuarioId } = body;
+        const { proveedorId, fechaPedido, costoTotal, detalles, notas, usuarioId, tipoPago } = body;
         // Validaciones básicas
         if (!proveedorId || !fechaPedido || !costoTotal || !detalles || detalles.length === 0) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
@@ -264,6 +264,7 @@ async function POST(request) {
                 status: 400
             });
         }
+        const tipoPagoFinal = tipoPago || 'contado';
         // Generar número de pedido
         const ultimoPedido = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('SELECT numero_pedido FROM pedidos ORDER BY id DESC LIMIT 1');
         let numeroPedido;
@@ -273,15 +274,20 @@ async function POST(request) {
             const ultimoNumero = parseInt(ultimoPedido[0].numero_pedido.split('-')[1]);
             numeroPedido = `PED-${(ultimoNumero + 1).toString().padStart(3, '0')}`;
         }
-        // Insertar el pedido con saldo_pendiente igual al costo_total
+        // Para contado el saldo_pendiente es 0 (ya pagado), para crédito/mixto es el total
+        const saldoPendienteInicial = tipoPagoFinal === 'contado' ? 0 : costoTotal;
+        const totalAbonadoInicial = tipoPagoFinal === 'contado' ? costoTotal : 0;
+        // Insertar el pedido
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`INSERT INTO pedidos (
-        numero_pedido, proveedor_id, fecha_pedido, costo_total, total_abonado, saldo_pendiente, estado, usuario_id, notas
-      ) VALUES (?, ?, ?, ?, 0, ?, 'pendiente', ?, ?)`, [
+        numero_pedido, proveedor_id, fecha_pedido, costo_total, total_abonado, saldo_pendiente, tipo_pago, estado, usuario_id, notas
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?, ?)`, [
             numeroPedido,
             proveedorId,
             fechaPedido,
             costoTotal,
-            costoTotal,
+            totalAbonadoInicial,
+            saldoPendienteInicial,
+            tipoPagoFinal,
             usuarioId || null,
             notas || null
         ]);
@@ -301,7 +307,7 @@ async function POST(request) {
         const nuevoPedido = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
               LEAST(p.total_abonado, p.costo_total) as total_abonado,
               GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
-              p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
+              p.tipo_pago, p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
        LEFT JOIN proveedores pr ON p.proveedor_id = pr.id

@@ -352,6 +352,53 @@ async function POST(request) {
                 it.total
             ]);
         }
+        // ── Crear pedido correspondiente automáticamente ──────────────────────
+        try {
+            const numeroPedido = await generarNumeroPedido();
+            const abonoIni = Number(abono_inicial) || 0;
+            const saldoPendiente = Math.max(total - abonoIni, 0);
+            // tipo_pago: contado=pago total, credito/mixto=pago parcial o diferido
+            const tipoPagoNorm = tipo_pago === 'contado' ? 'contado' : 'credito';
+            const pedidoResult = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`INSERT INTO pedidos (
+                    numero_pedido, proveedor_id, fecha_pedido, costo_total,
+                    total_abonado, saldo_pendiente, tipo_pago, estado, usuario_id, notas
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?, ?)`, [
+                numeroPedido,
+                proveedor_id,
+                fecha,
+                total.toFixed(2),
+                abonoIni.toFixed(2),
+                saldoPendiente.toFixed(2),
+                tipoPagoNorm,
+                usuario_id || null,
+                `Generado desde compra ${numero_compra}${factura_numero ? ' - Fact. ' + factura_numero : ''}`
+            ]);
+            const pedidoId = pedidoResult.insertId;
+            for (const it of itemsCalculados){
+                const [prod] = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])('SELECT nombre FROM productos WHERE id = ?', [
+                    it.producto_id
+                ]);
+                const nombreProd = prod?.nombre || `Producto #${it.producto_id}`;
+                await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`INSERT INTO detalle_pedidos (pedido_id, descripcion, cantidad, precio_total) VALUES (?, ?, ?, ?)`, [
+                    pedidoId,
+                    nombreProd,
+                    it.cantidad,
+                    it.total
+                ]);
+            }
+            // Registrar abono inicial solo para crédito (en contado ya se marca todo pagado)
+            if (abonoIni > 0 && tipoPagoNorm !== 'contado') {
+                await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["query"])(`INSERT INTO abonos_pedidos (pedido_id, monto, metodo_pago, referencia, usuario_id) VALUES (?, ?, ?, ?, ?)`, [
+                    pedidoId,
+                    abonoIni.toFixed(2),
+                    'efectivo',
+                    numero_compra,
+                    usuario_id || null
+                ]);
+            }
+        } catch (pedidoErr) {
+            console.error('Aviso: no se pudo crear el pedido asociado:', pedidoErr.message);
+        }
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_react$2d$dom$40$19$2e$2$2e$0_react$40$19$2e$2$2e$0_$5f$react$40$19$2e$2$2e$0$2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
             id: compra_id,

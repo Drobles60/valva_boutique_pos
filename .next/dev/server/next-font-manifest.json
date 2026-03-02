@@ -28,11 +28,23 @@
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
+    "[project]/app/inventario/descuentos/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
+    ],
     "[project]/app/inventario/kardex/page": [
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
     "[project]/app/inventario/productos/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
+    ],
+    "[project]/app/login/page": [
+      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
+      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
+    ],
+    "[project]/app/page": [
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
@@ -60,27 +72,11 @@
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
-    "[project]/app/reportes/estadisticas/comparativas/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
     "[project]/app/reportes/estadisticas/page": [
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
-    "[project]/app/reportes/estadisticas/rotacion/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
     "[project]/app/reportes/estadisticas/tendencias/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
-    "[project]/app/reportes/financieros/balance/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
-    "[project]/app/reportes/financieros/diario/page": [
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
@@ -100,10 +96,6 @@
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
-    "[project]/app/reportes/financieros/margenes/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
     "[project]/app/reportes/generales/page": [
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
@@ -120,27 +112,7 @@
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
-    "[project]/app/reportes/ventas/categorias/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
-    "[project]/app/reportes/ventas/conciliacion/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
-    "[project]/app/reportes/ventas/corte-mensual/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
-    "[project]/app/reportes/ventas/descuentos/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
     "[project]/app/reportes/ventas/devoluciones/page": [
-      "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
-      "static/media/797e433ab948586e-s.p.dbea232f.woff2"
-    ],
-    "[project]/app/reportes/ventas/formas-pago/page": [
       "static/media/caa3a2e1cccd8315-s.p.853070df.woff2",
       "static/media/797e433ab948586e-s.p.dbea232f.woff2"
     ],
