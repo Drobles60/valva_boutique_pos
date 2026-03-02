@@ -25,6 +25,7 @@ export function ComprasListContent() {
     const [loading, setLoading] = useState(false)
     const [proveedores, setProveedores] = useState<any[]>([])
     const [filtros, setFiltros] = useState({ estado: "", proveedor_id: "", fecha_inicio: "", fecha_fin: "" })
+    const [mounted, setMounted] = useState(false)
 
     const cargar = async () => {
         setLoading(true)
@@ -39,9 +40,12 @@ export function ComprasListContent() {
     }
 
     useEffect(() => {
+        setMounted(true)
         fetch("/api/proveedores").then(r => r.json()).then(j => { if (j.success) setProveedores(j.data || []) })
         cargar()
     }, [])
+
+    if (!mounted) return null
 
     return (
         <div className="flex flex-col h-full gap-3 p-3 md:p-4">

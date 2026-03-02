@@ -70,6 +70,7 @@ type Pedido = {
   costo_total: number
   total_abonado: number
   saldo_pendiente: number
+  tipo_pago: 'contado' | 'credito' | 'mixto'
   estado: "pendiente" | "recibido"
   estado_pago?: "sin_pagar" | "pago_parcial" | "pagado"
   porcentaje_pagado?: number
@@ -482,10 +483,6 @@ export function PedidosContent() {
                 <Wallet className="mr-2 h-4 w-4" />
                 Abonar a Proveedor
               </Button>
-              <Button onClick={() => setDialogOpen(true)} className="w-full md:w-auto">
-                <Plus className="mr-2 h-4 w-4" />
-                Nuevo Pedido
-              </Button>
             </div>
           </div>
 
@@ -586,6 +583,7 @@ export function PedidosContent() {
                     <TableHead className="min-w-[150px]">Proveedor</TableHead>
                     <TableHead className="min-w-[100px]">Fecha Pedido</TableHead>
                     <TableHead className="min-w-[100px]">Fecha Entrega</TableHead>
+                    <TableHead className="min-w-[90px]">Tipo Pago</TableHead>
                     <TableHead className="text-right min-w-[100px]">Costo Total</TableHead>
                     <TableHead className="text-right min-w-[100px]">Total Abonado</TableHead>
                     <TableHead className="text-right min-w-[120px]">Saldo Pendiente</TableHead>
@@ -596,13 +594,13 @@ export function PedidosContent() {
                 <TableBody>
                   {loading && pedidos.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="text-center py-8">
+                      <TableCell colSpan={10} className="text-center py-8">
                         Cargando pedidos...
                       </TableCell>
                     </TableRow>
                   ) : filteredPedidos.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                         No se encontraron pedidos
                       </TableCell>
                     </TableRow>
@@ -637,18 +635,28 @@ export function PedidosContent() {
                             <span className="text-muted-foreground text-sm">-</span>
                           )}
                         </TableCell>
+                        <TableCell>
+                          {pedido.tipo_pago === 'contado'
+                            ? <Badge className="bg-green-100 text-green-700 border border-green-300 text-[11px] font-medium">Contado</Badge>
+                            : <Badge className="bg-orange-100 text-orange-700 border border-orange-300 text-[11px] font-medium">Crédito</Badge>
+                          }
+                        </TableCell>
                         <TableCell className="text-right font-medium">
                           ${formatCurrency(pedido.costo_total)}
                         </TableCell>
                         <TableCell className="text-right">
-                          <span className="font-medium text-blue-600">
-                            ${formatCurrency(pedido.total_abonado || 0)}
-                          </span>
+                          {pedido.tipo_pago === 'contado'
+                            ? <span className="text-muted-foreground">—</span>
+                            : <span className="font-medium text-blue-600">${formatCurrency(pedido.total_abonado || 0)}</span>
+                          }
                         </TableCell>
                         <TableCell className="text-right">
-                          <span className={`font-medium ${Number(pedido.saldo_pendiente || 0) === 0 ? 'text-green-600' : 'text-orange-600'}`}>
-                            ${formatCurrency(pedido.saldo_pendiente || pedido.costo_total)}
-                          </span>
+                          {pedido.tipo_pago === 'contado'
+                            ? <span className="text-muted-foreground">—</span>
+                            : <span className={`font-medium ${Number(pedido.saldo_pendiente || 0) === 0 ? 'text-green-600' : 'text-orange-600'}`}>
+                                ${formatCurrency(pedido.saldo_pendiente || pedido.costo_total)}
+                              </span>
+                          }
                         </TableCell>
                         <TableCell>
                           <Badge variant={pedido.estado === 'recibido' ? 'default' : 'secondary'}>
@@ -666,7 +674,7 @@ export function PedidosContent() {
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            {pedido.saldo_pendiente > 0 && (
+                            {pedido.saldo_pendiente > 0 && pedido.tipo_pago !== 'contado' && (
                               <Button
                                 variant="ghost"
                                 size="icon"

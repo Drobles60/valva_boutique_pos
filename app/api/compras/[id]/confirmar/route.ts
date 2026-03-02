@@ -103,6 +103,22 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         // 4. Confirmar compra
         await query("UPDATE compras SET estado='confirmada' WHERE id=?", [id])
 
+        // 5. Marcar el pedido asociado como recibido (busca por numero_pedido = numero_compra)
+        try {
+            const pedidosAsociados = await query<any[]>(
+                `SELECT id FROM pedidos WHERE numero_pedido = ? AND estado = 'pendiente' LIMIT 1`,
+                [compra.numero_compra]
+            )
+            if (pedidosAsociados.length > 0) {
+                await query(
+                    `UPDATE pedidos SET estado = 'recibido', fecha_recibido = NOW() WHERE id = ?`,
+                    [pedidosAsociados[0].id]
+                )
+            }
+        } catch (pedErr: any) {
+            console.error('Aviso: no se pudo marcar el pedido como recibido:', pedErr.message)
+        }
+
         return NextResponse.json({
             success: true,
             message: `Compra ${compra.numero_compra} confirmada. ${detalle.length} producto(s) actualizados en inventario y Kardex.`
