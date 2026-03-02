@@ -93,12 +93,6 @@ const menuItems = [
     href: "/usuarios",
     permissions: ['usuarios.ver'] as Permission[]
   },
-  {
-    title: "Configuraciones",
-    icon: Settings,
-    href: "/configuracion",
-    permissions: ['config.ver', 'config.editar', 'config.webhooks'] as Permission[]
-  },
 ]
 
 const inventorySubmenu = [
@@ -167,7 +161,7 @@ export function SidebarToggle() {
 }
 
 export function AppSidebar() {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, open } = useSidebar()
   const pathname = usePathname()
   const { data: session } = useSession()
 
@@ -210,6 +204,20 @@ export function AppSidebar() {
   const showReportesSection = visibleReportesSubmenu.length > 0
 
   return (
+    <>
+      {/* Botón flotante para reabrir el panel cuando está cerrado */}
+      {!open && (
+        <button
+          type="button"
+          aria-label="Abrir menú"
+          onClick={toggleSidebar}
+          className="fixed top-4 left-4 z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-md border border-border bg-background shadow-md transition-all duration-200 hover:bg-accent hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <span className="block h-0.5 w-5 rounded-full bg-foreground" />
+          <span className="block h-0.5 w-5 rounded-full bg-foreground" />
+          <span className="block h-0.5 w-5 rounded-full bg-foreground" />
+        </button>
+      )}
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-0 px-4 py-6">
@@ -310,6 +318,20 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 </Collapsible>
               )}
+
+              {hasAccess(['config.ver', 'config.editar', 'config.webhooks']) && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === '/configuracion'}
+                  >
+                    <a href="/configuracion">
+                      <Settings className="h-4 w-4" />
+                      <span>Configuraciones</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -344,5 +366,6 @@ export function AppSidebar() {
         </div>
       </SidebarFooter>
     </Sidebar>
+    </>
   )
 }

@@ -8,7 +8,7 @@ export async function GET() {
             `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
               LEAST(p.total_abonado, p.costo_total) as total_abonado,
               GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
-              p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
+              p.tipo_pago, p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
        LEFT JOIN proveedores pr ON p.proveedor_id = pr.id
@@ -46,7 +46,8 @@ export async function POST(request: NextRequest) {
       costoTotal,
       detalles,
       notas,
-      usuarioId
+      usuarioId,
+      tipoPago,
     } = body;
 
     // Validaciones básicas
@@ -56,6 +57,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const tipoPagoFinal = tipoPago || 'contado';
 
     // Generar número de pedido
     const ultimoPedido = await query<any[]>(
@@ -70,12 +73,16 @@ export async function POST(request: NextRequest) {
       numeroPedido = `PED-${(ultimoNumero + 1).toString().padStart(3, '0')}`;
     }
 
-    // Insertar el pedido con saldo_pendiente igual al costo_total
+    // Para contado el saldo_pendiente es 0 (ya pagado), para crédito/mixto es el total
+    const saldoPendienteInicial = tipoPagoFinal === 'contado' ? 0 : costoTotal
+    const totalAbonadoInicial = tipoPagoFinal === 'contado' ? costoTotal : 0
+
+    // Insertar el pedido
     const result = await query<any>(
       `INSERT INTO pedidos (
-        numero_pedido, proveedor_id, fecha_pedido, costo_total, total_abonado, saldo_pendiente, estado, usuario_id, notas
-      ) VALUES (?, ?, ?, ?, 0, ?, 'pendiente', ?, ?)`,
-      [numeroPedido, proveedorId, fechaPedido, costoTotal, costoTotal, usuarioId || null, notas || null]
+        numero_pedido, proveedor_id, fecha_pedido, costo_total, total_abonado, saldo_pendiente, tipo_pago, estado, usuario_id, notas
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?, ?)`,
+      [numeroPedido, proveedorId, fechaPedido, costoTotal, totalAbonadoInicial, saldoPendienteInicial, tipoPagoFinal, usuarioId || null, notas || null]
     );
 
     const pedidoId = result.insertId;
@@ -95,7 +102,7 @@ export async function POST(request: NextRequest) {
             `SELECT p.id, p.numero_pedido, p.proveedor_id, p.fecha_pedido, p.costo_total,
               LEAST(p.total_abonado, p.costo_total) as total_abonado,
               GREATEST(p.saldo_pendiente, 0) as saldo_pendiente,
-              p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
+              p.tipo_pago, p.estado, p.fecha_recibido, p.usuario_id, p.notas, p.created_at, p.updated_at,
               pr.razon_social as proveedor_nombre, pr.codigo as proveedor_codigo
        FROM pedidos p
        LEFT JOIN proveedores pr ON p.proveedor_id = pr.id
